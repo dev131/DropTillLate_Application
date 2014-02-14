@@ -1,38 +1,15 @@
 package ch.droptilllate.application.query;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.StringWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import ch.droptilllate.application.com.IXmlConnection;
 import ch.droptilllate.application.com.XmlConnection;
@@ -46,20 +23,22 @@ public class FileQuery {
 	private IXmlConnection conn;
 	private String rootElement = "collection";
 	private String childElement = "file";
+
 	public FileQuery() {
-		conn = new XmlConnection(Messages.getFilesXMLpath(), rootElement);		
+		conn = new XmlConnection(Messages.getFilesXMLpath(), rootElement);
 	}
 
-/**
- * New File Entry
- * @param encryptedFile
- * @return
- */
+	/**
+	 * New File Entry
+	 * 
+	 * @param encryptedFile
+	 * @return
+	 */
 	public int newFile(EncryptedFile encryptedFile) {
-		//TODO id generate
+		// TODO id generate
 		int id = (int) (Math.random() * 10000 + 1);
-		//Check if it exist
-		while(!checkExist(id)){
+		// Check if it exist
+		while (!checkExist(id)) {
 			id = (int) (Math.random() * 10000 + 1);
 		}
 		document = conn.getXML();
@@ -80,31 +59,35 @@ public class FileQuery {
 		conn.writeToXML();
 		return id;
 	}
+
 	/**
 	 * Check if it already exist
+	 * 
 	 * @param fileID
 	 * @return
 	 */
-	private boolean checkExist(int fileID){
+	private boolean checkExist(int fileID) {
 		document = conn.getXML();
 		boolean result = true;
 		// cast the result to a DOM NodeList
-		NodeList nodes = conn.executeQuery("//"+childElement+"[@id='" + fileID + "']");
-		if(nodes == null) result = false;
+		NodeList nodes = conn.executeQuery("//" + childElement + "[@id='"
+				+ fileID + "']");
+		if (nodes == null)
+			result = false;
 		return result;
 	}
-	
-/**
- * Get files from folder
- * @param folder
- * @return
- */
+
+	/**
+	 * Get files from folder
+	 * 
+	 * @param folder
+	 * @return
+	 */
 	public List<EncryptedFileDob> getFile(EncryptedFolderDob folder) {
 		List<EncryptedFileDob> files = new ArrayList<EncryptedFileDob>();
-		EncryptedFileDob dob;
 		document = conn.getXML();
-		NodeList nodes = conn.executeQuery("//"+childElement+"[@parentID='" + folder.getId()
-				+ "']");
+		NodeList nodes = conn.executeQuery("//" + childElement + "[@parentID='"
+				+ folder.getId() + "']");
 		for (int i = 0; i < nodes.getLength(); i++) {
 			String date1 = nodes.item(i).getAttributes().getNamedItem("date")
 					.getNodeValue().toString();
@@ -131,15 +114,17 @@ public class FileQuery {
 		}
 		return files;
 	}
-/**
- * update Fileinfos
- * @param encryptedFile
- * @return
- */
+
+	/**
+	 * update Fileinfos
+	 * 
+	 * @param encryptedFile
+	 * @return
+	 */
 	public boolean updateFile(EncryptedFileDob encryptedFile) {
 		document = conn.getXML();
-		NodeList nodes = conn.executeQuery("//"+childElement+"[@id='" + encryptedFile.getId()
-				+ "']");
+		NodeList nodes = conn.executeQuery("//" + childElement + "[@id='"
+				+ encryptedFile.getId() + "']");
 		for (int idx = 0; idx < nodes.getLength(); idx++) {
 			if (encryptedFile.getName() != null)
 				nodes.item(idx).getAttributes().getNamedItem("name")
@@ -180,7 +165,8 @@ public class FileQuery {
 		EncryptedFileDob encryptedFileDob = null;
 		document = conn.getXML();
 		// cast the result to a DOM NodeList
-		NodeList nodes = conn.executeQuery("//"+childElement+"[@id='" + id + "']");
+		NodeList nodes = conn.executeQuery("//" + childElement + "[@id='" + id
+				+ "']");
 		String date1 = nodes.item(0).getAttributes().getNamedItem("date")
 				.getNodeValue().toString();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -203,20 +189,22 @@ public class FileQuery {
 						.getNodeValue()));
 		System.out.println("Everything replaced.");
 		// save xml file back
-		//writeToXML();
+		// writeToXML();
 
 		return encryptedFileDob;
 	}
-/**
- * Delete Files
- * @param encryptedFile
- * @return
- */
+
+	/**
+	 * Delete Files
+	 * 
+	 * @param encryptedFile
+	 * @return
+	 */
 	public boolean deleteFile(EncryptedFileDob encryptedFile) {
 		document = conn.getXML();
 		// cast the result to a DOM NodeList
-		NodeList nodes = conn.executeQuery("//"+childElement+"[@id='" + encryptedFile.getId()
-				+ "']");
+		NodeList nodes = conn.executeQuery("//" + childElement + "[@id='"
+				+ encryptedFile.getId() + "']");
 		for (int idx = 0; idx < nodes.getLength(); idx++) {
 			nodes.item(idx).getParentNode().removeChild(nodes.item(idx));
 		}

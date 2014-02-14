@@ -1,15 +1,11 @@
 package ch.droptilllate.application.tests;
 
-import static org.junit.Assert.*;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
@@ -17,7 +13,6 @@ import org.junit.Test;
 import ch.droptilllate.application.com.FileSystemCom;
 import ch.droptilllate.application.com.IFileSystemCom;
 import ch.droptilllate.application.model.EncryptedFileDob;
-import ch.droptilllate.filesystem.api.FileInfoEncrypt;
 
 public class FileSystem {
 

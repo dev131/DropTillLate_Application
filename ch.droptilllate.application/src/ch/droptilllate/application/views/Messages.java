@@ -9,20 +9,19 @@ public class Messages extends NLS {
 	public static String FilesTableIdentifier_SIZE;
 	public static String FilesTableIdentifier_DATE;
 	public static String BUNDLE_NAME = "ch.droptilllate.application.views.messages";
-	public static String TableView_ProgressMonitorDialog_Encrypt;
-	public static String TableView_ProgressMonitor_SubTast_Handler;
 	public static String DATE_FORMAT;
 	public static String FILE;
 	public static String LocalPathDropBox;
 	public static String LocalPathTemp;
-	public static String LocalSharePath;
 	public static String Encryptview_ID;
 	public static String FilesXMLpath;
 	public static String FolderXMLpath;
 	public static String ShareFolderXMLpath;
 	public static String ContainerXMLpath;
 
-	
+	public static String getBUNDLE_NAME() {
+		return BUNDLE_NAME;
+	}
 
 	public static String getEncryptview_ID() {
 		return Encryptview_ID;

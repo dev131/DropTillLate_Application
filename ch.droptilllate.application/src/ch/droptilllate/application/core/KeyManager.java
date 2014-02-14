@@ -1,36 +1,20 @@
 package ch.droptilllate.application.core;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 public class KeyManager {
-	private String path = "key.xml";
-
-	public KeyManager() {
-		// XMLReader erzeugen
-		File yourFile = new File(path);
-		if (!yourFile.exists()) {
-			try {
-				yourFile.createNewFile();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+	public static void main(String [] args)
+	{
+		String password = "marco131";
+		String salt = "filename";
+		KeysGenerator gen = new KeysGenerator();
 		try {
-			FileOutputStream oFile = new FileOutputStream(yourFile, false);
-		} catch (FileNotFoundException e) {
+			String key = gen.getKey(password, salt);
+			System.out.println(key);
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		//System.out.println(i);
 	}
 
 }

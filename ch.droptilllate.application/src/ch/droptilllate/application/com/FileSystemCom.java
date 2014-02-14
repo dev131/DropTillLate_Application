@@ -3,8 +3,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import ch.droptilllate.application.dao.EncryptedFileDao;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.views.Messages;
 import ch.droptilllate.filesystem.api.ContainerInfo;

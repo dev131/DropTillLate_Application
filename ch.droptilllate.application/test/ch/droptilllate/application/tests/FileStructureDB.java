@@ -1,7 +1,4 @@
 package ch.droptilllate.application.tests;
-
-import static org.junit.Assert.*;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,11 +6,7 @@ import java.io.RandomAccessFile;
 import java.sql.Date;
 import java.util.List;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-
 import org.junit.Test;
-import org.xml.sax.SAXException;
 
 import ch.droptilllate.application.com.IXmlDatabase;
 import ch.droptilllate.application.dao.EncryptedFileDao;

@@ -1,14 +1,10 @@
 package ch.droptilllate.application.controller;
 
 import java.io.File;
-import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -24,7 +20,6 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
-import org.xml.sax.SAXException;
 
 import ch.droptilllate.application.com.FileSystemCom;
 import ch.droptilllate.application.com.IFileSystemCom;
@@ -199,7 +194,7 @@ public class ViewController {
 				}
 			}
 		}
-		FileSystemCom ifileSystem = new FileSystemCom();
+		IFileSystemCom ifileSystem = new FileSystemCom();
 		ifileSystem.decryptFile(fileList, Messages.getTempFolder());
 
 	}
@@ -297,8 +292,6 @@ public class ViewController {
 	private void dropTreeElements(File droppedElement, EncryptedFolderDob parent) {
 		IXmlDatabase encryptedFolderDao = new EncryptedFolderDao();
 		IXmlDatabase encryptedFileDao = new EncryptedFileDao();
-		List<EncryptedFolderDob> successfullyProcessedFolders = new ArrayList<EncryptedFolderDob>();
-		List<EncryptedFileDob> successfullyProcessedFiles = new ArrayList<EncryptedFileDob>();
 		
 		if (!droppedElement.isDirectory()) {
 			if (droppedElement.getName().contains(".DS_Store")) {

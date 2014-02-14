@@ -9,7 +9,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
-import ch.droptilllate.application.controller.ViewController;
 
 public class StatusLine implements Observer {
 	private Text textBox;

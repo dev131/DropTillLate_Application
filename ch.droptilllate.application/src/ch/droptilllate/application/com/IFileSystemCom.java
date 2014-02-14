@@ -1,19 +1,10 @@
 package ch.droptilllate.application.com;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import ch.droptilllate.application.dao.EncryptedFileDao;
 import ch.droptilllate.application.model.EncryptedFileDob;
-import ch.droptilllate.application.views.Messages;
-import ch.droptilllate.filesystem.api.ContainerInfo;
+
 import ch.droptilllate.filesystem.api.FileInfo;
-import ch.droptilllate.filesystem.api.FileInfoDecrypt;
-import ch.droptilllate.filesystem.api.FileInfoEncrypt;
-import ch.droptilllate.filesystem.api.FileSystemHandler;
-import ch.droptilllate.filesystem.api.IFileSystem;
 
 public interface IFileSystemCom {
 	/**
