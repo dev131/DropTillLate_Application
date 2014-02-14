@@ -21,6 +21,7 @@ import ch.droptilllate.filesystem.api.IFileSystem;
  *
  */
 public class FileSystemCom implements IFileSystemCom{	
+	//TODO Key transfer
 	@Override
 	public List<FileInfo> encryptFile(List<EncryptedFileDob> droppedFiles, String containerPath) {
 		FileHandlingSummary filehandling_result = null;
@@ -43,6 +44,7 @@ public class FileSystemCom implements IFileSystemCom{
 		return filehandling_result.getFileInfoSuccessList();		
 		}
 
+	//TODO Key transfer
 	@Override
 	public List<FileInfo> decryptFile(List<EncryptedFileDob> droppedFiles,
 			String containerPath) {

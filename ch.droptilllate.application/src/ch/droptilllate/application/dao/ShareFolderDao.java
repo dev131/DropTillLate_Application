@@ -19,9 +19,8 @@ public class ShareFolderDao implements IXmlDatabase {
 	@Override
 	public Object newElement(Object obj) {
 		if (sharefolderQuery == null)
-			sharefolderQuery = new ShareFolderQuery();
-		 sharefolderQuery.newShareFolder((ShareFolder) obj);
-		 return (ShareFolder) obj;
+			sharefolderQuery = new ShareFolderQuery();		 
+		 return sharefolderQuery.newShareFolder((ShareFolder) obj);
 	}
 
 	@Override

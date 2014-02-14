@@ -21,10 +21,10 @@ public class KeyManager {
 	 * Init MasterPassword
 	 * @param password
 	 */
-	public void initPassword(String password){
+	public void initPassword(String password, String salt){
 		KeysGenerator kg = new KeysGenerator();
 		ShareFolderDao dao = new ShareFolderDao();
-		ShareFolder	folder = new ShareFolder(0, Messages.getLocalPathDropBoxMaster(), kg.getKey(password, Messages.getLocalPathDropBoxMaster()));
+		ShareFolder	folder = new ShareFolder(0, Messages.getLocalPathDropBoxMaster(), kg.getKey(password, salt));
 		dao.newElement(folder);
 	}
 	
@@ -32,7 +32,7 @@ public class KeyManager {
 	 * Check if master password exist
 	 * @return true if exist
 	 */
-	public boolean checkMasterPassword(){
+	public boolean checkMasterPasswordExisting(){
 		ShareFolderDao dao = new ShareFolderDao();
 		ShareFolder folder = (ShareFolder) dao.getElementByID(0);
 		if(folder == null ){
@@ -45,15 +45,20 @@ public class KeyManager {
 	 * @param password
 	 * @return true if it match
 	 */
-	public boolean checkPassword(String password){
+	public boolean checkPassword(String password, String salt){
 		KeysGenerator kg = new KeysGenerator();
 		ShareFolderDao dao = new ShareFolderDao();
 		ShareFolder folder = (ShareFolder) dao.getElementByID(0);
-		if(folder.getKey().equals(kg.getKey(password, Messages.getLocalPathDropBoxMaster())))
+		if(folder.getKey().equals(kg.getKey(password, salt)))
 			return true;
 		else{
 			return false;
 		}			
+	}
+	
+	public String generatePassword(String password, String salt){
+		KeysGenerator kg = new KeysGenerator();
+		return kg.getKey(password, salt);
 	}
 	
 

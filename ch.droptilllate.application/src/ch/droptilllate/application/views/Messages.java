@@ -21,8 +21,14 @@ public class Messages extends NLS {
 	public static String LocalPathDropBoxMaster;
 	public static String LoginPassword;
 	public static String CreatePassword;
+	public static String SaltMasterPassword;
 
 	
+
+	public static String getSaltMasterPassword() {
+		return SaltMasterPassword;
+	}
+
 
 	public static String getLoginPassword() {
 		return LoginPassword;

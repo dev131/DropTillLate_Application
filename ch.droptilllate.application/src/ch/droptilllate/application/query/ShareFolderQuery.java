@@ -27,7 +27,14 @@ public class ShareFolderQuery {
 	 * @param encryptedFolder
 	 * @return
 	 */
-	public void newShareFolder(ShareFolder sharefolder) {
+	public ShareFolder newShareFolder(ShareFolder sharefolder) {
+		// TODO id generate
+				int id = (int) (Math.random() * 10000 + 1);
+				// Check if it exist
+				while (checkExist(id)) {
+					id = (int) (Math.random() * 10000 + 1);
+				}		
+				sharefolder.setID(id);
 		document = conn.getXML();
 		Node node = document.getFirstChild();
 		Element folder = document.createElement(childElement);
@@ -37,6 +44,18 @@ public class ShareFolderQuery {
 		folder.setAttribute("path", sharefolder.getPath());
 		node.appendChild(folder);
 		conn.writeToXML();
+		return sharefolder;
+	}
+	
+	private boolean checkExist(int sharefolderID) {
+		document = conn.getXML();
+		boolean result = false;
+		// cast the result to a DOM NodeList
+		NodeList nodes = conn.executeQuery("//" + childElement + "[@id='"
+				+ sharefolderID + "']");
+		if(nodes.getLength()>0)
+			result = true;
+		return result;
 	}
 
 	public ShareFolder getShareFolder(int sharefolderID) {

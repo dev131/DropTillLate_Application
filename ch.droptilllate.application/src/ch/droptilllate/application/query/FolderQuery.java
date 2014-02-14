@@ -76,12 +76,12 @@ public class FolderQuery {
 		return id;
 	}
 
-	private boolean checkExist(int sharefolderID) {
+	private boolean checkExist(int folderID) {
 		document = conn.getXML();
 		boolean result = false;
 		// cast the result to a DOM NodeList
 		NodeList nodes = conn.executeQuery("//" + childElement + "[@id='"
-				+ sharefolderID + "']");
+				+ folderID + "']");
 		if(nodes.getLength()>0)
 			result = true;
 		return result;

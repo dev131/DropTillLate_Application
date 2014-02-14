@@ -32,13 +32,16 @@ import ch.droptilllate.application.com.FileSystemCom;
 import ch.droptilllate.application.com.IFileSystemCom;
 import ch.droptilllate.application.com.IXmlDatabase;
 import ch.droptilllate.application.core.KeyManager;
+import ch.droptilllate.application.core.ShareManager;
 import ch.droptilllate.application.dao.ContainerDao;
 import ch.droptilllate.application.dao.EncryptedFileDao;
 import ch.droptilllate.application.dao.EncryptedFolderDao;
+import ch.droptilllate.application.dao.ShareFolderDao;
 import ch.droptilllate.application.dnb.Container;
 import ch.droptilllate.application.dnb.DroppedElement;
 import ch.droptilllate.application.dnb.EncryptedFile;
 import ch.droptilllate.application.dnb.EncryptedFolder;
+import ch.droptilllate.application.dnb.ShareFolder;
 import ch.droptilllate.application.listener.TreeDragSourceListener;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.EncryptedFolderDob;
@@ -100,16 +103,16 @@ public class ViewController {
 
 		//TODO init password
 		KeyManager km = new KeyManager();
-		if(!km.checkMasterPassword()){ 
+		if(!km.checkMasterPasswordExisting()){ 
 			 dialog = new LoginView(shell, Messages.getCreatePassword());
 				dialog.create();
 				if (dialog.open() == Window.OK) {
 				  password = dialog.getPassword();	  			
-				  km.initPassword(password);
+				  km.initPassword(password, Messages.getSaltMasterPassword());
 				}
 		}
 		else{
-			while(!km.checkPassword(password)){
+			while(!km.checkPassword(password, Messages.getSaltMasterPassword())){
 				 dialog = new LoginView(shell, Messages.getLoginPassword());
 					dialog.create();
 					if (dialog.open() == Window.OK) {
@@ -373,5 +376,40 @@ public class ViewController {
 			// log.debug("Sourcefolder deleted");
 		}
 
+	}
+
+	/**
+	 * ShareFiles
+	 */
+	public void shareFiles() {		
+		fileList = new ArrayList<EncryptedFileDob>();
+		String password = "";
+		dialog = new LoginView(shell, Messages.getCreatePassword());
+			dialog.create();
+			if (dialog.open() == Window.OK) {
+			 password = dialog.getPassword();	  					
+			}
+			// TODO Statusline
+			List<EncryptedFileDob> fileList = new ArrayList<EncryptedFileDob>();
+			// List inserts and prepare for delete
+			TreeItem[] treeItems = tree.getSelection();
+			if (treeItems != null) {
+				for (int i = 0; i < treeItems.length; i++) {
+					Object obj = treeItems[i].getData();
+					// IF selection a Folder
+					if (obj.getClass() == EncryptedFolderDob.class) {
+						// do Nothing
+					}
+					// IF selection a File
+					if (obj.getClass() == EncryptedFileDob.class) {
+						EncryptedFileDob f2 = (EncryptedFileDob) obj;
+						fileList.add(f2);
+					}
+				}
+			}
+			ShareManager shareManager= new ShareManager();
+			shareManager.newShareRelation(fileList, password);
+	
+		
 	}
 }
