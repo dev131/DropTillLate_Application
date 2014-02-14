@@ -42,13 +42,17 @@ public class ShareFolderQuery {
 	public ShareFolder getShareFolder(int sharefolderID) {
 		document = conn.getXML();
 		// cast the result to a DOM NodeList
+		
 		NodeList nodes = conn.executeQuery("//" + childElement + "[@id='"
 				+ sharefolderID + "']");
-		ShareFolder sharefolder = new ShareFolder(sharefolderID,
+		ShareFolder sharefolder = null;
+		if(nodes.getLength()>0){
+			sharefolder= new ShareFolder(sharefolderID,
 				nodes.item(0).getAttributes().getNamedItem("path")
 						.getNodeValue().toString(), nodes.item(0)
 						.getAttributes().getNamedItem("key").getNodeValue()
 						.toString());
+		}
 		return sharefolder;
 	}
 

@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.core.runtime.Path;
 import org.osgi.framework.Bundle;

@@ -18,10 +18,26 @@ public class Messages extends NLS {
 	public static String FolderXMLpath;
 	public static String ShareFolderXMLpath;
 	public static String ContainerXMLpath;
+	public static String LocalPathDropBoxMaster;
+	public static String LoginPassword;
+	public static String CreatePassword;
 
-	public static String getBUNDLE_NAME() {
-		return BUNDLE_NAME;
+	
+
+	public static String getLoginPassword() {
+		return LoginPassword;
 	}
+
+
+	public static String getCreatePassword() {
+		return CreatePassword;
+	}
+
+
+	public static String getLocalPathDropBoxMaster() {
+		return LocalPathDropBoxMaster;
+	}
+
 
 	public static String getEncryptview_ID() {
 		return Encryptview_ID;

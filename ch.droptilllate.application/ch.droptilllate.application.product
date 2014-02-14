@@ -3,6 +3,7 @@
 
 <product name="ch.droptilllate.application" id="ch.droptilllate.application.product" application="org.eclipse.e4.ui.workbench.swt.E4Application" version="1.0.0.qualifier" useFeatures="false" includeLaunchers="true">
 
+
    <configIni use="default">
    </configIni>
 
@@ -21,11 +22,14 @@
       </win>
    </launcher>
 
+
    <vm>
    </vm>
 
+
    <plugins>
       <plugin id="ch.droptilllate.application"/>
+      <plugin id="ch.droptilllate.filesystem.plugin"/>
       <plugin id="com.ibm.icu"/>
       <plugin id="javax.annotation"/>
       <plugin id="javax.inject"/>
@@ -83,7 +87,6 @@
       <plugin id="org.eclipse.osgi.services"/>
       <plugin id="org.eclipse.swt"/>
       <plugin id="org.eclipse.swt.cocoa.macosx.x86_64" fragment="true"/>
-      <plugin id="org.eclipse.ui"/>
       <plugin id="org.w3c.css.sac"/>
       <plugin id="org.w3c.dom.events"/>
       <plugin id="org.w3c.dom.smil"/>

@@ -1,6 +1,8 @@
 package ch.droptilllate.application.core;
 
 import java.security.Key;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Arrays;
 
@@ -9,12 +11,21 @@ import javax.crypto.spec.PBEKeySpec;
 
 public class KeysGenerator {
 
-	public String getKey(String password, String salt) throws Exception {
+	public String getKey(String password, String salt) {
 		// get raw key from password and salt
-		SecretKeyFactory factory = SecretKeyFactory
-				.getInstance("PBKDF2WithHmacSHA1");
-		KeySpec keyspec = new PBEKeySpec(password.toCharArray(), salt.getBytes(), 1000, 256);
-		Key key = factory.generateSecret(keyspec);
+		Key key= null;
+		try {
+			SecretKeyFactory factory = SecretKeyFactory
+					.getInstance("PBKDF2WithHmacSHA1");
+			KeySpec keyspec = new PBEKeySpec(password.toCharArray(), salt.getBytes(), 1000, 256);
+			key = factory.generateSecret(keyspec);
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidKeySpecException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		// Length
 		byte[] keyBytes = key.getEncoded();

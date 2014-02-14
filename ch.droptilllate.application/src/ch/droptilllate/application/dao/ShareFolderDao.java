@@ -1,7 +1,16 @@
 package ch.droptilllate.application.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import ch.droptilllate.application.com.IXmlDatabase;
 import ch.droptilllate.application.dnb.ShareFolder;
+import ch.droptilllate.application.model.EncryptedFileDob;
+import ch.droptilllate.application.query.FileQuery;
 import ch.droptilllate.application.query.ShareFolderQuery;
 
 public class ShareFolderDao implements IXmlDatabase {

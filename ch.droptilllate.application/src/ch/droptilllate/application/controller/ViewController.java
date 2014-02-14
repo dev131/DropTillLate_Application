@@ -1,15 +1,20 @@
 package ch.droptilllate.application.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSource;
@@ -17,15 +22,20 @@ import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
+import org.xml.sax.SAXException;
 
 import ch.droptilllate.application.com.FileSystemCom;
 import ch.droptilllate.application.com.IFileSystemCom;
 import ch.droptilllate.application.com.IXmlDatabase;
+import ch.droptilllate.application.core.KeyManager;
+import ch.droptilllate.application.dao.ContainerDao;
 import ch.droptilllate.application.dao.EncryptedFileDao;
 import ch.droptilllate.application.dao.EncryptedFolderDao;
+import ch.droptilllate.application.dnb.Container;
 import ch.droptilllate.application.dnb.DroppedElement;
 import ch.droptilllate.application.dnb.EncryptedFile;
 import ch.droptilllate.application.dnb.EncryptedFolder;
@@ -34,7 +44,10 @@ import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.EncryptedFolderDob;
 import ch.droptilllate.application.provider.DropTillLateContentProvider;
 import ch.droptilllate.application.provider.DropTillLateLabelProvider;
+import ch.droptilllate.application.views.FileNameDialog;
+import ch.droptilllate.application.views.LoginView;
 import ch.droptilllate.application.views.Messages;
+import ch.droptilllate.application.views.Status;
 import ch.droptilllate.application.views.TableIdentifier;
 import ch.droptilllate.filesystem.api.FileInfo;
 
@@ -47,7 +60,10 @@ public class ViewController {
 	private List<EncryptedFolderDob> folderList;
 	private static ViewController instance = null;
 	private List<EncryptedFileDob> actualDropFiles;
-
+	private String password ="";
+	private LoginView dialog;
+	private Shell shell;
+	
 	public ViewController() {
 		// Exists only to defeat instantiation.
 	}
@@ -59,9 +75,10 @@ public class ViewController {
 		return instance;
 	}
 
-	public void initViewController(TreeViewer viewer) {
+	public void initViewController(TreeViewer viewer, Shell shell) {
 		// Treeviewer
 		this.viewer = viewer;
+		this.shell = shell;
 		// Set ContentProvider and Labels
 		viewer.setContentProvider(new DropTillLateContentProvider());
 		viewer.setLabelProvider(new DropTillLateLabelProvider());
@@ -78,12 +95,36 @@ public class ViewController {
 			tree.getColumn(identifier.ordinal()).setWidth(
 					identifier.columnWidth);
 		}
+		//LOGIN AREA
+		//Register Password
+
+		//TODO init password
+		KeyManager km = new KeyManager();
+		if(!km.checkMasterPassword()){ 
+			 dialog = new LoginView(shell, Messages.getCreatePassword());
+				dialog.create();
+				if (dialog.open() == Window.OK) {
+				  password = dialog.getPassword();	  			
+				  km.initPassword(password);
+				}
+		}
+		else{
+			while(!km.checkPassword(password)){
+				 dialog = new LoginView(shell, Messages.getLoginPassword());
+					dialog.create();
+					if (dialog.open() == Window.OK) {
+					  password = dialog.getPassword();	  
+					} 
+			}
+		}
+		System.out.println("Successfull login");	
 		// Get InitialInput
 		root = getInitialInput();
 		viewer.setInput(root);
 		viewer.expandToLevel(1);
 		// Register Drag&Drop Listener
 		registerDragDrop();
+	
 	}
 
 	/**
@@ -194,7 +235,7 @@ public class ViewController {
 				}
 			}
 		}
-		IFileSystemCom ifileSystem = new FileSystemCom();
+		FileSystemCom ifileSystem = new FileSystemCom();
 		ifileSystem.decryptFile(fileList, Messages.getTempFolder());
 
 	}
@@ -274,10 +315,22 @@ public class ViewController {
 			System.out.println("some Files are not stored");
 		} else {
 			updateTreeElements(result, actualDropFiles);
+			updateContainerTable(result);
 			// droppedElement.delete();
 			// droppedFile.setPath(Messages.getLocalPathDropbox());
 		}
 
+	}
+
+	private void updateContainerTable(List<FileInfo> result) {
+		for(int index = 0; index< result.size(); index++){
+			ContainerDao dao = new ContainerDao();
+			//All in mastersharefolder
+			Container container = new Container(result.get(index).getContainerInfo().getContainerID(), 0);
+			dao.newElement(container);
+			
+		}
+		
 	}
 
 	private void updateTreeElements(List<FileInfo> result, List<EncryptedFileDob> droppedFiles) {
@@ -292,6 +345,8 @@ public class ViewController {
 	private void dropTreeElements(File droppedElement, EncryptedFolderDob parent) {
 		IXmlDatabase encryptedFolderDao = new EncryptedFolderDao();
 		IXmlDatabase encryptedFileDao = new EncryptedFileDao();
+		List<EncryptedFolderDob> successfullyProcessedFolders = new ArrayList<EncryptedFolderDob>();
+		List<EncryptedFileDob> successfullyProcessedFiles = new ArrayList<EncryptedFileDob>();
 		
 		if (!droppedElement.isDirectory()) {
 			if (droppedElement.getName().contains(".DS_Store")) {

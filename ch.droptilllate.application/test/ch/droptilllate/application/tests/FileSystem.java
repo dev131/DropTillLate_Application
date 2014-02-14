@@ -1,11 +1,15 @@
 package ch.droptilllate.application.tests;
 
+import static org.junit.Assert.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
@@ -53,10 +57,10 @@ public class FileSystem {
 		EncryptedFileDob fdob = new EncryptedFileDob(id, name, type, size,
 				date, path, containerID);
 		newFiles.add(fdob);
-		ifileSystem.encryptFile(newFiles,
-				"/Users/marcobetschart/Documents/BDA_project/TestFolder/");
-		ifileSystem.decryptFile(newFiles,
-				"/Users/marcobetschart/Documents/BDA_project/TestFolder/");
+//		ifileSystem.encryptFile(newFiles,
+//				"/Users/marcobetschart/Documents/BDA_project/TestFolder/");
+//		ifileSystem.decryptFile(newFiles,
+//				"/Users/marcobetschart/Documents/BDA_project/TestFolder/");
 		ifileSystem.deleteFile(newFiles);
 	}
 

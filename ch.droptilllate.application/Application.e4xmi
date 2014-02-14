@@ -3,35 +3,33 @@
   <children xsi:type="basic:TrimmedWindow" xmi:id="_puo28INwEeOZSfPuT6ZnVQ" label="ch.droptilllate.application" width="900" height="600">
     <children xsi:type="advanced:PerspectiveStack" xmi:id="_puqFFoNwEeOZSfPuT6ZnVQ">
       <children xsi:type="advanced:Perspective" xmi:id="_puqFF4NwEeOZSfPuT6ZnVQ">
-        <children xsi:type="basic:PartSashContainer" xmi:id="_mOxXkIRREeO1MbzHOfxL0A" elementId="ch.droptilllate.application.partsashcontainer.0" horizontal="true">
-          <children xsi:type="basic:PartStack" xmi:id="__v9S0IRREeO1MbzHOfxL0A" elementId="ch.droptilllate.application.partstack.0" selectedElement="_ggtJ8IN_EeOPbN9mpPOXoQ">
-            <children xsi:type="basic:Part" xmi:id="_ggtJ8IN_EeOPbN9mpPOXoQ" elementId="ch.droptilllate.application.part.decryptedview" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.views.EncryptedView" label="Decrypted">
-              <menus xsi:type="menu:PopupMenu" xmi:id="_2duWYIdaEeO6wsyQtk52Vg" elementId="ch.droptilllate.application.popupmenu.table" label="Table Menu">
-                <children xsi:type="menu:HandledMenuItem" xmi:id="_4l8AEIdaEeO6wsyQtk52Vg" elementId="ch.droptilllate.application.handledmenuitem.Open" label="Open" command="_Ku9s4IdZEeO6wsyQtk52Vg"/>
-                <children xsi:type="menu:HandledMenuItem" xmi:id="_7KavAIdaEeO6wsyQtk52Vg" elementId="ch.droptilllate.application.handledmenuitem.Delete" label="Delete" command="_PAnvUIdZEeO6wsyQtk52Vg"/>
-                <children xsi:type="menu:HandledMenuItem" xmi:id="_WAKpIJAREeOHkoJaezvPIA" elementId="ch.droptilllate.application.handledmenuitem.NewFolder" label="New Folder" command="_euHAYIN-EeOPbN9mpPOXoQ"/>
-              </menus>
-            </children>
-            <children xsi:type="basic:Part" xmi:id="_cdzCMIRQEeO1MbzHOfxL0A" elementId="ch.droptilllate.application.part.encryptedview" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.views.DecryptedView" label="Encrypted"/>
+        <children xsi:type="basic:PartSashContainer" xmi:id="_zIcCwJWWEeOV_sbJE0cJGg" elementId="ch.droptilllate.application.partsashcontainer.0">
+          <children xsi:type="basic:Part" xmi:id="_ggtJ8IN_EeOPbN9mpPOXoQ" elementId="ch.droptilllate.application.part.decryptedview" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.views.EncryptedView" label="Decrypted">
+            <menus xsi:type="menu:PopupMenu" xmi:id="_2duWYIdaEeO6wsyQtk52Vg" elementId="ch.droptilllate.application.popupmenu.table" label="Table Menu">
+              <children xsi:type="menu:HandledMenuItem" xmi:id="_4l8AEIdaEeO6wsyQtk52Vg" elementId="ch.droptilllate.application.handledmenuitem.Open" label="Open" command="_Ku9s4IdZEeO6wsyQtk52Vg"/>
+              <children xsi:type="menu:HandledMenuItem" xmi:id="_7KavAIdaEeO6wsyQtk52Vg" elementId="ch.droptilllate.application.handledmenuitem.Delete" label="Delete" command="_PAnvUIdZEeO6wsyQtk52Vg"/>
+              <children xsi:type="menu:HandledMenuItem" xmi:id="_WAKpIJAREeOHkoJaezvPIA" elementId="ch.droptilllate.application.handledmenuitem.NewFolder" label="New Folder" command="_euHAYIN-EeOPbN9mpPOXoQ"/>
+            </menus>
           </children>
+          <children xsi:type="basic:Part" xmi:id="_stQhUJWREeOV_sbJE0cJGg" elementId="ch.droptilllate.application.part.0" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.views.LogView"/>
         </children>
       </children>
     </children>
     <mainMenu xmi:id="_pupeDYNwEeOZSfPuT6ZnVQ" elementId="menu:org.eclipse.ui.main.menu">
       <children xsi:type="menu:Menu" xmi:id="_puqFEINwEeOZSfPuT6ZnVQ" label="File">
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_puqFEYNwEeOZSfPuT6ZnVQ" label="Open" iconURI="platform:/plugin/ch.droptilllate.application/icons/sample.png" command="_pupeBINwEeOZSfPuT6ZnVQ"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_puqFEYNwEeOZSfPuT6ZnVQ" label="Open" iconURI="platform:/plugin/ch.droptilllate.application/icons/sample.png"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_puqFEoNwEeOZSfPuT6ZnVQ" label="Save" iconURI="platform:/plugin/ch.droptilllate.application/icons/save_edit.png" command="_pupeB4NwEeOZSfPuT6ZnVQ"/>
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_puqFE4NwEeOZSfPuT6ZnVQ" label="Quit" command="_pupeAINwEeOZSfPuT6ZnVQ"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_puqFE4NwEeOZSfPuT6ZnVQ" label="Quit" iconURI="" command="_pupeAINwEeOZSfPuT6ZnVQ"/>
       </children>
       <children xsi:type="menu:Menu" xmi:id="_puqFFINwEeOZSfPuT6ZnVQ" label="Help">
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_puqFFYNwEeOZSfPuT6ZnVQ" label="About" command="_pupeCoNwEeOZSfPuT6ZnVQ"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_puqFFYNwEeOZSfPuT6ZnVQ" label="About"/>
       </children>
     </mainMenu>
     <trimBars xmi:id="_puqsIYNwEeOZSfPuT6ZnVQ">
       <children xsi:type="menu:ToolBar" xmi:id="_puqsIoNwEeOZSfPuT6ZnVQ" elementId="toolbar:org.eclipse.ui.main.toolbar">
-        <children xsi:type="menu:HandledToolItem" xmi:id="_puqsI4NwEeOZSfPuT6ZnVQ" iconURI="platform:/plugin/ch.droptilllate.application/icons/sample.png" command="_pupeBINwEeOZSfPuT6ZnVQ"/>
         <children xsi:type="menu:HandledToolItem" xmi:id="_puqsJINwEeOZSfPuT6ZnVQ" iconURI="platform:/plugin/ch.droptilllate.application/icons/save_edit.png" command="_pupeB4NwEeOZSfPuT6ZnVQ"/>
-        <children xsi:type="menu:HandledToolItem" xmi:id="_t-CHMIN-EeOPbN9mpPOXoQ" elementId="ch.droptilllate.application.handledtoolitem.newFile" iconURI="platform:/plugin/ch.droptilllate.application/icons/folder_add.png" command="_euHAYIN-EeOPbN9mpPOXoQ"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_t-CHMIN-EeOPbN9mpPOXoQ" elementId="ch.droptilllate.application.handledtoolitem.newFolder" iconURI="platform:/plugin/ch.droptilllate.application/icons/folder_add.png" command="_euHAYIN-EeOPbN9mpPOXoQ"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_Ryo0UJWZEeOV_sbJE0cJGg" elementId="ch.droptilllate.application.handledtoolitem.0"/>
       </children>
     </trimBars>
     <trimBars xmi:id="_qv72YITlEeOE5pTDi_Agfw" elementId="ch.droptilllate.application.trimbar.0" side="Bottom">
@@ -39,29 +37,25 @@
     </trimBars>
   </children>
   <handlers xmi:id="_pupeAYNwEeOZSfPuT6ZnVQ" elementId="ch.droptilllate.application.handler.quitCommand" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.handlers.QuitHandler" command="_pupeAINwEeOZSfPuT6ZnVQ"/>
-  <handlers xmi:id="_pupeBYNwEeOZSfPuT6ZnVQ" elementId="ch.droptilllate.application.handler.openCommand" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.handlers.OpenHandler" command="_pupeBINwEeOZSfPuT6ZnVQ"/>
   <handlers xmi:id="_pupeCINwEeOZSfPuT6ZnVQ" elementId="ch.droptilllate.application.handler.saveCommand" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.handlers.SaveHandler" command="_pupeB4NwEeOZSfPuT6ZnVQ"/>
-  <handlers xmi:id="_pupeC4NwEeOZSfPuT6ZnVQ" elementId="ch.droptilllate.application.handler.aboutCommand" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.handlers.AboutHandler" command="_pupeCoNwEeOZSfPuT6ZnVQ"/>
-  <handlers xmi:id="_RME-wIN-EeOPbN9mpPOXoQ" elementId="ch.droptilllate.application.handler.newFile" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.handlers.NewFolderHandler" command="_euHAYIN-EeOPbN9mpPOXoQ"/>
+  <handlers xmi:id="_RME-wIN-EeOPbN9mpPOXoQ" elementId="ch.droptilllate.application.handler.newFolder" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.handlers.NewFolderHandler" command="_euHAYIN-EeOPbN9mpPOXoQ"/>
   <handlers xmi:id="_RSzNUIdZEeO6wsyQtk52Vg" elementId="ch.droptilllate.application.handler.open" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.handlers.OpenFileHandler" command="_Ku9s4IdZEeO6wsyQtk52Vg"/>
   <handlers xmi:id="_X6WwIIdZEeO6wsyQtk52Vg" elementId="ch.droptilllate.application.handler.deleteFile" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.handlers.DeleteFileHandler" command="_PAnvUIdZEeO6wsyQtk52Vg"/>
   <bindingTables xmi:id="_pupeAoNwEeOZSfPuT6ZnVQ" bindingContext="_puo2-INwEeOZSfPuT6ZnVQ">
     <bindings xmi:id="_pupeA4NwEeOZSfPuT6ZnVQ" keySequence="M1+Q" command="_pupeAINwEeOZSfPuT6ZnVQ"/>
-    <bindings xmi:id="_pupeBoNwEeOZSfPuT6ZnVQ" keySequence="M1+O" command="_pupeBINwEeOZSfPuT6ZnVQ"/>
+    <bindings xmi:id="_pupeBoNwEeOZSfPuT6ZnVQ" keySequence="M1+O"/>
     <bindings xmi:id="_pupeCYNwEeOZSfPuT6ZnVQ" keySequence="M1+S" command="_pupeB4NwEeOZSfPuT6ZnVQ"/>
-    <bindings xmi:id="_pupeDINwEeOZSfPuT6ZnVQ" keySequence="M1+A" command="_pupeCoNwEeOZSfPuT6ZnVQ"/>
+    <bindings xmi:id="_pupeDINwEeOZSfPuT6ZnVQ" keySequence="M1+A"/>
   </bindingTables>
   <rootContext xmi:id="_puo2-INwEeOZSfPuT6ZnVQ" elementId="org.eclipse.ui.contexts.dialogAndWindow" name="In Dialog and Windows">
     <children xmi:id="_puo2-YNwEeOZSfPuT6ZnVQ" elementId="org.eclipse.ui.contexts.window" name="In Windows"/>
     <children xmi:id="_puo2-oNwEeOZSfPuT6ZnVQ" elementId="org.eclipse.ui.contexts.dialog" name="In Dialogs"/>
   </rootContext>
   <commands xmi:id="_pupeAINwEeOZSfPuT6ZnVQ" elementId="org.eclipse.ui.file.exit" commandName="quitCommand"/>
-  <commands xmi:id="_pupeBINwEeOZSfPuT6ZnVQ" elementId="ch.droptilllate.application.open" commandName="openCommand"/>
   <commands xmi:id="_pupeB4NwEeOZSfPuT6ZnVQ" elementId="org.eclipse.ui.file.save" commandName="saveCommand"/>
-  <commands xmi:id="_pupeCoNwEeOZSfPuT6ZnVQ" elementId="org.eclipse.ui.help.aboutAction" commandName="aboutCommand"/>
-  <commands xmi:id="_euHAYIN-EeOPbN9mpPOXoQ" elementId="ch.droptilllate.application.command.newFile" commandName="newFile"/>
+  <commands xmi:id="_euHAYIN-EeOPbN9mpPOXoQ" elementId="ch.droptilllate.application.command.newFolder" commandName="newFolder"/>
   <commands xmi:id="_Ku9s4IdZEeO6wsyQtk52Vg" elementId="ch.droptilllate.application.command.open" commandName="open"/>
-  <commands xmi:id="_PAnvUIdZEeO6wsyQtk52Vg" elementId="ch.droptilllate.application.command.Delete" commandName="delete"/>
+  <commands xmi:id="_PAnvUIdZEeO6wsyQtk52Vg" elementId="ch.droptilllate.application.command.delete" commandName="delete"/>
   <addons xmi:id="_puo28YNwEeOZSfPuT6ZnVQ" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_puo28oNwEeOZSfPuT6ZnVQ" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_puo284NwEeOZSfPuT6ZnVQ" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>

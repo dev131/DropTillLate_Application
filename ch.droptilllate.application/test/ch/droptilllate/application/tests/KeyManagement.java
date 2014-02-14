@@ -7,6 +7,9 @@ import ch.droptilllate.application.dao.ContainerDao;
 import ch.droptilllate.application.dao.ShareFolderDao;
 import ch.droptilllate.application.dnb.Container;
 import ch.droptilllate.application.dnb.ShareFolder;
+import ch.droptilllate.application.query.ContainerQuery;
+import ch.droptilllate.application.query.ShareFolderQuery;
+
 public class KeyManagement {
 
 	@Test

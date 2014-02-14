@@ -1,8 +1,19 @@
 package ch.droptilllate.application.dao;
 
-
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
+import org.xml.sax.SAXException;
 
 import ch.droptilllate.application.com.IXmlDatabase;
 import ch.droptilllate.application.dnb.EncryptedFolder;
