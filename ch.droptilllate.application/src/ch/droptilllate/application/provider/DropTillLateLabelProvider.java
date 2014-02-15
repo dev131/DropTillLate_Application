@@ -15,7 +15,7 @@ import org.osgi.framework.FrameworkUtil;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 
 import ch.droptilllate.application.model.EncryptedFileDob;
-import ch.droptilllate.application.model.EncryptedFolderDob;
+import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.views.EncryptedView;
 import ch.droptilllate.application.views.Messages;
 import ch.droptilllate.application.views.TableIdentifier;
@@ -62,13 +62,13 @@ public class DropTillLateLabelProvider implements ITableLabelProvider {
 			}
 		}
 
-		else if (element instanceof EncryptedFolderDob) {
+		else if (element instanceof GhostFolderDob) {
 			switch (identifier) {
 			case DATE:
-				text = sdf.format(((EncryptedFolderDob) element).getDate());
+				text = sdf.format(((GhostFolderDob) element).getDate());
 				break;
 			case NAME:
-				text = ((EncryptedFolderDob) element).getName();
+				text = ((GhostFolderDob) element).getName();
 				break;
 			case SIZE:
 				text = "";
@@ -90,7 +90,7 @@ public class DropTillLateLabelProvider implements ITableLabelProvider {
 		String fileType = "";
 
 		if (columnIndex == 0) {
-			if (element instanceof EncryptedFolderDob) {
+			if (element instanceof GhostFolderDob) {
 				return getImage("folder.png");
 			} else if (element instanceof EncryptedFileDob) {
 				fileType = ((EncryptedFileDob) element).getType();

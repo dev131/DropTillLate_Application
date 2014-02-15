@@ -9,7 +9,7 @@ import org.eclipse.jface.viewers.Viewer;
 import ch.droptilllate.application.dnb.DroppedElement;
 import ch.droptilllate.application.listener.DeltaEvent;
 import ch.droptilllate.application.listener.IDeltaListener;
-import ch.droptilllate.application.model.EncryptedFolderDob;
+import ch.droptilllate.application.model.GhostFolderDob;
 
 public class DropTillLateContentProvider implements ITreeContentProvider,
 		IDeltaListener {
@@ -25,10 +25,10 @@ public class DropTillLateContentProvider implements ITreeContentProvider,
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		this.viewer = (TreeViewer) viewer;
 		if (oldInput != null) {
-			removeListenerFrom((EncryptedFolderDob) oldInput);
+			removeListenerFrom((GhostFolderDob) oldInput);
 		}
 		if (newInput != null) {
-			addListenerTo((EncryptedFolderDob) newInput);
+			addListenerTo((GhostFolderDob) newInput);
 		}
 	}
 
@@ -36,11 +36,11 @@ public class DropTillLateContentProvider implements ITreeContentProvider,
 	 * Because the domain model does not have a richer listener model,
 	 * recursively remove this listener from each child box of the given box.
 	 */
-	protected void removeListenerFrom(EncryptedFolderDob folder) {
+	protected void removeListenerFrom(GhostFolderDob folder) {
 		folder.removeListener(this);
 		for (Iterator iterator = folder.getFolders().iterator(); iterator
 				.hasNext();) {
-			EncryptedFolderDob aFolder = (EncryptedFolderDob) iterator.next();
+			GhostFolderDob aFolder = (GhostFolderDob) iterator.next();
 			removeListenerFrom(aFolder);
 		}
 	}
@@ -49,11 +49,11 @@ public class DropTillLateContentProvider implements ITreeContentProvider,
 	 * Because the domain model does not have a richer listener model,
 	 * recursively add this listener to each child box of the given box.
 	 */
-	protected void addListenerTo(EncryptedFolderDob folder) {
+	protected void addListenerTo(GhostFolderDob folder) {
 		folder.addListener(this);
 		for (Iterator iterator = folder.getFolders().iterator(); iterator
 				.hasNext();) {
-			EncryptedFolderDob aFolder = (EncryptedFolderDob) iterator.next();
+			GhostFolderDob aFolder = (GhostFolderDob) iterator.next();
 			addListenerTo(aFolder);
 		}
 	}
@@ -65,8 +65,8 @@ public class DropTillLateContentProvider implements ITreeContentProvider,
 
 	@Override
 	public Object[] getChildren(Object parentElement) {
-		if (parentElement instanceof EncryptedFolderDob) {
-			EncryptedFolderDob encryptedFolder = (EncryptedFolderDob) parentElement;
+		if (parentElement instanceof GhostFolderDob) {
+			GhostFolderDob encryptedFolder = (GhostFolderDob) parentElement;
 			return concat(encryptedFolder.getFolders().toArray(),
 					encryptedFolder.getFiles().toArray());
 		}

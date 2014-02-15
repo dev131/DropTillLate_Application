@@ -1,6 +1,7 @@
 package ch.droptilllate.application.dao;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.w3c.dom.Element;
@@ -10,7 +11,9 @@ import org.w3c.dom.NodeList;
 import ch.droptilllate.application.com.IXmlDatabase;
 import ch.droptilllate.application.dnb.ShareFolder;
 import ch.droptilllate.application.model.EncryptedFileDob;
+import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.query.FileQuery;
+import ch.droptilllate.application.query.GhostFolderQuery;
 import ch.droptilllate.application.query.ShareFolderQuery;
 
 public class ShareFolderDao implements IXmlDatabase {
@@ -31,16 +34,28 @@ public class ShareFolderDao implements IXmlDatabase {
 	}
 
 	@Override
-	public boolean updateElement(Object obj) {
+	public void updateElement(Object obj) {
 		if (sharefolderQuery == null)
 			sharefolderQuery = new ShareFolderQuery();		
-		return  sharefolderQuery.updateShareFolder((ShareFolder) obj);	
+		sharefolderQuery.updateShareFolder((ShareFolder) obj);	
 	}
 
 	@Override
-	public boolean deleteElement(Object obj) {
+	public void deleteElement(Object obj) {
+		List<ShareFolder> sharefolderList = (List<ShareFolder>) obj;
+		Iterator<ShareFolder> sharefolderIterator = sharefolderList.iterator();	
+		if (sharefolderQuery == null)
+			sharefolderQuery = new ShareFolderQuery();
+		while (sharefolderIterator.hasNext()){
+			sharefolderQuery.deleteShareFolder(sharefolderIterator.next());
+		}		
+	}
+
+	@Override
+	public Object checkDatabase(Object obj) {
+		List<ShareFolder> shareFolderList = (List<ShareFolder>) obj;
 		if (sharefolderQuery == null)
 			sharefolderQuery = new ShareFolderQuery();		
-		return  sharefolderQuery.deleteShareFolder((ShareFolder) obj);	
+		return sharefolderQuery.checkDatabase(shareFolderList);
 	}
 }

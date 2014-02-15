@@ -12,18 +12,15 @@ import ch.droptilllate.application.dnb.EncryptedFile;
 
 public class EncryptedFileDob extends EncryptedFile {
 
-	private int id;
-
 	// =========================================================================
 
 	/**
 	 * Used when new file was added.
 	 */
-	public EncryptedFileDob(int id, EncryptedFile encryptedFile) {
-		super(encryptedFile.getName(), encryptedFile.getType(), encryptedFile
+	public EncryptedFileDob(EncryptedFile encryptedFile) {
+		super(encryptedFile.getId(),encryptedFile.getName(), encryptedFile.getType(), encryptedFile
 				.getSize(), encryptedFile.getDate(), encryptedFile.getPath(),
 				encryptedFile.getContainerID(), encryptedFile.getParent());
-		this.id = id;
 	}
 
 	/**
@@ -37,19 +34,11 @@ public class EncryptedFileDob extends EncryptedFile {
 	 * @param path
 	 * @param file
 	 */
-	public EncryptedFileDob(int id, String name, String type, long size,
+	public EncryptedFileDob(Integer id, String name, String type, long size,
 			Date date, String path, int containerID) {
-		super(name, type, size, date, path, containerID);
-		this.id = id;
+		super(id,name, type, size, date, path, containerID);
 	}
 
 	// =========================================================================
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
 }

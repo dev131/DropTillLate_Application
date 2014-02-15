@@ -6,37 +6,38 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import ch.droptilllate.application.com.IXmlDatabase;
 import ch.droptilllate.application.dnb.EncryptedFile;
+import ch.droptilllate.application.dnb.GhostFolder;
 import ch.droptilllate.application.model.EncryptedFileDob;
-import ch.droptilllate.application.model.EncryptedFolderDob;
+import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.query.FileQuery;
+import ch.droptilllate.application.query.GhostFolderQuery;
 
 
 public class EncryptedFileDao implements IXmlDatabase {
 
 	private FileQuery filequery;
 
-	public List<EncryptedFileDob> getFilesForFolder(EncryptedFolderDob folder)
+	public List<EncryptedFileDob> getFilesInFolder(GhostFolderDob folder)
 	{
 		if (filequery == null)
 			filequery = new FileQuery();
 		List<EncryptedFileDob> files = new ArrayList<EncryptedFileDob>();
-		files = filequery.getFile(folder);
+		files = filequery.getFiles(folder);
 		return files;
 	}
 
 	@Override
 	public Object newElement(Object obj) {
-		EncryptedFileDob encryptedFileDob = null;
 		if (filequery == null)
 			filequery = new FileQuery();
-		int id = filequery.newFile((EncryptedFile) obj);
-
-		encryptedFileDob = new EncryptedFileDob(id, (EncryptedFile) obj);
-		return encryptedFileDob;
+		EncryptedFile tmp = filequery.newFile((EncryptedFile) obj);
+		EncryptedFileDob dob = new EncryptedFileDob(tmp);
+		return dob;
 	}
 
 	@Override
@@ -49,24 +50,29 @@ public class EncryptedFileDao implements IXmlDatabase {
 	}
 
 	@Override
-	public boolean updateElement(Object obj) {
-		boolean successful = false;
+	public void updateElement(Object obj) {
 		if(filequery == null)
 			filequery = new FileQuery();	
-		successful = filequery.updateFile((EncryptedFileDob) obj);
-		return successful;
+		filequery.updateFile((EncryptedFileDob) obj);
 	}
 
 	@Override
-	public boolean deleteElement(Object obj) {
+	public void deleteElement(Object obj) {
 		List<EncryptedFileDob> fileList = (List<EncryptedFileDob>) obj;
-		boolean successful = false;
-		if(filequery == null)
+		Iterator<EncryptedFileDob> fileIterator = fileList.iterator();	
+		if (filequery == null)
 			filequery = new FileQuery();
-		for(int i=0; i< fileList.size(); i++){
-			successful = filequery.deleteFile(fileList.get(i));
+		while (fileIterator.hasNext()){
+			filequery.deleteFile(fileIterator.next());
 		}		
-		return successful;
+	}
+
+	@Override
+	public Object checkDatabase(Object obj) {
+		List<EncryptedFileDob> EncryptedFileDob = (List<EncryptedFileDob>) obj;
+		if (filequery == null)
+			filequery = new FileQuery();		
+		return filequery.checkDatabase(EncryptedFileDob);
 	}
 
 }

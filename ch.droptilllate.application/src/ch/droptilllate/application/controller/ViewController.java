@@ -28,6 +28,8 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.xml.sax.SAXException;
 
+import ch.droptilllate.application.com.CRUDCryptedFileResult;
+import ch.droptilllate.application.com.FileHandler;
 import ch.droptilllate.application.com.FileSystemCom;
 import ch.droptilllate.application.com.IFileSystemCom;
 import ch.droptilllate.application.com.IXmlDatabase;
@@ -37,14 +39,14 @@ import ch.droptilllate.application.dao.ContainerDao;
 import ch.droptilllate.application.dao.EncryptedFileDao;
 import ch.droptilllate.application.dao.EncryptedFolderDao;
 import ch.droptilllate.application.dao.ShareFolderDao;
-import ch.droptilllate.application.dnb.Container;
+import ch.droptilllate.application.dnb.EncryptedContainer;
 import ch.droptilllate.application.dnb.DroppedElement;
 import ch.droptilllate.application.dnb.EncryptedFile;
-import ch.droptilllate.application.dnb.EncryptedFolder;
+import ch.droptilllate.application.dnb.GhostFolder;
 import ch.droptilllate.application.dnb.ShareFolder;
 import ch.droptilllate.application.listener.TreeDragSourceListener;
 import ch.droptilllate.application.model.EncryptedFileDob;
-import ch.droptilllate.application.model.EncryptedFolderDob;
+import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.provider.DropTillLateContentProvider;
 import ch.droptilllate.application.provider.DropTillLateLabelProvider;
 import ch.droptilllate.application.views.FileNameDialog;
@@ -52,21 +54,21 @@ import ch.droptilllate.application.views.LoginView;
 import ch.droptilllate.application.views.Messages;
 import ch.droptilllate.application.views.Status;
 import ch.droptilllate.application.views.TableIdentifier;
-import ch.droptilllate.filesystem.api.FileInfo;
+import ch.droptilllate.filesystem.info.FileInfo;
 
 public class ViewController {
 	private Tree tree;
 	private TreeViewer viewer;
-	private EncryptedFolderDob root;
+	private GhostFolderDob root;
 	private DroppedElement elementCurrent;
 	private List<EncryptedFileDob> fileList;
-	private List<EncryptedFolderDob> folderList;
+	private List<GhostFolderDob> folderList;
 	private static ViewController instance = null;
 	private List<EncryptedFileDob> actualDropFiles;
-	private String password ="";
+	private String password = "";
 	private LoginView dialog;
 	private Shell shell;
-	
+
 	public ViewController() {
 		// Exists only to defeat instantiation.
 	}
@@ -98,36 +100,35 @@ public class ViewController {
 			tree.getColumn(identifier.ordinal()).setWidth(
 					identifier.columnWidth);
 		}
-		//LOGIN AREA
-		//Register Password
+		// LOGIN AREA
+		// Register Password
 
-		//TODO init password
+		// TODO init password
 		KeyManager km = new KeyManager();
-		if(!km.checkMasterPasswordExisting()){ 
-			 dialog = new LoginView(shell, Messages.getCreatePassword());
+		if (!km.checkMasterPasswordExisting()) {
+			dialog = new LoginView(shell, Messages.getCreatePassword());
+			dialog.create();
+			if (dialog.open() == Window.OK) {
+				password = dialog.getPassword();
+				km.initPassword(password, Messages.getSaltMasterPassword());
+			}
+		} else {
+			while (!km.checkPassword(password, Messages.getSaltMasterPassword(),0)) {
+				dialog = new LoginView(shell, Messages.getLoginPassword());
 				dialog.create();
 				if (dialog.open() == Window.OK) {
-				  password = dialog.getPassword();	  			
-				  km.initPassword(password, Messages.getSaltMasterPassword());
+					password = dialog.getPassword();
 				}
-		}
-		else{
-			while(!km.checkPassword(password, Messages.getSaltMasterPassword())){
-				 dialog = new LoginView(shell, Messages.getLoginPassword());
-					dialog.create();
-					if (dialog.open() == Window.OK) {
-					  password = dialog.getPassword();	  
-					} 
 			}
 		}
-		System.out.println("Successfull login");	
+		System.out.println("Successfull login");
 		// Get InitialInput
 		root = getInitialInput();
 		viewer.setInput(root);
 		viewer.expandToLevel(1);
 		// Register Drag&Drop Listener
 		registerDragDrop();
-	
+
 	}
 
 	/**
@@ -150,9 +151,9 @@ public class ViewController {
 	/**
 	 * Returns the initial input for the table, right after application start.
 	 */
-	private EncryptedFolderDob getInitialInput() {
+	private GhostFolderDob getInitialInput() {
 		// Create RootDob
-		root = new EncryptedFolderDob(0, "Root-Folder", new Date(
+		root = new GhostFolderDob(0, "Root-Folder", new Date(
 				System.currentTimeMillis()), "");
 		getFolderContent(root);
 		return root;
@@ -161,15 +162,16 @@ public class ViewController {
 	/**
 	 * Needed by getInitialInput() to fill all (sub)folders with files.
 	 */
-	private void getFolderContent(EncryptedFolderDob folder) {
+	private void getFolderContent(GhostFolderDob folder) {
 		IXmlDatabase encryptedFolderDao = new EncryptedFolderDao();
 		IXmlDatabase encryptedFileDao = new EncryptedFileDao();
-		folder.addFiles(((EncryptedFileDao) encryptedFileDao).getFilesForFolder(folder));
-		List<EncryptedFolderDob> childFolders = ((EncryptedFolderDao) encryptedFolderDao)
-				.getFoldersForFolder(folder);
+		folder.addFiles(((EncryptedFileDao) encryptedFileDao)
+				.getFilesInFolder(folder));
+		List<GhostFolderDob> childFolders = ((EncryptedFolderDao) encryptedFolderDao)
+				.getFoldersInFolder(folder);
 		if (childFolders != null && childFolders.size() > 0) {
 			folder.addFolders(childFolders);
-			for (EncryptedFolderDob childFolder : childFolders) {
+			for (GhostFolderDob childFolder : childFolders) {
 				getFolderContent(childFolder);
 			}
 		}
@@ -196,24 +198,56 @@ public class ViewController {
 	 */
 	public void deleteFile() {
 		fileList = new ArrayList<EncryptedFileDob>();
-		folderList = new ArrayList<EncryptedFolderDob>();
+		folderList = new ArrayList<GhostFolderDob>();
 		// List inserts and prepare for delete
 		TreeSelection currentSelection = (TreeSelection) viewer.getSelection();
-		// DELETE IN TREE
-		Iterator<DroppedElement> droppedElementsIterator = currentSelection
-				.iterator();
+		//FIll selection in lists
+		EncryptedFileDob fileToDelete= null;
+		GhostFolderDob folderToDelete=null;
+		Iterator<DroppedElement> droppedElementsIterator = currentSelection.iterator();
 		while (droppedElementsIterator.hasNext()) {
-			deleteTreeElement(droppedElementsIterator.next(), true);
+			DroppedElement element = droppedElementsIterator.next();			
+			if (element instanceof GhostFolderDob){
+				 folderToDelete = (GhostFolderDob) element;
+				folderList.add(folderToDelete);}
+			if (element instanceof EncryptedFileDob){
+				fileToDelete = (EncryptedFileDob) element;
+				fileList.add(fileToDelete);}
 		}
-		IXmlDatabase folderDao = new EncryptedFolderDao();
-		IXmlDatabase fileDao = new EncryptedFileDao();
-		// Send to Dao
-		folderDao.deleteElement(folderList);
-		fileDao.deleteElement(fileList);
-		//Delete on Filesystem
-		FileSystemCom ifileSystem = new FileSystemCom();
-		ifileSystem.deleteFile(fileList);
+		// Delete on Filesystem
+		FileHandler fileHandler = new FileHandler();
+		// TODO Check successlist
+		CRUDCryptedFileResult result = fileHandler.deleteFilesOnFileSystem(fileList);
+		for(EncryptedFileDob fileDob : result.getEncryptedFileListSuccess()){
+			Status status = Status.getInstance();
+			status.setMessage(fileDob.getName() + " -> successfully deleted");
+		}
+		//Delete on DB
+		fileHandler.deleteFilesOnDatabase(result.getEncryptedFileListSuccess());
+		// Check Folder
+		for(EncryptedFileDob fileDob : result.getEncryptedFileListError()){
+			for(GhostFolderDob folderDob : folderList){
+				if(folderDob.getId() == fileDob.getParent().getId()){
+					folderList.remove(folderDob);
+				}
+			}
+		}
+		fileHandler.deleteFolderOnDatabase(folderList);
+		deleteTreeFiles(fileList);
+		deleteTreeFolders(folderList);
 		
+	}
+
+	private void deleteTreeFolders(List<GhostFolderDob> folderList2) {
+			for (GhostFolderDob nextFolderToDelete : folderList2) {
+				nextFolderToDelete.getParent().removeFolder(nextFolderToDelete);
+			}		
+	}
+
+	private void deleteTreeFiles(List<EncryptedFileDob> fileList2) {
+		for (EncryptedFileDob nextFileToDelete : fileList2) {
+			nextFileToDelete.getParent().removeFile(nextFileToDelete);
+		}
 	}
 
 	/**
@@ -228,7 +262,7 @@ public class ViewController {
 			for (int i = 0; i < treeItems.length; i++) {
 				Object obj = treeItems[i].getData();
 				// IF selection a Folder
-				if (obj.getClass() == EncryptedFolderDob.class) {
+				if (obj.getClass() == GhostFolderDob.class) {
 					// do Nothing
 				}
 				// IF selection a File
@@ -238,9 +272,17 @@ public class ViewController {
 				}
 			}
 		}
-		FileSystemCom ifileSystem = new FileSystemCom();
-		ifileSystem.decryptFile(fileList, Messages.getTempFolder());
-
+		// TODO check succesfull list
+		FileHandler fileHandler = new FileHandler();
+		CRUDCryptedFileResult result = fileHandler.decryptFiles(fileList, Messages.getTempFolder());
+		for(EncryptedFileDob fileDob : result.getEncryptedFileListSuccess()){
+			Status status = Status.getInstance();
+			status.setMessage(fileDob.getName() + " -> decryption worked");
+		}
+		for(EncryptedFileDob fileDob : result.getEncryptedFileListError()){
+			Status status = Status.getInstance();
+			status.setMessage(fileDob.getName() + " -> decryption not worked");
+		}
 	}
 
 	/**
@@ -251,128 +293,81 @@ public class ViewController {
 	public void newFolder(String name) {
 		IXmlDatabase folderDao = new EncryptedFolderDao();
 		File newFile = new File(name);
-		EncryptedFolder newfolder = new EncryptedFolder(newFile, root);
-	
-		EncryptedFolderDob encryptedPersistedFolder = 	(EncryptedFolderDob) folderDao.newElement(newfolder);
-		root.addFolder(encryptedPersistedFolder);
-		folderDao = new EncryptedFolderDao();
-		folderDao.newElement(newfolder);
-	}
-
-	/**
-	 * Delete Element in treeview
-	 * 
-	 * @param element
-	 * DroppedElement
-	 * @param rootFile
-	 */
-	private void deleteTreeElement(DroppedElement element, boolean rootFile) {
-		if (element instanceof EncryptedFileDob) {
-			EncryptedFileDob fileToDelete = (EncryptedFileDob) element;
-			boolean success = true;
-			if (success) {
-				// element.getParent().removeFile(fileToDelete);
-				fileList.add(fileToDelete);
-				// // this.encryptedFileDao.deleteFile(fileToDelete);
-				// // log.debug("database entry deleted");
-				if (rootFile)
-					(element).getParent().removeFile(fileToDelete);
-			}
-		} else if (element instanceof EncryptedFolderDob) {
-			EncryptedFolderDob folderToDelete = (EncryptedFolderDob) element;
-			for (EncryptedFolderDob nextFolderToDecrypt : folderToDelete
-					.getFolders()) {
-				deleteTreeElement(nextFolderToDecrypt, false);
-			}
-			for (EncryptedFileDob nextFileToDecrypt : folderToDelete.getFiles()) {
-				deleteTreeElement(nextFileToDecrypt, false);
-			}
-			folderList.add(folderToDelete);
-			// encryptedFolderDao.deleteFolder(folderToDelete);
-			// log.debug("database entry deleted");
-			if (rootFile)
-				folderToDelete.getParent().removeFolder(folderToDelete);
-		}
+		GhostFolder newfolder = new GhostFolder(null,newFile, root);
+		FileHandler fileHandler = new FileHandler();
+		// insert in DB and Treeview
+		root.addFolder(fileHandler.newFolderDBEntry(newfolder));
 	}
 
 	/**
 	 * DropElements dragOverFolder = ParentFolder
-	 * 
+	 * Insert new DroppedFiles
 	 * @param droppedFileInformation
 	 * @param dragOverFolder
 	 */
-	public void dropElements(String[] droppedFileInformation,
-			EncryptedFolderDob dragOverFolder) {
-
+	public void encryptDropElements(String[] droppedFileInformation,
+			GhostFolderDob dragOverFolder) {
 		actualDropFiles = new ArrayList<EncryptedFileDob>();
+
+		// insert DAO and update VIEW
 		for (String currentDroppedElement : droppedFileInformation) {
-			dropTreeElements(new File(currentDroppedElement),
-					dragOverFolder);
+			dropTreeElements(new File(currentDroppedElement), dragOverFolder);
 		}
-		// TODO delete file and set new Path
-		FileSystemCom ifileSystem = new FileSystemCom();
-		List<FileInfo> result = ifileSystem.encryptFile(actualDropFiles,
-				Messages.getLocalPathDropbox());
-		if (result == null) {
-			// TODO MESSAGE
-			System.out.println("some Files are not stored");
-		} else {
-			updateTreeElements(result, actualDropFiles);
-			updateContainerTable(result);
+		
+		// TODO Insert in Filesystem and Error handling Results
+		FileHandler fileHandler = new FileHandler();
+		CRUDCryptedFileResult result = fileHandler.encryptFiles(
+				actualDropFiles, Messages.getLocalPathDropBoxMaster());
+		//Update DB
+		for(EncryptedFileDob fileDob : result.getEncryptedFileListSuccess()){
+			fileHandler.updateFileOnDatabase(fileDob);
+			EncryptedContainer container = new EncryptedContainer(fileDob.getContainerID(),0);
+			fileHandler.newContainer(container);
+			Status status = Status.getInstance();
+			status.setMessage(fileDob.getName() + " -> encryption worked");
+		}
+		for(EncryptedFileDob fileDob: result.getEncryptedFileListError()){
+			Status status = Status.getInstance();
+			status.setMessage(fileDob.getName() + " -> encryption not worked");
+		}
+		//Delete Error Files on DB
+		fileHandler.deleteFilesOnDatabase(result.getEncryptedFileListError());
+			//TODO maybe dropped element Delete
 			// droppedElement.delete();
 			// droppedFile.setPath(Messages.getLocalPathDropbox());
-		}
-
 	}
 
-	private void updateContainerTable(List<FileInfo> result) {
-		for(int index = 0; index< result.size(); index++){
-			ContainerDao dao = new ContainerDao();
-			//All in mastersharefolder
-			Container container = new Container(result.get(index).getContainerInfo().getContainerID(), 0);
-			dao.newElement(container);
-			
-		}
-		
-	}
-
-	private void updateTreeElements(List<FileInfo> result, List<EncryptedFileDob> droppedFiles) {
-		for(int index = 0; index< droppedFiles.size(); index++){
-			droppedFiles.get(index).setPath(result.get(index).getContainerInfo().getParentContainerPath());
-			droppedFiles.get(index).setContainerID(result.get(index).getContainerInfo().getContainerID());
-			IXmlDatabase encryptedFileDao = new EncryptedFileDao();
-			encryptedFileDao.updateElement(droppedFiles.get(index));
-		}
-	}
-
-	private void dropTreeElements(File droppedElement, EncryptedFolderDob parent) {
-		IXmlDatabase encryptedFolderDao = new EncryptedFolderDao();
-		IXmlDatabase encryptedFileDao = new EncryptedFileDao();
-		List<EncryptedFolderDob> successfullyProcessedFolders = new ArrayList<EncryptedFolderDob>();
-		List<EncryptedFileDob> successfullyProcessedFiles = new ArrayList<EncryptedFileDob>();
-		
+	/**
+	 * Insert Node into treeview
+	 * @param droppedElement
+	 * @param parent
+	 */
+	private void dropTreeElements(File droppedElement, GhostFolderDob parent) {
 		if (!droppedElement.isDirectory()) {
 			if (droppedElement.getName().contains(".DS_Store")) {
 				// TODO Message
 				// log.info(".ds_store File ignored!");
 				return;
 			}
-			EncryptedFile droppedFile = new EncryptedFile(droppedElement,parent);
+			EncryptedFile droppedFile = new EncryptedFile(null,droppedElement,
+					parent);
 			// Insert new Node in DB
-			EncryptedFileDob encryptedPersistedFile = (EncryptedFileDob) encryptedFileDao.newElement(droppedFile);
+			FileHandler fileHandler = new FileHandler();
+			EncryptedFileDob encryptedPersistedFile = fileHandler
+					.newFileDBEntry(droppedFile);
 			parent.addFile(encryptedPersistedFile);
 			// add to list
 			actualDropFiles.add(encryptedPersistedFile);
 		} else {
-			EncryptedFolder droppedFolder = new EncryptedFolder(droppedElement,parent);
-			EncryptedFolderDob encryptedPersistedFolder = (EncryptedFolderDob) encryptedFolderDao.newElement(droppedFolder);
+			GhostFolder droppedFolder = new GhostFolder(null,droppedElement,parent);
+			FileHandler fileHandler = new FileHandler();
+			GhostFolderDob encryptedPersistedFolder = fileHandler
+					.newFolderDBEntry(droppedFolder);
 			parent.addFolder(encryptedPersistedFolder);
-			//persistedNonDeletedFolders.add(encryptedPersistedFolder);
-			// log.debug("Folder persisted");
 			for (File file : droppedElement.listFiles()) {
 				dropTreeElements(file, encryptedPersistedFolder);
 			}
-			//boolean success = droppedElement.delete();
+			// boolean success = droppedElement.delete();
 			// log.debug("Sourcefolder deleted");
 		}
 
@@ -381,35 +376,34 @@ public class ViewController {
 	/**
 	 * ShareFiles
 	 */
-	public void shareFiles() {		
+	public void shareFiles() {
 		fileList = new ArrayList<EncryptedFileDob>();
 		String password = "";
 		dialog = new LoginView(shell, Messages.getCreatePassword());
-			dialog.create();
-			if (dialog.open() == Window.OK) {
-			 password = dialog.getPassword();	  					
-			}
-			// TODO Statusline
-			List<EncryptedFileDob> fileList = new ArrayList<EncryptedFileDob>();
-			// List inserts and prepare for delete
-			TreeItem[] treeItems = tree.getSelection();
-			if (treeItems != null) {
-				for (int i = 0; i < treeItems.length; i++) {
-					Object obj = treeItems[i].getData();
-					// IF selection a Folder
-					if (obj.getClass() == EncryptedFolderDob.class) {
-						// do Nothing
-					}
-					// IF selection a File
-					if (obj.getClass() == EncryptedFileDob.class) {
-						EncryptedFileDob f2 = (EncryptedFileDob) obj;
-						fileList.add(f2);
-					}
+		dialog.create();
+		if (dialog.open() == Window.OK) {
+			password = dialog.getPassword();
+		}
+		// TODO Statusline
+		List<EncryptedFileDob> fileList = new ArrayList<EncryptedFileDob>();
+		// List inserts and prepare for delete
+		TreeItem[] treeItems = tree.getSelection();
+		if (treeItems != null) {
+			for (int i = 0; i < treeItems.length; i++) {
+				Object obj = treeItems[i].getData();
+				// IF selection a Folder
+				if (obj.getClass() == GhostFolderDob.class) {
+					// do Nothing
+				}
+				// IF selection a File
+				if (obj.getClass() == EncryptedFileDob.class) {
+					EncryptedFileDob f2 = (EncryptedFileDob) obj;
+					fileList.add(f2);
 				}
 			}
-			ShareManager shareManager= new ShareManager();
-			shareManager.newShareRelation(fileList, password);
-	
-		
+		}
+		ShareManager shareManager = new ShareManager();
+		shareManager.newShareRelation(fileList, password);
+
 	}
 }

@@ -28,4 +28,5 @@ public class Status extends Observable{
 		notifyObservers(message);
 	}
 	
+	
 }

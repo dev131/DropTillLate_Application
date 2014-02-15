@@ -1,12 +1,18 @@
 package ch.droptilllate.application.dao;
 
+import java.util.Iterator;
+import java.util.List;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import ch.droptilllate.application.com.IXmlDatabase;
-import ch.droptilllate.application.dnb.Container;
+import ch.droptilllate.application.dnb.EncryptedContainer;
+import ch.droptilllate.application.dnb.ShareFolder;
+import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.query.ContainerQuery;
+import ch.droptilllate.application.query.GhostFolderQuery;
 import ch.droptilllate.application.query.ShareFolderQuery;
 
 public class ContainerDao implements IXmlDatabase {
@@ -16,8 +22,8 @@ public class ContainerDao implements IXmlDatabase {
 	public Object newElement(Object obj) {
 		if (containerQuery == null)
 			containerQuery = new ContainerQuery();
-		containerQuery.newContainer((Container) obj);
-		return (Container) obj;
+		containerQuery.newContainer((EncryptedContainer) obj);
+		return (EncryptedContainer) obj;
 		
 	}
 
@@ -29,16 +35,28 @@ public class ContainerDao implements IXmlDatabase {
 	}
 
 	@Override
-	public boolean updateElement(Object obj) {
+	public void updateElement(Object obj) {
 		if (containerQuery == null)
 			containerQuery = new ContainerQuery();
-		return containerQuery.updateContainer((Container) obj);	
+		containerQuery.updateContainer((EncryptedContainer) obj);	
 	}
 	@Override
-	public boolean deleteElement(Object obj) {
+	public void deleteElement(Object obj) {
+		List<EncryptedContainer> containerList = (List<EncryptedContainer>) obj;
+		Iterator<EncryptedContainer> containerIterator = containerList.iterator();	
 		if (containerQuery == null)
 			containerQuery = new ContainerQuery();
-		return containerQuery.deleteContainer((Container) obj);
+		while (containerIterator.hasNext()){
+			containerQuery.deleteContainer(containerIterator.next());
+		}		
+	}
+
+	@Override
+	public Object checkDatabase(Object obj) {
+		List<EncryptedContainer> containerList = (List<EncryptedContainer>) obj;
+		if (containerQuery == null)
+			containerQuery = new ContainerQuery();		
+		return containerQuery.checkDatabase(containerList);
 	}
 
 }

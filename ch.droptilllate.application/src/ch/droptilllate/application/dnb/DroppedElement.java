@@ -4,12 +4,12 @@ import java.sql.Date;
 import ch.droptilllate.application.listener.DeltaEvent;
 import ch.droptilllate.application.listener.IDeltaListener;
 import ch.droptilllate.application.listener.NullDeltaListener;
-import ch.droptilllate.application.model.EncryptedFolderDob;
+import ch.droptilllate.application.model.GhostFolderDob;
 
 public abstract class DroppedElement {
 	protected IDeltaListener listener = NullDeltaListener.getSoleInstance();
-	private EncryptedFolderDob parent;
-	
+	private GhostFolderDob parent;
+
 	protected String name;
 	protected Date date;
 	protected String path;
@@ -22,7 +22,7 @@ public abstract class DroppedElement {
 		this.path = path;
 	}
 	
-	public DroppedElement(String name, Date date, String path, EncryptedFolderDob parent) {
+	public DroppedElement(String name, Date date, String path, GhostFolderDob parent) {
 		this.name = name;
 		this.date = date;
 		this.path = path;
@@ -30,7 +30,7 @@ public abstract class DroppedElement {
 	}
 	
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	
+
 	public void addListener(IDeltaListener listener) {
 		this.listener = listener;
 	}
@@ -51,11 +51,11 @@ public abstract class DroppedElement {
 	
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
-	public EncryptedFolderDob getParent() {
+	public GhostFolderDob getParent() {
 		return parent;
 	}
 
-	public void setParent(EncryptedFolderDob parent) {
+	public void setParent(GhostFolderDob parent) {
 		this.parent = parent;
 	}
 

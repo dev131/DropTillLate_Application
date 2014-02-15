@@ -19,7 +19,7 @@ import ch.droptilllate.application.dao.EncryptedFolderDao;
 import ch.droptilllate.application.dnb.DroppedElement;
 import ch.droptilllate.application.listener.TreeDragSourceListener;
 import ch.droptilllate.application.model.EncryptedFileDob;
-import ch.droptilllate.application.model.EncryptedFolderDob;
+import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.views.Status;
 
 public class TreeDropTargetAdapter extends DropTargetAdapter {
@@ -29,11 +29,11 @@ public class TreeDropTargetAdapter extends DropTargetAdapter {
 
 	private FileTransfer fileTransfer = FileTransfer.getInstance();
 	private TreeViewer treeViewer;
-	private EncryptedFolderDob root;
-	private EncryptedFolderDob dragOverFolder;
+	private GhostFolderDob root;
+	private GhostFolderDob dragOverFolder;
 
 	public TreeDropTargetAdapter(TreeViewer treeViewer,
-			EncryptedFolderDob dragOverFolder) {
+			GhostFolderDob dragOverFolder) {
 		this.treeViewer = treeViewer;
 		this.root = dragOverFolder;
 		this.dragOverFolder = root;
@@ -77,8 +77,8 @@ public class TreeDropTargetAdapter extends DropTargetAdapter {
 			TreeItem item = null;
 			if (event.item != null) {
 				item = (TreeItem) event.item;
-				if (item.getData() instanceof EncryptedFolderDob) {
-					dragOverFolder = (EncryptedFolderDob) item.getData();
+				if (item.getData() instanceof GhostFolderDob) {
+					dragOverFolder = (GhostFolderDob) item.getData();
 					item.setExpanded(true);
 				} else {
 					dragOverFolder = ((DroppedElement) item.getData()).getParent();
@@ -87,7 +87,7 @@ public class TreeDropTargetAdapter extends DropTargetAdapter {
 			try {
 				// TODO Monitor
 				 ViewController viewcontroller = ViewController.getInstance();
-				 viewcontroller.dropElements(droppedFileInformation, dragOverFolder);
+				 viewcontroller.encryptDropElements(droppedFileInformation, dragOverFolder);
 
 			} catch (Exception e) {
 				// log.error("Error at proccessing dropped data. " + e);
@@ -109,8 +109,8 @@ public class TreeDropTargetAdapter extends DropTargetAdapter {
 				if (event.item != null) {
 					item = (TreeItem) event.item;
 
-					if (item.getData() instanceof EncryptedFolderDob) {
-						dragOverFolder = (EncryptedFolderDob) item.getData();
+					if (item.getData() instanceof GhostFolderDob) {
+						dragOverFolder = (GhostFolderDob) item.getData();
 						item.setExpanded(true);
 					} else {
 						dragOverFolder = ((DroppedElement) item.getData())
@@ -125,10 +125,10 @@ public class TreeDropTargetAdapter extends DropTargetAdapter {
 					//Write to Database
 					encryptedFileDao.updateElement(draggedFile);
 					dragOverFolder.addFile(draggedFile);
-				} else if (draggedElement instanceof EncryptedFolderDob) {
-					EncryptedFolderDob draggedFolder = (EncryptedFolderDob) draggedElement;
+				} else if (draggedElement instanceof GhostFolderDob) {
+					GhostFolderDob draggedFolder = (GhostFolderDob) draggedElement;
 
-					EncryptedFolderDob currentDragOverFolder = dragOverFolder;
+					GhostFolderDob currentDragOverFolder = dragOverFolder;
 
 					while (!currentDragOverFolder.equals(root)) {
 						if (currentDragOverFolder.equals(draggedFolder)) {
@@ -157,8 +157,5 @@ public class TreeDropTargetAdapter extends DropTargetAdapter {
 		}
 		TreeDragSourceListener.draggedDroppedElements.clear();
 		treeViewer.refresh();
-		 Status status = Status.getInstance();
-		 status.setMessage("Inserted all Folder");
-
 	}
 }

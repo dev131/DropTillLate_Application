@@ -45,10 +45,10 @@ public class KeyManager {
 	 * @param password
 	 * @return true if it match
 	 */
-	public boolean checkPassword(String password, String salt){
+	public boolean checkPassword(String password, String salt, int shareID){
 		KeysGenerator kg = new KeysGenerator();
 		ShareFolderDao dao = new ShareFolderDao();
-		ShareFolder folder = (ShareFolder) dao.getElementByID(0);
+		ShareFolder folder = (ShareFolder) dao.getElementByID(shareID);
 		if(folder.getKey().equals(kg.getKey(password, salt)))
 			return true;
 		else{

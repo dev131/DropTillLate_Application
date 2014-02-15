@@ -19,23 +19,19 @@ import ch.droptilllate.application.com.IXmlDatabase;
 import ch.droptilllate.application.dao.EncryptedFileDao;
 import ch.droptilllate.application.dao.EncryptedFolderDao;
 import ch.droptilllate.application.dnb.EncryptedFile;
-import ch.droptilllate.application.dnb.EncryptedFolder;
+import ch.droptilllate.application.dnb.GhostFolder;
 import ch.droptilllate.application.model.EncryptedFileDob;
-import ch.droptilllate.application.model.EncryptedFolderDob;
+import ch.droptilllate.application.model.GhostFolderDob;
 
 public class FileStructureDB {
 
 	@Test
 	public void test() {
-		IXmlDatabase fileDao = new EncryptedFileDao();
-		IXmlDatabase folderDao = new EncryptedFolderDao();
-		EncryptedFolderDob root = new EncryptedFolderDob(0, "Root-Folder", new Date(System.currentTimeMillis()), "");
-		EncryptedFolderDob child = new EncryptedFolderDob(1, "First-Folder", new Date(System.currentTimeMillis()), "");
-		File folder = new File(
-				"/Users/marcobetschart/Documents/BDA_project/TestFolder");
+		GhostFolderDob root = new GhostFolderDob(0, "Root-Folder", new Date(System.currentTimeMillis()), "");
+		//GhostFolderDob child = new GhostFolderDob(1, "First-Folder", new Date(System.currentTimeMillis()), "");
+		File folder = new File("TestFolder");
 		//Create Temp File
-		File file = new File(
-				"/Users/marcobetschart/Documents/BDA_project/TestFolder/text.xml");
+		File file = new File("text.xml");
 		try {
 			RandomAccessFile raf = new RandomAccessFile(file, "rw");
 			raf.setLength(30);
@@ -48,33 +44,37 @@ public class FileStructureDB {
 			e.printStackTrace();
 		}
 		
-		//File newFile, EncryptedFolderDob parent
-		EncryptedFile encfile = new EncryptedFile(file, child);
-		EncryptedFolder encfold = new EncryptedFolder(folder, root);		
+		//File newFile, EncryptedFolderDob parent		
+		GhostFolder f = new GhostFolder(null,file, root);
+		GhostFolderDob child = new GhostFolderDob(f);
+		EncryptedFile encfile = new EncryptedFile(null,file, child);
+		EncryptedFileDob dobf = new EncryptedFileDob(encfile);
+		
 		//DAO
 		//INSERT
-			folderDao.newElement(encfold);
-			fileDao.newElement(encfile);
-		
+		IXmlDatabase fileDao = new EncryptedFileDao();
+		IXmlDatabase folderDao = new EncryptedFolderDao();
+		GhostFolderDob tempFolderDob = (GhostFolderDob) folderDao.newElement(child);
+		EncryptedFileDob tempFileDob = (EncryptedFileDob) fileDao.newElement(dobf);		
 		//GET PRINT OUT
-		List<EncryptedFolderDob> folderlist = ((EncryptedFolderDao) folderDao).getFoldersForFolder(root);	
+		List<GhostFolderDob> folderlist = ((EncryptedFolderDao) folderDao).getFoldersInFolder(root);
 		System.out.println(folderlist.get(0).getName());		
 		//GET PRINT OUT
-		List<EncryptedFileDob> filelist = ((EncryptedFileDao) fileDao).getFilesForFolder(child);
+		List<EncryptedFileDob> filelist = ((EncryptedFileDao) fileDao).getFilesInFolder(child);
 		System.out.println(filelist.get(0).getName());
+		System.out.println(filelist.get(0).getParent().getId());
 		//Update
 		filelist.get(0).setName("newName.xml");
 		folderlist.get(0).setName("newName");
 		folderDao.updateElement(folderlist.get(0));
-		fileDao.updateElement(filelist.get(0));
-		
+		fileDao.updateElement(filelist.get(0));		
 		//GET PRINT OUT
-		folderlist = ((EncryptedFolderDao) folderDao).getFoldersForFolder(root);
+		folderlist = ((EncryptedFolderDao) folderDao).getFoldersInFolder(root);
 		System.out.println(folderlist.get(0).getName());
 		//GET PRINT OUT
-		filelist = ((EncryptedFileDao) fileDao).getFilesForFolder(child);
+		filelist = ((EncryptedFileDao) fileDao).getFilesInFolder(child);
 		System.out.println(filelist.get(0).getName());
-		
+		//DeleteFile
 		folderDao.deleteElement(folderlist);
 		fileDao.deleteElement(filelist);
 //		

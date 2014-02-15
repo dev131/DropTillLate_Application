@@ -1,13 +1,20 @@
 package ch.droptilllate.application.query;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import ch.droptilllate.application.com.CRUDCryptedFileResult;
+import ch.droptilllate.application.com.CRUDShareFolderResult;
 import ch.droptilllate.application.com.IXmlConnection;
 import ch.droptilllate.application.com.XmlConnection;
 import ch.droptilllate.application.dnb.ShareFolder;
+import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.views.Messages;
 
 public class ShareFolderQuery {
@@ -28,13 +35,14 @@ public class ShareFolderQuery {
 	 * @return
 	 */
 	public ShareFolder newShareFolder(ShareFolder sharefolder) {
-		// TODO id generate
-				int id = (int) (Math.random() * 10000 + 1);
-				// Check if it exist
-				while (checkExist(id)) {
-					id = (int) (Math.random() * 10000 + 1);
-				}		
-				sharefolder.setID(id);
+		if (sharefolder.getID() == null) {
+			int id = (int) (Math.random() * 10000 + 1);
+			// Check if it exist
+			while (checkExist(id)) {
+				id = (int) (Math.random() * 10000 + 1);
+			}
+			sharefolder.setID(id);
+		}
 		document = conn.getXML();
 		Node node = document.getFirstChild();
 		Element folder = document.createElement(childElement);
@@ -46,14 +54,14 @@ public class ShareFolderQuery {
 		conn.writeToXML();
 		return sharefolder;
 	}
-	
+
 	private boolean checkExist(int sharefolderID) {
 		document = conn.getXML();
 		boolean result = false;
 		// cast the result to a DOM NodeList
 		NodeList nodes = conn.executeQuery("//" + childElement + "[@id='"
 				+ sharefolderID + "']");
-		if(nodes.getLength()>0)
+		if (nodes.getLength() > 0)
 			result = true;
 		return result;
 	}
@@ -61,16 +69,15 @@ public class ShareFolderQuery {
 	public ShareFolder getShareFolder(int sharefolderID) {
 		document = conn.getXML();
 		// cast the result to a DOM NodeList
-		
+
 		NodeList nodes = conn.executeQuery("//" + childElement + "[@id='"
 				+ sharefolderID + "']");
 		ShareFolder sharefolder = null;
-		if(nodes.getLength()>0){
-			sharefolder= new ShareFolder(sharefolderID,
-				nodes.item(0).getAttributes().getNamedItem("path")
-						.getNodeValue().toString(), nodes.item(0)
-						.getAttributes().getNamedItem("key").getNodeValue()
-						.toString());
+		if (nodes.getLength() > 0) {
+			sharefolder = new ShareFolder(sharefolderID, nodes.item(0)
+					.getAttributes().getNamedItem("path").getNodeValue()
+					.toString(), nodes.item(0).getAttributes()
+					.getNamedItem("key").getNodeValue().toString());
 		}
 		return sharefolder;
 	}
@@ -111,6 +118,29 @@ public class ShareFolderQuery {
 		}
 		conn.writeToXML();
 		return true;
+	}
+
+	public CRUDShareFolderResult checkDatabase(List<ShareFolder> shareFolderList) {
+
+		document = conn.getXML();
+		List<ShareFolder> shareFolderSuccessList = new ArrayList<ShareFolder>();
+		List<ShareFolder> shareFolderErrorList = new ArrayList<ShareFolder>();
+		Iterator<ShareFolder> shareFolderInfoListIterator = shareFolderList
+				.iterator();
+		while (shareFolderInfoListIterator.hasNext()) {
+			NodeList nodes = conn.executeQuery("//" + childElement + "[@id='"
+					+ shareFolderInfoListIterator.next().getID() + "']");
+			if (nodes.getLength() > 0) {
+				shareFolderSuccessList.add(shareFolderInfoListIterator.next());
+			} else {
+				shareFolderErrorList.add(shareFolderInfoListIterator.next());
+			}
+		}
+		CRUDShareFolderResult result = new CRUDShareFolderResult();
+		result.setShareFolderListError(shareFolderErrorList);
+		result.setShareFolderListSuccess(shareFolderSuccessList);
+		return result;
+
 	}
 
 }

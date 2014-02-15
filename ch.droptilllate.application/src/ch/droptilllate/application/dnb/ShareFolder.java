@@ -3,20 +3,26 @@ package ch.droptilllate.application.dnb;
 public class ShareFolder {
 
 
-	private int id;
+	private Integer id;
 	private String key;
 	private String path;
 	
-	public ShareFolder(int id, String path, String key){
+	/**
+	 * ShareFolder
+	 * @param id -> auto generate if it is null
+	 * @param path
+	 * @param key
+	 */
+	public ShareFolder(Integer id, String path, String key){
 		this.id= id;
 		this.key= key;
 	}
 	
-	public int getID(){
+	public Integer getID(){
 		return id;
 	}
 	
-	public void setID(int id){
+	public void setID(Integer id){
 		this.id = id;
 	}
 	
