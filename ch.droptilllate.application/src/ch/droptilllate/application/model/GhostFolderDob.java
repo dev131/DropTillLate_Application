@@ -4,40 +4,29 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.droptilllate.application.dnb.GhostFolder;
+import ch.droptilllate.application.dnb.DroppedElement;
 import ch.droptilllate.application.listener.NullDeltaListener;
 
-public class GhostFolderDob extends GhostFolder {
+public class GhostFolderDob extends DroppedElement{
 
 	private List<GhostFolderDob> folders;
 	private List<EncryptedFileDob> files;
 
-
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 	/**
-	 * Used when new folder was added.
-	 */
-	public GhostFolderDob(GhostFolder ghostFolder) {
-		super(ghostFolder.getId(),ghostFolder.getName(), ghostFolder.getDate(),
-				ghostFolder.getPath(), ghostFolder.getParent());
-		this.folders = new ArrayList<GhostFolderDob>();
-		this.files = new ArrayList<EncryptedFileDob>();
-	}
-
-	/**
-	 * Used when the content table is being read.
-	 * 
+	 * GhostFolderDob Constructor
 	 * @param id
 	 * @param name
 	 * @param date
 	 * @param path
+	 * @param parent
 	 */
-	public GhostFolderDob(Integer id, String name, Date date, String path) {
-		super(id,name, date, path);
+	public GhostFolderDob(Integer id, String name, Date date, String path,
+			GhostFolderDob parent) {
+		super(id, name, date, path.replace("\\", "/"), parent);
 		this.folders = new ArrayList<GhostFolderDob>();
 		this.files = new ArrayList<EncryptedFileDob>();
-	}
+	}	
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

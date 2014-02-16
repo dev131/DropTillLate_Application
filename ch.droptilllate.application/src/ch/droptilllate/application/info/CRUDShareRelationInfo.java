@@ -4,7 +4,7 @@ import java.util.List;
 
 import ch.droptilllate.application.dnb.ShareRelation;
 
-public class CRUDShareRelationResult {
+public class CRUDShareRelationInfo {
 
 	private List<ShareRelation> ShareRelationListError;
 	private List<ShareRelation> ShareRelationListSuccess;

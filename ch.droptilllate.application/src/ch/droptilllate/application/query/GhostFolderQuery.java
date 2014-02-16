@@ -1,43 +1,18 @@
 package ch.droptilllate.application.query;
 
-import java.io.File;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
 import ch.droptilllate.application.com.IXmlConnection;
 import ch.droptilllate.application.com.XmlConnection;
-import ch.droptilllate.application.dnb.EncryptedContainer;
-import ch.droptilllate.application.dnb.GhostFolder;
-import ch.droptilllate.application.info.CRUDCryptedFileResult;
-import ch.droptilllate.application.info.CRUDGhostFolderResult;
-import ch.droptilllate.application.model.EncryptedFileDob;
+import ch.droptilllate.application.info.CRUDGhostFolderInfo;
 import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.views.Messages;
 
@@ -57,31 +32,31 @@ public class GhostFolderQuery {
 	 * @param encryptedFolder
 	 * @return
 	 */
-	public GhostFolder newFolder(GhostFolder encryptedFolder) {
+	public GhostFolderDob newFolder(GhostFolderDob folderDob) {
 		// TODO id generate
-		if(encryptedFolder.getId() == null){
+		if(folderDob.getId() == null){
 			int id = (int) (Math.random() * 10000 + 1);
 			// Check if it exist
 			while (checkExist(id)) {
 				id = (int) (Math.random() * 10000 + 1);
 			}
-			encryptedFolder.setId(id);
+			folderDob.setId(id);
 		}		
 		document = conn.getXML();
 		Node node = document.getFirstChild();
 		// TODO Generate ID and Check if it exist
 		Element folder = document.createElement(childElement);
-		folder.setAttribute("id", Integer.toString(encryptedFolder.getId()));
+		folder.setAttribute("id", Integer.toString(folderDob.getId()));
 		folder.setIdAttribute("id", true);
-		int parentID = encryptedFolder.getParent().getId();
-		folder.setAttribute("name", encryptedFolder.getName());
-		folder.setAttribute("date", encryptedFolder.getDate().toString());
-		folder.setAttribute("path", encryptedFolder.getPath().toString());
+		int parentID = folderDob.getParent().getId();
+		folder.setAttribute("name", folderDob.getName());
+		folder.setAttribute("date", folderDob.getDate().toString());
+		folder.setAttribute("path", folderDob.getPath().toString());
 		folder.setAttribute("parentID", Integer.toString(parentID));
 		node.appendChild(folder);
 
 		conn.writeToXML();
-		return encryptedFolder;
+		return folderDob;
 	}
 
 	private boolean checkExist(int folderID) {
@@ -118,15 +93,14 @@ public class GhostFolderQuery {
 				e.printStackTrace();
 			}
 			java.sql.Date sqlDate = new java.sql.Date(parsed.getTime());
-			GhostFolder tmp = new GhostFolder(
-					Integer.parseInt(nodes.item(i).getAttributes().getNamedItem("id").getNodeValue()), 
+			//Integer id, String name, Date date, String path, GhostFolderDob parent
+			GhostFolderDob dob = new GhostFolderDob(
+					Integer.parseInt(nodes.item(i).getAttributes().getNamedItem("id").getNodeValue()),
 					nodes.item(i).getAttributes().getNamedItem("name").getNodeValue(), 
 					sqlDate, 
-					nodes.item(i).getAttributes().getNamedItem("path").getNodeValue(), 
-					folder);
-			
-			folders.add(new GhostFolderDob(tmp));
-
+					nodes.item(i).getAttributes().getNamedItem("path").getNodeValue(),
+					folder);			
+			folders.add(dob);
 		}
 		return folders;
 	}
@@ -174,7 +148,7 @@ public class GhostFolderQuery {
 	 * @param folderDob
 	 * @return FolderCRUDResults 
 	 */
-	public CRUDGhostFolderResult checkDatabase(List<GhostFolderDob> folderDob){
+	public CRUDGhostFolderInfo checkDatabase(List<GhostFolderDob> folderDob){
 		document = conn.getXML();
 		List<GhostFolderDob> folderSuccessList = new ArrayList<GhostFolderDob>();
 		List<GhostFolderDob> folderErrorList = new ArrayList<GhostFolderDob>();
@@ -189,7 +163,7 @@ public class GhostFolderQuery {
 				folderErrorList.add(folderInfoListErrorIterator.next());
 			}
 		}
-		CRUDGhostFolderResult result = new CRUDGhostFolderResult();
+		CRUDGhostFolderInfo result = new CRUDGhostFolderInfo();
 		result.setEncryptedFolderListError(folderErrorList);
 		result.setEncryptedFolderListSuccess(folderSuccessList);
 		return result;

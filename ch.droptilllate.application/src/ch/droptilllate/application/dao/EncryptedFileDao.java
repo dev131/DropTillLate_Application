@@ -1,21 +1,12 @@
 package ch.droptilllate.application.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import ch.droptilllate.application.com.IXmlDatabase;
-import ch.droptilllate.application.dnb.EncryptedFile;
-import ch.droptilllate.application.dnb.GhostFolder;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.query.FileQuery;
-import ch.droptilllate.application.query.GhostFolderQuery;
 
 
 public class EncryptedFileDao implements IXmlDatabase {
@@ -35,9 +26,8 @@ public class EncryptedFileDao implements IXmlDatabase {
 	public Object newElement(Object obj) {
 		if (filequery == null)
 			filequery = new FileQuery();
-		EncryptedFile tmp = filequery.newFile((EncryptedFile) obj);
-		EncryptedFileDob dob = new EncryptedFileDob(tmp);
-		return dob;
+
+		return filequery.newFile((EncryptedFileDob) obj);
 	}
 
 	@Override

@@ -11,7 +11,7 @@ import org.w3c.dom.NodeList;
 import ch.droptilllate.application.com.IXmlConnection;
 import ch.droptilllate.application.com.XmlConnection;
 import ch.droptilllate.application.dnb.ShareRelation;
-import ch.droptilllate.application.info.CRUDShareRelationResult;
+import ch.droptilllate.application.info.CRUDShareRelationInfo;
 import ch.droptilllate.application.views.Messages;
 
 public class ShareRelationQuery {
@@ -55,11 +55,12 @@ public class ShareRelationQuery {
 		NodeList nodes = conn.executeQuery("//" + childElement + "[@"
 				+ shareFolderIdAttribut + "='" + shareRelationId + "']");
 		for (int i = 0; i < nodes.getLength(); i++) {
-			ShareRelation tmp = new ShareRelation();
-			tmp.setSharefolderId(Integer.parseInt(nodes.item(i).getAttributes()
-					.getNamedItem(shareFolderIdAttribut).getNodeValue()));
-			tmp.setMail(nodes.item(i).getAttributes()
-					.getNamedItem(mailAttribut).getNodeValue());
+			//Integer sharefolderId, String mail
+			ShareRelation tmp = new ShareRelation(Integer.parseInt(nodes.item(i).getAttributes()
+					.getNamedItem(shareFolderIdAttribut).getNodeValue()),
+					nodes.item(i).getAttributes()
+					.getNamedItem(mailAttribut).getNodeValue()
+					);
 			shareRelations.add(tmp);
 		}
 		return shareRelations;
@@ -107,7 +108,7 @@ public class ShareRelationQuery {
 		return true;
 	}
 
-	public CRUDShareRelationResult checkDatabase(
+	public CRUDShareRelationInfo checkDatabase(
 			List<ShareRelation> shareRelationList) {
 		document = conn.getXML();
 		List<ShareRelation> shareRelationSuccessList = new ArrayList<ShareRelation>();
@@ -130,7 +131,7 @@ public class ShareRelationQuery {
 				shareRelationErrorList.add(relation);
 			}
 		}
-		CRUDShareRelationResult result = new CRUDShareRelationResult();
+		CRUDShareRelationInfo result = new CRUDShareRelationInfo();
 		result.setShareRelationListError(shareRelationErrorList);
 		result.setShareRelationListSuccess(shareRelationSuccessList);
 		return result;

@@ -34,8 +34,8 @@ import ch.droptilllate.application.com.IXmlConnection;
 import ch.droptilllate.application.com.XmlConnection;
 import ch.droptilllate.application.dnb.EncryptedContainer;
 import ch.droptilllate.application.dnb.ShareFolder;
-import ch.droptilllate.application.info.CRUDContainerResult;
-import ch.droptilllate.application.info.CRUDGhostFolderResult;
+import ch.droptilllate.application.info.CRUDContainerInfo;
+import ch.droptilllate.application.info.CRUDGhostFolderInfo;
 import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.views.Messages;
 
@@ -144,7 +144,7 @@ public class ContainerQuery {
 		return true;
 	}
 
-	public CRUDContainerResult checkDatabase(List<EncryptedContainer> containerList) {
+	public CRUDContainerInfo checkDatabase(List<EncryptedContainer> containerList) {
 		document = conn.getXML();
 		List<EncryptedContainer> encryptedContainerListSuccess = new ArrayList<EncryptedContainer>();
 		List<EncryptedContainer> encryptedContainerListError = new ArrayList<EncryptedContainer>();
@@ -158,7 +158,7 @@ public class ContainerQuery {
 				encryptedContainerListError.add(ContainerInfoListErrorIterator.next());
 			}
 		}
-		CRUDContainerResult result = new CRUDContainerResult();
+		CRUDContainerInfo result = new CRUDContainerInfo();
 		result.setEncryptedContainerListError(encryptedContainerListError);
 		result.setEncryptedContainerListSuccess(encryptedContainerListSuccess);
 		return result;

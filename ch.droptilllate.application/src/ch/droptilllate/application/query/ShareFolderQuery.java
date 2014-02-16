@@ -12,8 +12,8 @@ import org.w3c.dom.NodeList;
 import ch.droptilllate.application.com.IXmlConnection;
 import ch.droptilllate.application.com.XmlConnection;
 import ch.droptilllate.application.dnb.ShareFolder;
-import ch.droptilllate.application.info.CRUDCryptedFileResult;
-import ch.droptilllate.application.info.CRUDShareFolderResult;
+import ch.droptilllate.application.info.CRUDCryptedFileInfo;
+import ch.droptilllate.application.info.CRUDShareFolderInfo;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.views.Messages;
 
@@ -121,7 +121,7 @@ public class ShareFolderQuery {
 		return true;
 	}
 
-	public CRUDShareFolderResult checkDatabase(List<ShareFolder> shareFolderList) {
+	public CRUDShareFolderInfo checkDatabase(List<ShareFolder> shareFolderList) {
 		conn.getXML();
 		List<ShareFolder> shareFolderSuccessList = new ArrayList<ShareFolder>();
 		List<ShareFolder> shareFolderErrorList = new ArrayList<ShareFolder>();
@@ -136,7 +136,7 @@ public class ShareFolderQuery {
 				shareFolderErrorList.add(shareFolderInfoListIterator.next());
 			}
 		}
-		CRUDShareFolderResult result = new CRUDShareFolderResult();
+		CRUDShareFolderInfo result = new CRUDShareFolderInfo();
 		result.setShareFolderListError(shareFolderErrorList);
 		result.setShareFolderListSuccess(shareFolderSuccessList);
 		return result;

@@ -7,7 +7,7 @@ import java.util.List;
 
 import ch.droptilllate.application.converter.FileInfoConverter;
 import ch.droptilllate.application.dnb.ShareFolder;
-import ch.droptilllate.application.info.CRUDCryptedFileResult;
+import ch.droptilllate.application.info.CRUDCryptedFileInfo;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.views.Messages;
 import ch.droptilllate.filesystem.info.*;
@@ -24,7 +24,7 @@ import ch.droptilllate.filesystem.api.IFileSystem;
 public class FileSystemCom implements IFileSystemCom {
 	// TODO Key transfer
 	@Override
-	public CRUDCryptedFileResult encryptFile(List<EncryptedFileDob> droppedFiles,String containerPath) {
+	public CRUDCryptedFileInfo encryptFile(List<EncryptedFileDob> droppedFiles,String containerPath) {
 		FileHandlingSummary filehandling_result = null;
 		List<FileInfoEncrypt> fileInfoList = new ArrayList<FileInfoEncrypt>();
 		for(EncryptedFileDob fileDob: droppedFiles){
@@ -41,14 +41,14 @@ public class FileSystemCom implements IFileSystemCom {
 		filehandling_result = ifile.encryptFiles(fileInfoList);
 		//Convert to FileCRUDResults
 		FileInfoConverter converter = new FileInfoConverter();
-		CRUDCryptedFileResult result = new CRUDCryptedFileResult();
+		CRUDCryptedFileInfo result = new CRUDCryptedFileInfo();
 		result = converter.convertFileInfoList(filehandling_result.getFileInfoSuccessList(),filehandling_result.getFileInfoErrorList(), droppedFiles);
 		return result;
 	}
 
 	// TODO Key transfer
 	@Override
-	public CRUDCryptedFileResult decryptFile(List<EncryptedFileDob> droppedFiles,
+	public CRUDCryptedFileInfo decryptFile(List<EncryptedFileDob> droppedFiles,
 			String containerPath) {
 		FileHandlingSummary filehandling_result = null;		
 		List<FileInfoDecrypt> fileInfoList = new ArrayList<FileInfoDecrypt>();
@@ -60,18 +60,18 @@ public class FileSystemCom implements IFileSystemCom {
 			
 			fileInfoList.add(new FileInfoDecrypt(fileDob.getId(),
 					fileDob.getType(), containerPath,
-					fileDob.getPath(), fileDob.getContainerID()));		
+					fileDob.getPath(), fileDob.getContainerId()));		
 		}
 		IFileSystem ifile = new FileSystemHandler();
 		filehandling_result = ifile.decryptFiles(fileInfoList);
 		//Convert to FileCRUDResults
 		FileInfoConverter converter = new FileInfoConverter();
-		CRUDCryptedFileResult result = converter.convertFileInfoList(filehandling_result.getFileInfoSuccessList(),filehandling_result.getFileInfoErrorList(), droppedFiles);
+		CRUDCryptedFileInfo result = converter.convertFileInfoList(filehandling_result.getFileInfoSuccessList(),filehandling_result.getFileInfoErrorList(), droppedFiles);
 		return result;
 	}
 
 	@Override
-	public CRUDCryptedFileResult deleteFile(List<EncryptedFileDob> fileList) {
+	public CRUDCryptedFileInfo deleteFile(List<EncryptedFileDob> fileList) {
 		FileHandlingSummary filehandling_result = null;
 		List<FileInfo> fileInfoList = new ArrayList<FileInfo>();
 		for(EncryptedFileDob fileDob : fileList){
@@ -80,19 +80,19 @@ public class FileSystemCom implements IFileSystemCom {
 				System.out.println("file Exist");
 			}
 			fileInfoList.add(new FileInfo(fileDob.getId(),
-					new ContainerInfo(fileDob.getContainerID(), fileDob
+					new ContainerInfo(fileDob.getContainerId(), fileDob
 							.getPath())));
 		}		
 		IFileSystem ifile = new FileSystemHandler();
 		filehandling_result =ifile.deleteFiles(fileInfoList);
 		//Convert to FileCRUDResults
 		FileInfoConverter converter = new FileInfoConverter();
-		CRUDCryptedFileResult result = converter.convertFileInfoList(filehandling_result.getFileInfoSuccessList(),filehandling_result.getFileInfoErrorList(), fileList);
+		CRUDCryptedFileInfo result = converter.convertFileInfoList(filehandling_result.getFileInfoSuccessList(),filehandling_result.getFileInfoErrorList(), fileList);
 		return result;
 	}
 
 	@Override
-	public CRUDCryptedFileResult moveFiles(List<EncryptedFileDob> fileList, ShareFolder sharedFolder) {
+	public CRUDCryptedFileInfo moveFiles(List<EncryptedFileDob> fileList, ShareFolder sharedFolder) {
 		// TODO Key transfer
 		List<FileInfoMove> fileInfoList = new ArrayList<FileInfoMove>();
 		FileHandlingSummary filehandling_result = null;
@@ -100,14 +100,14 @@ public class FileSystemCom implements IFileSystemCom {
 	  		fileInfoList.add(new FileInfoMove(fileDob.getId(), 
 	  				fileDob.getSize(), 
 	  				fileDob.getPath(), 
-	  				fileDob.getContainerID(), 
+	  				fileDob.getContainerId(), 
 	  				sharedFolder.getPath() + sharedFolder.getID()));
 		}
 		IFileSystem ifile = new FileSystemHandler(); 
 		filehandling_result= ifile.moveFiles(fileInfoList);
 		//Convert to FileCRUDResults
 		FileInfoConverter converter = new FileInfoConverter();
-		CRUDCryptedFileResult result = converter.convertFileInfoList(filehandling_result.getFileInfoSuccessList(),filehandling_result.getFileInfoErrorList(), fileList);
+		CRUDCryptedFileInfo result = converter.convertFileInfoList(filehandling_result.getFileInfoSuccessList(),filehandling_result.getFileInfoErrorList(), fileList);
 		return result;
 	}
 }

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import ch.droptilllate.application.info.CRUDCryptedFileResult;
+import ch.droptilllate.application.info.CRUDCryptedFileInfo;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.filesystem.info.FileInfo;
 
@@ -19,18 +19,18 @@ public class FileInfoConverter {
 	 * @param droppedFiles
 	 * @return
 	 */
-	public CRUDCryptedFileResult convertFileInfoList(
+	public CRUDCryptedFileInfo convertFileInfoList(
 			List<FileInfo> fileInfoSuccessList,
 			List<FileInfo> fileInfoErrorList,
 			List<EncryptedFileDob> droppedFiles){
 		List<EncryptedFileDob> encryptedFileListError = new ArrayList<EncryptedFileDob>();
 		List<EncryptedFileDob> encryptedFileListSuccess = new ArrayList<EncryptedFileDob>();
-		CRUDCryptedFileResult result = new CRUDCryptedFileResult();
+		CRUDCryptedFileInfo result = new CRUDCryptedFileInfo();
 		// Fill SuccessList
 		for (FileInfo fileInfo : fileInfoSuccessList) {
 			for (EncryptedFileDob fileDob : droppedFiles) {
 				if (fileDob.getId() == fileInfo.getFileID()) {
-					fileDob.setContainerID(fileInfo.getContainerInfo()
+					fileDob.setContainerId(fileInfo.getContainerInfo()
 							.getContainerID());
 					fileDob.setPath(fileInfo.getContainerInfo()
 							.getParentContainerPath());

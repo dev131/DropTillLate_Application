@@ -38,9 +38,7 @@ import ch.droptilllate.application.dao.EncryptedFileDao;
 import ch.droptilllate.application.dao.GhostFolderDao;
 import ch.droptilllate.application.dnb.EncryptedContainer;
 import ch.droptilllate.application.dnb.DroppedElement;
-import ch.droptilllate.application.dnb.EncryptedFile;
-import ch.droptilllate.application.dnb.GhostFolder;
-import ch.droptilllate.application.info.CRUDCryptedFileResult;
+import ch.droptilllate.application.info.CRUDCryptedFileInfo;
 import ch.droptilllate.application.listener.TreeDragSourceListener;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
@@ -148,8 +146,10 @@ public class ViewController {
 	 */
 	private GhostFolderDob getInitialInput() {
 		// Create RootDob
-		root = new GhostFolderDob(0, "Root-Folder", new Date(
-				System.currentTimeMillis()), "");
+		//Integer id, String name, Date date, String path,GhostFolderDob parent) {
+		root = new GhostFolderDob(0, "Root-Folder", 
+				new Date(
+				System.currentTimeMillis()), "", null);
 		getFolderContent(root);
 		return root;
 	}
@@ -212,7 +212,7 @@ public class ViewController {
 		// Delete on Filesystem
 		IFileSystemCom com = new FileSystemCom();	
 		// TODO Check successlist
-		CRUDCryptedFileResult result = com.deleteFile(fileList);
+		CRUDCryptedFileInfo result = com.deleteFile(fileList);
 		for(EncryptedFileDob fileDob : result.getEncryptedFileListSuccess()){
 			Status status = Status.getInstance();
 			status.setMessage(fileDob.getName() + " -> successfully deleted");
@@ -271,7 +271,7 @@ public class ViewController {
 		}
 		// TODO check succesfull list
 		IFileSystemCom iFileSystem = new FileSystemCom();
-		CRUDCryptedFileResult result = 		iFileSystem.decryptFile(fileList, Messages.getPathLocalTemp());
+		CRUDCryptedFileInfo result = 		iFileSystem.decryptFile(fileList, Messages.getPathLocalTemp());
 		for(EncryptedFileDob fileDob : result.getEncryptedFileListSuccess()){
 			Status status = Status.getInstance();
 			status.setMessage(fileDob.getName() + " -> decryption worked");
@@ -290,9 +290,9 @@ public class ViewController {
 	public void newFolder(String name) {
 		IXmlDatabase folderDao = new GhostFolderDao();
 		File newFile = new File(name);
-		GhostFolder newfolder = new GhostFolder(null,newFile, root);
+		GhostFolderDob dob = new GhostFolderDob(null, newFile.getName(), new Date(System.currentTimeMillis()), newFile.getPath(), root);
 		// insert in DB and Treeview
-		root.addFolder((GhostFolderDob) folderDao.newElement(newfolder));
+		root.addFolder((GhostFolderDob) folderDao.newElement(dob));
 	}
 
 	/**
@@ -307,17 +307,18 @@ public class ViewController {
 
 		// insert DAO and update VIEW
 		for (String currentDroppedElement : droppedFileInformation) {
+			File element = new File(currentDroppedElement);		
 			dropTreeElements(new File(currentDroppedElement), dragOverFolder);
 		}
 		
 		// TODO Insert in Filesystem and Error handling Results
 		IFileSystemCom fileSystem = new FileSystemCom();	
-		CRUDCryptedFileResult result = 	fileSystem.encryptFile(actualDropFiles, Messages.getPathDropBoxLocal());
+		CRUDCryptedFileInfo result = 	fileSystem.encryptFile(actualDropFiles, Messages.getPathDropBoxLocal());
 		//Update DB
 		IXmlDatabase fileDB = new EncryptedFileDao();
 		for(EncryptedFileDob fileDob : result.getEncryptedFileListSuccess()){			
 			fileDB.updateElement(fileDob);
-			EncryptedContainer container = new EncryptedContainer(fileDob.getContainerID(),0);
+			EncryptedContainer container = new EncryptedContainer(fileDob.getContainerId(),0);
 			IXmlDatabase containerDB = new ContainerDao();
 			containerDB.newElement(container);
 			Status status = Status.getInstance();
@@ -335,30 +336,42 @@ public class ViewController {
 	}
 
 	/**
-	 * Insert Node into treeview
+	 * Insert Node into treeview and DB
 	 * @param droppedElement
 	 * @param parent
 	 */
-	private void dropTreeElements(File droppedElement, GhostFolderDob parent) {
+	private void dropTreeElements(File droppedElement, GhostFolderDob parent) {				
 		if (!droppedElement.isDirectory()) {
 			if (droppedElement.getName().contains(".DS_Store")) {
 				// TODO Message
 				// log.info(".ds_store File ignored!");
 				return;
 			}
-			EncryptedFile droppedFile = new EncryptedFile(null,droppedElement,
-					parent);
+			//Integer id, String name, Date date, String path, GhostFolderDob parent, String type, Long size, Integer containerId
+			EncryptedFileDob fileDob = new EncryptedFileDob(null, 
+					droppedElement.getName(), 
+					new Date(System.currentTimeMillis()), 
+					droppedElement.getPath(), 
+					parent, 
+					droppedElement.getName(), 
+					droppedElement.length(), 
+					null);					
 			// Insert new Node in DB
 			IXmlDatabase fileDB = new EncryptedFileDao();
-			EncryptedFileDob encryptedPersistedFile = (EncryptedFileDob) fileDB.newElement(droppedFile);
+			EncryptedFileDob encryptedPersistedFile = (EncryptedFileDob) fileDB.newElement(fileDob);
 			parent.addFile(encryptedPersistedFile);
 			// add to list
 			actualDropFiles.add(encryptedPersistedFile);
 		} else {
-			GhostFolder droppedFolder = new GhostFolder(null,droppedElement,parent);
+			//Integer id, String name, Date date, String path, GhostFolderDob parent
+			GhostFolderDob folderDob = new GhostFolderDob(null, 
+					droppedElement.getName(), 
+					new Date(System.currentTimeMillis()),
+					droppedElement.getPath(), 
+					parent);			
 			IXmlDatabase folderDB = new GhostFolderDao();
-			folderDB.newElement(droppedFolder);
-			GhostFolderDob encryptedPersistedFolder = (GhostFolderDob) folderDB.newElement(droppedFolder);
+			folderDob = (GhostFolderDob) folderDB.newElement(folderDob);
+			GhostFolderDob encryptedPersistedFolder = (GhostFolderDob) folderDB.newElement(folderDob);
 			parent.addFolder(encryptedPersistedFolder);
 			for (File file : droppedElement.listFiles()) {
 				dropTreeElements(file, encryptedPersistedFolder);

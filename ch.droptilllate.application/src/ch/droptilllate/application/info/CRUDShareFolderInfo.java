@@ -5,7 +5,7 @@ import java.util.List;
 import ch.droptilllate.application.dnb.ShareFolder;
 
 
-public class CRUDShareFolderResult {
+public class CRUDShareFolderInfo {
 
 	private List<ShareFolder> shareFolderListError;
 	private List<ShareFolder> shareFolderListSuccess;

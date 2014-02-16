@@ -4,7 +4,7 @@ import java.util.List;
 
 import ch.droptilllate.application.model.EncryptedFileDob;
 
-public class CRUDCryptedFileResult {
+public class CRUDCryptedFileInfo {
 	private List<EncryptedFileDob> encryptedFileListError;
 	private List<EncryptedFileDob> encryptedFileListSuccess;
 	

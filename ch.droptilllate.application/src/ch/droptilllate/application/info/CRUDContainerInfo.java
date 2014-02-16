@@ -5,7 +5,7 @@ import java.util.List;
 import ch.droptilllate.application.dnb.EncryptedContainer;
 
 
-public class CRUDContainerResult {
+public class CRUDContainerInfo {
 	private List<EncryptedContainer> encryptedContainerListError;
 	private List<EncryptedContainer> encryptedContainerListSuccess;
 	

@@ -4,7 +4,7 @@ import java.util.List;
 
 import ch.droptilllate.application.model.GhostFolderDob;
 
-public class CRUDGhostFolderResult {
+public class CRUDGhostFolderInfo {
 	private List<GhostFolderDob> encryptedFolderListError;
 	private List<GhostFolderDob> encryptedFolderListSuccess;
 	

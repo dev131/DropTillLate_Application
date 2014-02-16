@@ -13,16 +13,12 @@ public abstract class DroppedElement {
 	protected String name;
 	protected Date date;
 	protected String path;
+	protected Integer id;
 	
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
-	public DroppedElement(String name, Date date, String path) {
-		this.name = name;
-		this.date = date;
-		this.path = path;
-	}
-	
-	public DroppedElement(String name, Date date, String path, GhostFolderDob parent) {
+	public DroppedElement(Integer id, String name, Date date, String path, GhostFolderDob parent) {
+		this.id = id;
 		this.name = name;
 		this.date = date;
 		this.path = path;
@@ -82,5 +78,15 @@ public abstract class DroppedElement {
 	public void setPath(String path) {
 		this.path = path;
 	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	
+	
 
 }

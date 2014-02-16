@@ -8,7 +8,7 @@ import ch.droptilllate.application.com.IXmlDatabase;
 import ch.droptilllate.application.dao.EncryptedFileDao;
 import ch.droptilllate.application.dao.ShareFolderDao;
 import ch.droptilllate.application.dnb.ShareFolder;
-import ch.droptilllate.application.info.CRUDCryptedFileResult;
+import ch.droptilllate.application.info.CRUDCryptedFileInfo;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.views.Messages;
 import ch.droptilllate.application.views.Status;
@@ -40,7 +40,7 @@ public class ShareManager {
 		shareDao.updateElement(sharedFolder);
 		//Move Files
 		IFileSystemCom iFile = new FileSystemCom();
-		CRUDCryptedFileResult result = iFile.moveFiles(fileList, sharedFolder);
+		CRUDCryptedFileInfo result = iFile.moveFiles(fileList, sharedFolder);
 		//Handle Error
 		for(EncryptedFileDob fileDob : result.getEncryptedFileListError()){
 			Status status = Status.getInstance();
