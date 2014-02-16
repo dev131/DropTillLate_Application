@@ -35,11 +35,12 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import ch.droptilllate.application.com.CRUDCryptedFileResult;
-import ch.droptilllate.application.com.CRUDGhostFolderResult;
 import ch.droptilllate.application.com.IXmlConnection;
 import ch.droptilllate.application.com.XmlConnection;
+import ch.droptilllate.application.dnb.EncryptedContainer;
 import ch.droptilllate.application.dnb.EncryptedFile;
+import ch.droptilllate.application.info.CRUDCryptedFileResult;
+import ch.droptilllate.application.info.CRUDGhostFolderResult;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.views.Messages;
@@ -51,7 +52,7 @@ public class FileQuery {
 	private String childElement = "file";
 
 	public FileQuery() {
-		conn = new XmlConnection(Messages.getFilesXMLpath(), rootElement);
+		conn = new XmlConnection(Messages.getPathFilesXML(), rootElement);
 	}
 
 	/**
@@ -231,18 +232,19 @@ public class FileQuery {
 	 * @param encryptedFile
 	 * @return
 	 */
-	public boolean deleteFile(EncryptedFileDob encryptedFile) {
+	public boolean deleteFile(List<EncryptedFileDob> encryptedFile) {
 		document = conn.getXML();
+		for(EncryptedFileDob fileDob : encryptedFile){
 		// cast the result to a DOM NodeList
 		NodeList nodes = conn.executeQuery("//" + childElement + "[@id='"
-				+ encryptedFile.getId() + "']");
+				+ fileDob.getId() + "']");
 		for (int idx = 0; idx < nodes.getLength(); idx++) {
 			nodes.item(idx).getParentNode().removeChild(nodes.item(idx));
 		}
 		System.out.println("Everything replaced.");
 		// save xml file back
+		}
 		conn.writeToXML();
-
 		return true;
 	}
 

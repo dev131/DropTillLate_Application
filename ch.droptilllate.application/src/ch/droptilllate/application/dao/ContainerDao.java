@@ -42,21 +42,17 @@ public class ContainerDao implements IXmlDatabase {
 	}
 	@Override
 	public void deleteElement(Object obj) {
-		List<EncryptedContainer> containerList = (List<EncryptedContainer>) obj;
-		Iterator<EncryptedContainer> containerIterator = containerList.iterator();	
 		if (containerQuery == null)
 			containerQuery = new ContainerQuery();
-		while (containerIterator.hasNext()){
-			containerQuery.deleteContainer(containerIterator.next());
-		}		
+			containerQuery.deleteContainer((List<EncryptedContainer>) obj);
+
 	}
 
 	@Override
 	public Object checkDatabase(Object obj) {
-		List<EncryptedContainer> containerList = (List<EncryptedContainer>) obj;
 		if (containerQuery == null)
 			containerQuery = new ContainerQuery();		
-		return containerQuery.checkDatabase(containerList);
+		return containerQuery.checkDatabase((List<EncryptedContainer>) obj);
 	}
 
 }

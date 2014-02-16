@@ -17,7 +17,7 @@ import org.xml.sax.SAXException;
 
 import ch.droptilllate.application.com.IXmlDatabase;
 import ch.droptilllate.application.dao.EncryptedFileDao;
-import ch.droptilllate.application.dao.EncryptedFolderDao;
+import ch.droptilllate.application.dao.GhostFolderDao;
 import ch.droptilllate.application.dnb.EncryptedFile;
 import ch.droptilllate.application.dnb.GhostFolder;
 import ch.droptilllate.application.model.EncryptedFileDob;
@@ -53,11 +53,11 @@ public class FileStructureDB {
 		//DAO
 		//INSERT
 		IXmlDatabase fileDao = new EncryptedFileDao();
-		IXmlDatabase folderDao = new EncryptedFolderDao();
+		IXmlDatabase folderDao = new GhostFolderDao();
 		GhostFolderDob tempFolderDob = (GhostFolderDob) folderDao.newElement(child);
 		EncryptedFileDob tempFileDob = (EncryptedFileDob) fileDao.newElement(dobf);		
 		//GET PRINT OUT
-		List<GhostFolderDob> folderlist = ((EncryptedFolderDao) folderDao).getFoldersInFolder(root);
+		List<GhostFolderDob> folderlist = ((GhostFolderDao) folderDao).getFoldersInFolder(root);
 		System.out.println(folderlist.get(0).getName());		
 		//GET PRINT OUT
 		List<EncryptedFileDob> filelist = ((EncryptedFileDao) fileDao).getFilesInFolder(child);
@@ -69,7 +69,7 @@ public class FileStructureDB {
 		folderDao.updateElement(folderlist.get(0));
 		fileDao.updateElement(filelist.get(0));		
 		//GET PRINT OUT
-		folderlist = ((EncryptedFolderDao) folderDao).getFoldersInFolder(root);
+		folderlist = ((GhostFolderDao) folderDao).getFoldersInFolder(root);
 		System.out.println(folderlist.get(0).getName());
 		//GET PRINT OUT
 		filelist = ((EncryptedFileDao) fileDao).getFilesInFolder(child);

@@ -31,11 +31,12 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import ch.droptilllate.application.com.CRUDCryptedFileResult;
-import ch.droptilllate.application.com.CRUDGhostFolderResult;
 import ch.droptilllate.application.com.IXmlConnection;
 import ch.droptilllate.application.com.XmlConnection;
+import ch.droptilllate.application.dnb.EncryptedContainer;
 import ch.droptilllate.application.dnb.GhostFolder;
+import ch.droptilllate.application.info.CRUDCryptedFileResult;
+import ch.droptilllate.application.info.CRUDGhostFolderResult;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.views.Messages;
@@ -47,7 +48,7 @@ public class GhostFolderQuery {
 	private String childElement = "folder";
 
 	public GhostFolderQuery() {
-		conn = new XmlConnection(Messages.getFolderXMLpath(), rootElement);
+		conn = new XmlConnection(Messages.getPathFolderXML(), rootElement);
 	}
 
 	/**
@@ -157,12 +158,14 @@ public class GhostFolderQuery {
 	 * @param encryptedFolder
 	 * @return
 	 */
-	public void deleteFolder(GhostFolderDob encryptedFolder) {
+	public void deleteFolder(List<GhostFolderDob> encryptedFolder) {
 		document = conn.getXML();
+		for(GhostFolderDob dob : encryptedFolder){
 		NodeList nodes = conn.executeQuery("//" + childElement + "[@id='"
-				+ encryptedFolder.getId() + "']");
+				+ dob.getId() + "']");
 		for (int idx = 0; idx < nodes.getLength(); idx++) {
 			nodes.item(idx).getParentNode().removeChild(nodes.item(idx));
+		}
 		}
 		conn.writeToXML();
 	}

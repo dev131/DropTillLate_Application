@@ -28,13 +28,14 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import ch.droptilllate.application.com.CRUDContainerResult;
 import ch.droptilllate.application.com.FileSystemCom;
-import ch.droptilllate.application.com.CRUDGhostFolderResult;
 import ch.droptilllate.application.com.IFileSystemCom;
 import ch.droptilllate.application.com.IXmlConnection;
 import ch.droptilllate.application.com.XmlConnection;
 import ch.droptilllate.application.dnb.EncryptedContainer;
+import ch.droptilllate.application.dnb.ShareFolder;
+import ch.droptilllate.application.info.CRUDContainerResult;
+import ch.droptilllate.application.info.CRUDGhostFolderResult;
 import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.views.Messages;
 
@@ -45,7 +46,7 @@ public class ContainerQuery {
 	private String childElement = "container";
 
 	public ContainerQuery() {
-		conn = new XmlConnection(Messages.getContainerXMLpath(), rootElement);
+		conn = new XmlConnection(Messages.getPathContainerXML(), rootElement);
 	}
 
 	/**
@@ -76,7 +77,7 @@ public class ContainerQuery {
 		conn.writeToXML();
 	}
 	private boolean checkExist(int containerId) {
-		document = conn.getXML();
+		conn.getXML();
 		boolean result = false;
 		// cast the result to a DOM NodeList
 		NodeList nodes = conn.executeQuery("//" + childElement + "[@id='"
@@ -87,7 +88,7 @@ public class ContainerQuery {
 	}
 
 	public EncryptedContainer getContainerByID(int id) {
-		document = conn.getXML();
+		conn.getXML();
 		// cast the result to a DOM NodeList
 		NodeList nodes = conn.executeQuery("//" + childElement + "[@id='" + id
 				+ "']");
@@ -107,7 +108,7 @@ public class ContainerQuery {
 	 * @return
 	 */
 	public boolean updateContainer(EncryptedContainer container) {
-		document = conn.getXML();
+		conn.getXML();
 		// cast the result to a DOM NodeList
 		NodeList nodes = conn.executeQuery("//" + childElement + "[@id='"
 				+ container.getId() + "']");
@@ -130,12 +131,14 @@ public class ContainerQuery {
 	 * @param encryptedFolder
 	 * @return
 	 */
-	public boolean deleteContainer(EncryptedContainer container) {
+	public boolean deleteContainer(List<EncryptedContainer> container) {
 		document = conn.getXML();
+		for(EncryptedContainer container1 : container){
 		NodeList nodes = conn.executeQuery("//" + childElement + "[@id='"
-				+ container.getId() + "']");
+				+ container1.getId() + "']");
 		for (int idx = 0; idx < nodes.getLength(); idx++) {
 			nodes.item(idx).getParentNode().removeChild(nodes.item(idx));
+		}
 		}
 		conn.writeToXML();
 		return true;

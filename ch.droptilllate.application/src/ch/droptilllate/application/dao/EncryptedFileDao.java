@@ -58,21 +58,16 @@ public class EncryptedFileDao implements IXmlDatabase {
 
 	@Override
 	public void deleteElement(Object obj) {
-		List<EncryptedFileDob> fileList = (List<EncryptedFileDob>) obj;
-		Iterator<EncryptedFileDob> fileIterator = fileList.iterator();	
 		if (filequery == null)
 			filequery = new FileQuery();
-		while (fileIterator.hasNext()){
-			filequery.deleteFile(fileIterator.next());
-		}		
-	}
+			filequery.deleteFile((List<EncryptedFileDob>) obj);
+}
 
 	@Override
 	public Object checkDatabase(Object obj) {
-		List<EncryptedFileDob> EncryptedFileDob = (List<EncryptedFileDob>) obj;
 		if (filequery == null)
 			filequery = new FileQuery();		
-		return filequery.checkDatabase(EncryptedFileDob);
+		return filequery.checkDatabase((List<EncryptedFileDob>) obj);
 	}
 
 }

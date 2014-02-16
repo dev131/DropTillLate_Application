@@ -3,8 +3,8 @@ package ch.droptilllate.application.com;
 import java.util.List;
 
 import ch.droptilllate.application.dnb.ShareFolder;
+import ch.droptilllate.application.info.CRUDCryptedFileResult;
 import ch.droptilllate.application.model.EncryptedFileDob;
-
 import ch.droptilllate.filesystem.info.*;
 import ch.droptilllate.filesystem.api.FileHandlingSummary;
 

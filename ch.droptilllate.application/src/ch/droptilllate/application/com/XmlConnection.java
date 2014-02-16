@@ -105,6 +105,7 @@ public class XmlConnection implements IXmlConnection {
 		} catch (TransformerException e) {
 			e.printStackTrace();
 		}
+	
 
 	}
 
@@ -116,7 +117,6 @@ public class XmlConnection implements IXmlConnection {
 		XPathFactory xFactory = XPathFactory.newInstance();
 		// create an XPath object
 		XPath xpath = xFactory.newXPath();
-
 		// compile the XPath expression
 		// run the query and get a nodeset
 		Object result = null;
@@ -125,7 +125,6 @@ public class XmlConnection implements IXmlConnection {
 
 			result = expr.evaluate(document.getDocumentElement(),
 					XPathConstants.NODESET);
-
 		} catch (XPathExpressionException e) {
 			e.printStackTrace();
 		}

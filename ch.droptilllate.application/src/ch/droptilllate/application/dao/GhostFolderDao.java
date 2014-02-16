@@ -21,7 +21,7 @@ import ch.droptilllate.application.dnb.GhostFolder;
 import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.query.GhostFolderQuery;
 
-public class EncryptedFolderDao implements IXmlDatabase {
+public class GhostFolderDao implements IXmlDatabase {
 
 	private GhostFolderQuery folderquery;
 
@@ -57,22 +57,17 @@ public class EncryptedFolderDao implements IXmlDatabase {
 	}
 
 	@Override
-	public void deleteElement(Object obj) {
-		List<GhostFolderDob> folderList = (List<GhostFolderDob>) obj;
-		Iterator<GhostFolderDob> folderIterator = folderList.iterator();	
+	public void deleteElement(Object obj) {	
 		if (folderquery == null)
 			folderquery = new GhostFolderQuery();
-		while (folderIterator.hasNext()){
-			folderquery.deleteFolder(folderIterator.next());
-		}		
+			folderquery.deleteFolder((List<GhostFolderDob>) obj);	
 	}
 
 	@Override
 	public Object checkDatabase(Object obj) {
-		List<GhostFolderDob> folderList = (List<GhostFolderDob>) obj;
 		if (folderquery == null)
 			folderquery = new GhostFolderQuery();		
-		return folderquery.checkDatabase(folderList);
+		return folderquery.checkDatabase((List<GhostFolderDob>) obj);
 		
 	}
 

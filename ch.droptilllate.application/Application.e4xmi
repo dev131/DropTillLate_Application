@@ -9,6 +9,7 @@
               <children xsi:type="menu:HandledMenuItem" xmi:id="_4l8AEIdaEeO6wsyQtk52Vg" elementId="ch.droptilllate.application.handledmenuitem.Open" label="Open" command="_Ku9s4IdZEeO6wsyQtk52Vg"/>
               <children xsi:type="menu:HandledMenuItem" xmi:id="_7KavAIdaEeO6wsyQtk52Vg" elementId="ch.droptilllate.application.handledmenuitem.Delete" label="Delete" command="_PAnvUIdZEeO6wsyQtk52Vg"/>
               <children xsi:type="menu:HandledMenuItem" xmi:id="_WAKpIJAREeOHkoJaezvPIA" elementId="ch.droptilllate.application.handledmenuitem.NewFolder" label="New Folder" command="_euHAYIN-EeOPbN9mpPOXoQ"/>
+              <children xsi:type="menu:HandledMenuItem" xmi:id="_7zYdgJbyEeOHEZkAJ8XYZg" elementId="ch.droptilllate.application.handledmenuitem.ShareFiles" label="Share selected files" command="_Bi6zMJbzEeOHEZkAJ8XYZg"/>
             </menus>
           </children>
           <children xsi:type="basic:Part" xmi:id="_stQhUJWREeOV_sbJE0cJGg" elementId="ch.droptilllate.application.part.0" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.views.LogView"/>
@@ -41,6 +42,7 @@
   <handlers xmi:id="_RME-wIN-EeOPbN9mpPOXoQ" elementId="ch.droptilllate.application.handler.newFolder" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.handlers.NewFolderHandler" command="_euHAYIN-EeOPbN9mpPOXoQ"/>
   <handlers xmi:id="_RSzNUIdZEeO6wsyQtk52Vg" elementId="ch.droptilllate.application.handler.open" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.handlers.OpenFileHandler" command="_Ku9s4IdZEeO6wsyQtk52Vg"/>
   <handlers xmi:id="_X6WwIIdZEeO6wsyQtk52Vg" elementId="ch.droptilllate.application.handler.deleteFile" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.handlers.DeleteFileHandler" command="_PAnvUIdZEeO6wsyQtk52Vg"/>
+  <handlers xmi:id="_DokREJbzEeOHEZkAJ8XYZg" elementId="ch.droptilllate.application.handler.shareFile" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.handlers.ShareHandler" command="_Bi6zMJbzEeOHEZkAJ8XYZg"/>
   <bindingTables xmi:id="_pupeAoNwEeOZSfPuT6ZnVQ" bindingContext="_puo2-INwEeOZSfPuT6ZnVQ">
     <bindings xmi:id="_pupeA4NwEeOZSfPuT6ZnVQ" keySequence="M1+Q" command="_pupeAINwEeOZSfPuT6ZnVQ"/>
     <bindings xmi:id="_pupeBoNwEeOZSfPuT6ZnVQ" keySequence="M1+O"/>
@@ -56,6 +58,7 @@
   <commands xmi:id="_euHAYIN-EeOPbN9mpPOXoQ" elementId="ch.droptilllate.application.command.newFolder" commandName="newFolder"/>
   <commands xmi:id="_Ku9s4IdZEeO6wsyQtk52Vg" elementId="ch.droptilllate.application.command.open" commandName="open"/>
   <commands xmi:id="_PAnvUIdZEeO6wsyQtk52Vg" elementId="ch.droptilllate.application.command.delete" commandName="delete"/>
+  <commands xmi:id="_Bi6zMJbzEeOHEZkAJ8XYZg" elementId="ch.droptilllate.application.command.share" commandName="share"/>
   <addons xmi:id="_puo28YNwEeOZSfPuT6ZnVQ" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_puo28oNwEeOZSfPuT6ZnVQ" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_puo284NwEeOZSfPuT6ZnVQ" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>

@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import converter.FileInfoConverter;
+import ch.droptilllate.application.converter.FileInfoConverter;
 import ch.droptilllate.application.dnb.ShareFolder;
+import ch.droptilllate.application.info.CRUDCryptedFileResult;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.views.Messages;
 import ch.droptilllate.filesystem.info.*;
@@ -100,7 +101,7 @@ public class FileSystemCom implements IFileSystemCom {
 	  				fileDob.getSize(), 
 	  				fileDob.getPath(), 
 	  				fileDob.getContainerID(), 
-	  				sharedFolder.getPath()));
+	  				sharedFolder.getPath() + sharedFolder.getID()));
 		}
 		IFileSystem ifile = new FileSystemHandler(); 
 		filehandling_result= ifile.moveFiles(fileInfoList);

@@ -11,62 +11,79 @@ public class Messages extends NLS {
 	public static String BUNDLE_NAME = "ch.droptilllate.application.views.messages";
 	public static String DATE_FORMAT;
 	public static String FILE;
-	public static String LocalPathDropBox;
-	public static String LocalPathTemp;
 	public static String Encryptview_ID;
-	public static String FilesXMLpath;
-	public static String FolderXMLpath;
-	public static String ShareFolderXMLpath;
-	public static String ContainerXMLpath;
-	public static String LocalPathDropBoxMaster;
 	public static String LoginPassword;
 	public static String CreatePassword;
 	public static String SaltMasterPassword;
-
+	public static String CreateSharePasswordDialog;
+	public static String PathShareFolderXML;
+	public static String PathContainerXML;
+	public static String PathFilesXML;
+	public static String PathFolderXML;
+	public static String PathDropBox;
+	public static String PathLocalTemp;
+	public static String PathDropBoxLocal;
+	public static String PathShareRealtionXML;
 	
+	static {
+		// initialize resource bundle
+		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
+	}
+
+	public static String getCreateSharePasswordDialog() {
+		return CreateSharePasswordDialog;
+	}
 
 	public static String getSaltMasterPassword() {
 		return SaltMasterPassword;
 	}
 
-
 	public static String getLoginPassword() {
 		return LoginPassword;
 	}
-
 
 	public static String getCreatePassword() {
 		return CreatePassword;
 	}
 
-
-	public static String getLocalPathDropBoxMaster() {
-		return LocalPathDropBoxMaster;
-	}
-
-
 	public static String getEncryptview_ID() {
 		return Encryptview_ID;
 	}
+	
 
-
-	public static String getFolderXMLpath() {
-		return FolderXMLpath;
+	public static String getPathShareFolderXML() {
+		return PathShareFolderXML;
 	}
 
-
-	public static String getShareFolderXMLpath() {
-		return ShareFolderXMLpath;
+	public static String getPathContainerXML() {
+		return PathContainerXML;
 	}
 
-	public static String getContainerXMLpath() {
-		return ContainerXMLpath;
+	public static String getPathFilesXML() {
+		return PathFilesXML;
 	}
 
-	public static String getFilesXMLpath() {
-		return FilesXMLpath;
+	public static String getPathFolderXML() {
+		return PathFolderXML;
 	}
 
+	public static String getPathDropBox() {
+		return PathDropBox;
+	}
+
+	public static String getPathLocalTemp() {
+		return PathLocalTemp;
+	}
+	
+
+	public static String getPathDropBoxLocal() {
+		return PathDropBoxLocal;
+	}
+	
+
+	public static String getPathShareRealtionXML() {
+		return PathShareRealtionXML;
+	}
 
 	public static String getTableColumnTitle(TableIdentifier identifier) {
 		String title = null;
@@ -91,29 +108,4 @@ public class Messages extends NLS {
 		return title;
 	}
 
-
-	static {
-		// initialize resource bundle
-		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-	}
-
-	public static String getLocalPathDropbox() {
-		return LocalPathDropBox;
-	}
-
-	public static String getTempFolder() {
-		return LocalPathTemp;
-	}
-
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
 }

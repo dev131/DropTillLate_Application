@@ -9,11 +9,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import ch.droptilllate.application.com.CRUDCryptedFileResult;
-import ch.droptilllate.application.com.CRUDShareFolderResult;
 import ch.droptilllate.application.com.IXmlConnection;
 import ch.droptilllate.application.com.XmlConnection;
 import ch.droptilllate.application.dnb.ShareFolder;
+import ch.droptilllate.application.info.CRUDCryptedFileResult;
+import ch.droptilllate.application.info.CRUDShareFolderResult;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.views.Messages;
 
@@ -24,7 +24,7 @@ public class ShareFolderQuery {
 	private String childElement = "sharefolder";
 
 	public ShareFolderQuery() {
-		conn = new XmlConnection(Messages.getShareFolderXMLpath(), rootElement);
+		conn = new XmlConnection(Messages.getPathShareFolderXML(), rootElement);
 
 	}
 
@@ -35,6 +35,7 @@ public class ShareFolderQuery {
 	 * @return
 	 */
 	public ShareFolder newShareFolder(ShareFolder sharefolder) {
+		document = conn.getXML();
 		if (sharefolder.getID() == null) {
 			int id = (int) (Math.random() * 10000 + 1);
 			// Check if it exist
@@ -42,8 +43,7 @@ public class ShareFolderQuery {
 				id = (int) (Math.random() * 10000 + 1);
 			}
 			sharefolder.setID(id);
-		}
-		document = conn.getXML();
+		}	
 		Node node = document.getFirstChild();
 		Element folder = document.createElement(childElement);
 		folder.setAttribute("id", Integer.toString(sharefolder.getID()));
@@ -56,7 +56,6 @@ public class ShareFolderQuery {
 	}
 
 	private boolean checkExist(int sharefolderID) {
-		document = conn.getXML();
 		boolean result = false;
 		// cast the result to a DOM NodeList
 		NodeList nodes = conn.executeQuery("//" + childElement + "[@id='"
@@ -67,7 +66,7 @@ public class ShareFolderQuery {
 	}
 
 	public ShareFolder getShareFolder(int sharefolderID) {
-		document = conn.getXML();
+		conn.getXML();
 		// cast the result to a DOM NodeList
 
 		NodeList nodes = conn.executeQuery("//" + childElement + "[@id='"
@@ -89,7 +88,7 @@ public class ShareFolderQuery {
 	 * @return
 	 */
 	public boolean updateShareFolder(ShareFolder sharefolder) {
-		document = conn.getXML();
+		conn.getXML();
 		// cast the result to a DOM NodeList
 		NodeList nodes = conn.executeQuery("//" + childElement + "[@id='"
 				+ sharefolder.getID() + "']");
@@ -109,20 +108,21 @@ public class ShareFolderQuery {
 	 * @param encryptedFolder
 	 * @return
 	 */
-	public boolean deleteShareFolder(ShareFolder sharefolder) {
-		document = conn.getXML();
+	public boolean deleteShareFolder(List<ShareFolder> sharefolder) {
+		conn.getXML();
+		for(ShareFolder shareFolder : sharefolder){
 		NodeList nodes = conn.executeQuery("//" + childElement + "[@id='"
-				+ sharefolder.getID() + "']");
+				+ shareFolder.getID() + "']");
 		for (int idx = 0; idx < nodes.getLength(); idx++) {
 			nodes.item(idx).getParentNode().removeChild(nodes.item(idx));
+		}
 		}
 		conn.writeToXML();
 		return true;
 	}
 
 	public CRUDShareFolderResult checkDatabase(List<ShareFolder> shareFolderList) {
-
-		document = conn.getXML();
+		conn.getXML();
 		List<ShareFolder> shareFolderSuccessList = new ArrayList<ShareFolder>();
 		List<ShareFolder> shareFolderErrorList = new ArrayList<ShareFolder>();
 		Iterator<ShareFolder> shareFolderInfoListIterator = shareFolderList

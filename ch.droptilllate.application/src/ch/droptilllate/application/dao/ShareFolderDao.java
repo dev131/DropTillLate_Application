@@ -42,20 +42,16 @@ public class ShareFolderDao implements IXmlDatabase {
 
 	@Override
 	public void deleteElement(Object obj) {
-		List<ShareFolder> sharefolderList = (List<ShareFolder>) obj;
-		Iterator<ShareFolder> sharefolderIterator = sharefolderList.iterator();	
 		if (sharefolderQuery == null)
 			sharefolderQuery = new ShareFolderQuery();
-		while (sharefolderIterator.hasNext()){
-			sharefolderQuery.deleteShareFolder(sharefolderIterator.next());
-		}		
+			sharefolderQuery.deleteShareFolder((List<ShareFolder>) obj);
+	
 	}
 
 	@Override
 	public Object checkDatabase(Object obj) {
-		List<ShareFolder> shareFolderList = (List<ShareFolder>) obj;
 		if (sharefolderQuery == null)
 			sharefolderQuery = new ShareFolderQuery();		
-		return sharefolderQuery.checkDatabase(shareFolderList);
+		return sharefolderQuery.checkDatabase((List<ShareFolder>) obj);
 	}
 }
