@@ -60,7 +60,7 @@ import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.provider.DropTillLateContentProvider;
 import ch.droptilllate.application.provider.DropTillLateLabelProvider;
-import ch.droptilllate.application.views.LoginView;
+import ch.droptilllate.application.views.InputView;
 import ch.droptilllate.application.views.Messages;
 import ch.droptilllate.application.views.Status;
 import ch.droptilllate.application.views.TableIdentifier;
@@ -74,7 +74,7 @@ public class ViewController {
 	private List<GhostFolderDob> folderList;
 	private static ViewController instance = null;
 	private List<EncryptedFileDob> actualDropFiles;
-	private LoginView dialog;
+	private InputView dialog;
 	private Shell shell;
 
 	public ViewController() {
@@ -108,29 +108,6 @@ public class ViewController {
 			tree.getColumn(identifier.ordinal()).setWidth(
 					identifier.columnWidth);
 		}
-		// LOGIN AREA
-		// Register Password
-
-		// TODO init password
-		KeyManager km = new KeyManager();
-		String password = null;
-		if (!km.checkMasterPasswordExisting()) {
-			dialog = new LoginView(shell, Messages.getCreatePassword());
-			dialog.create();
-			if (dialog.open() == Window.OK) {
-				password = dialog.getPassword();
-				km.initPassword(password, Messages.getSaltMasterPassword());
-			}
-		} else {
-			while (!km.checkPassword(password, Messages.getSaltMasterPassword(),0)) {
-				dialog = new LoginView(shell, Messages.getLoginPassword());
-				dialog.create();
-				if (dialog.open() == Window.OK) {
-					password = dialog.getPassword();
-				}
-			}
-		}
-		System.out.println("Successfull login");
 		// Get InitialInput
 		root = getInitialInput();
 		viewer.setInput(root);
@@ -428,7 +405,7 @@ public class ViewController {
 	public void shareFiles() {
 		fileList = new ArrayList<EncryptedFileDob>();
 		String password = null;
-		dialog = new LoginView(shell, Messages.getCreateSharePasswordDialog());
+		dialog = new InputView(shell, Messages.getCreateSharePasswordDialog());
 		dialog.create();
 		if (dialog.open() == Window.OK) {
 			password = dialog.getPassword();

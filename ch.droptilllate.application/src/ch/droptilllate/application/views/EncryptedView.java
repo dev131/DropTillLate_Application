@@ -11,12 +11,15 @@
  *******************************************************************************/
 package ch.droptilllate.application.views;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Iterator;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
@@ -29,6 +32,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
@@ -54,6 +59,26 @@ public class EncryptedView {
 		controller = ViewController.getInstance();
 		controller.initViewController(viewer, shell);
 		addListeners();
+		addCloseListener(parent);
+	}
+
+	private void addCloseListener(Composite parent) {
+		parent.addDisposeListener(new DisposeListener(){
+
+			@Override
+			public void widgetDisposed(DisposeEvent e) {
+				// TODO Auto-generated method stub
+				File file = new File(Messages.getPathLocalTemp());
+				try {
+					FileUtils.cleanDirectory(file);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			
+		});
+		
 	}
 
 	@Focus

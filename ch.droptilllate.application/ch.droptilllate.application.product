@@ -3,6 +3,7 @@
 
 <product name="ch.droptilllate.application" uid="DroptTillLate" id="ch.droptilllate.application.product" application="org.eclipse.e4.ui.workbench.swt.E4Application" version="0.3.2" useFeatures="false" includeLaunchers="true">
 
+
    <configIni use="default">
    </configIni>
 
@@ -13,6 +14,7 @@
 
    <windowImages/>
 
+
    <launcher name="DropTillLate">
       <solaris/>
       <win useIco="false">
@@ -20,12 +22,13 @@
       </win>
    </launcher>
 
+
    <vm>
    </vm>
 
+
    <plugins>
       <plugin id="ch.droptilllate.application"/>
-      <plugin id="ch.droptilllate.filesystem.plugin"/>
       <plugin id="com.ibm.icu"/>
       <plugin id="javax.annotation"/>
       <plugin id="javax.inject"/>

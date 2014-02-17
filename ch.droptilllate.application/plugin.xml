@@ -13,7 +13,11 @@
          </property>
          <property
                name="appName"
-               value="ch.droptilllate.application">
+               value="to-do">
+         </property>
+         <property
+               name="lifeCycleURI"
+               value="bundleclass://ch.droptilllate.application/ch.droptilllate.application.lifecycle.Manager">
          </property>
       </product>
    </extension>

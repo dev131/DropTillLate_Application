@@ -25,7 +25,7 @@ public class KeyManager {
 	 */
 	public boolean checkMasterPasswordExisting(){
 		IXmlDatabase dao = new ShareFolderDao();
-		ShareFolder folder = (ShareFolder) dao.getElementByID(0);
+		ShareFolder folder = (ShareFolder) dao.getElementByID(Integer.parseInt(Messages.getShareFolder0name()));
 		if(folder == null ){
 			return false;
 		}
@@ -37,14 +37,14 @@ public class KeyManager {
 	 * @return true if it match
 	 */
 	public boolean checkPassword(String password, String salt, int shareID){
+		Boolean exist = false;
 		KeysGenerator kg = new KeysGenerator();
 		IXmlDatabase dao = new ShareFolderDao();
 		ShareFolder folder = (ShareFolder) dao.getElementByID(shareID);
-		if(folder.getKey().equals(kg.getKey(password, salt)))
-			return true;
-		else{
-			return false;
-		}			
+		if(folder != null){
+			if(folder.getKey().equals(kg.getKey(password, salt)))exist= true;	
+		}	
+		return exist;
 	}
 	
 	public String generatePassword(String password, String salt){

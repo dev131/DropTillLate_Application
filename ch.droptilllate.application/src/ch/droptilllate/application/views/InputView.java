@@ -10,12 +10,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-public class LoginView extends TitleAreaDialog {
+public class InputView extends TitleAreaDialog {
 
 	private String title;
 	
-	 public LoginView(Shell parentShell, String title) {
-	
+	 public InputView(Shell parentShell, String title) {	
 		 super(parentShell);
 		 this.title = title;
 	
