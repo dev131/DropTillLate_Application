@@ -22,8 +22,8 @@ public class Messages extends NLS {
 	public static String PathFolderXML;
 	public static String PathDropBox;
 	public static String PathLocalTemp;
-	public static String PathDropBoxLocal;
 	public static String PathShareRealtionXML;
+	public static String ShareFolder0name;
 	
 	static {
 		// initialize resource bundle
@@ -76,13 +76,12 @@ public class Messages extends NLS {
 	}
 	
 
-	public static String getPathDropBoxLocal() {
-		return PathDropBoxLocal;
-	}
-	
-
 	public static String getPathShareRealtionXML() {
 		return PathShareRealtionXML;
+	}
+
+	public static String getShareFolder0name() {
+		return ShareFolder0name;
 	}
 
 	public static String getTableColumnTitle(TableIdentifier identifier) {

@@ -16,6 +16,7 @@ public class ShareFolder {
 	public ShareFolder(Integer id, String path, String key){
 		this.id= id;
 		this.key= key;
+		this.path = path;
 	}
 	
 	public Integer getID(){

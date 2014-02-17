@@ -13,13 +13,16 @@ public interface IFileSystemCom {
 	/**
 	 * Encrypt Files
 	 * @param droppedFiles
-	 * @param containerPath
+	 * @param shareFolderPath example Dropbox/DroptillLate/Sharefolder1 
+	 * shareFolderPath == null -> existingFile
 	 * @return List<FileInfo>
 	 */
-	public CRUDCryptedFileInfo encryptFile(List<EncryptedFileDob> droppedFiles, String containerPath);
+	public CRUDCryptedFileInfo encryptFile(List<EncryptedFileDob> droppedFiles, String sharedFolderPath);
 	/**
 	 * Update Files List<FileInfo>
 	 * @param filehandling_result  List<FileInfo>
+	 * @param sharefolderPath example Dropbox/DroptillLate/Sharefolder1
+	 * @return List<FileInfo>
 	 */
 	public CRUDCryptedFileInfo decryptFile(List<EncryptedFileDob> droppedFiles, String containerPath);
 	/**
@@ -32,6 +35,7 @@ public interface IFileSystemCom {
 	/**
 	 * Move Files into new ShareRelation
 	 * @param fileList
+	 * @param ShareFolder
 	 * @return FileInfoList
 	 */
 	public CRUDCryptedFileInfo moveFiles(List<EncryptedFileDob> fileList, ShareFolder sharedFolder);

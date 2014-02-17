@@ -1,7 +1,14 @@
 package ch.droptilllate.application.controller;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -10,6 +17,13 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import org.apache.commons.io.monitor.FileAlterationMonitor;
+import org.apache.commons.io.monitor.FileAlterationObserver;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileSystemManager;
+import org.apache.commons.vfs2.VFS;
+import org.apache.commons.vfs2.impl.DefaultFileMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -36,9 +50,11 @@ import ch.droptilllate.application.core.ShareManager;
 import ch.droptilllate.application.dao.ContainerDao;
 import ch.droptilllate.application.dao.EncryptedFileDao;
 import ch.droptilllate.application.dao.GhostFolderDao;
+import ch.droptilllate.application.dao.ShareFolderDao;
 import ch.droptilllate.application.dnb.EncryptedContainer;
 import ch.droptilllate.application.dnb.DroppedElement;
 import ch.droptilllate.application.info.CRUDCryptedFileInfo;
+import ch.droptilllate.application.listener.FileChangeListener;
 import ch.droptilllate.application.listener.TreeDragSourceListener;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
@@ -103,7 +119,7 @@ public class ViewController {
 			dialog.create();
 			if (dialog.open() == Window.OK) {
 				password = dialog.getPassword();
-				
+				km.initPassword(password, Messages.getSaltMasterPassword());
 			}
 		} else {
 			while (!km.checkPassword(password, Messages.getSaltMasterPassword(),0)) {
@@ -271,15 +287,40 @@ public class ViewController {
 		}
 		// TODO check succesfull list
 		IFileSystemCom iFileSystem = new FileSystemCom();
-		CRUDCryptedFileInfo result = 		iFileSystem.decryptFile(fileList, Messages.getPathLocalTemp());
+		CRUDCryptedFileInfo result = iFileSystem.decryptFile(fileList, Messages.getPathLocalTemp());
 		for(EncryptedFileDob fileDob : result.getEncryptedFileListSuccess()){
 			Status status = Status.getInstance();
 			status.setMessage(fileDob.getName() + " -> decryption worked");
+			System.out.println(Messages.PathLocalTemp + fileDob.getId() +"."+ fileDob.getType());
+			File file = new File(Messages.PathLocalTemp + fileDob.getId() +"."+ fileDob.getType());	
+			setFileListener(file, fileDob);
+			try {
+				Desktop.getDesktop().edit(file);
+			
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		for(EncryptedFileDob fileDob : result.getEncryptedFileListError()){
 			Status status = Status.getInstance();
 			status.setMessage(fileDob.getName() + " -> decryption not worked");
 		}
+	}
+	
+	private void setFileListener(File file, EncryptedFileDob dob){
+		FileObject listendir = null;
+		try {
+			FileSystemManager fsManager = VFS.getManager();
+			listendir = fsManager.resolveFile(file.getPath());
+		} catch (FileSystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		DefaultFileMonitor fm = new DefaultFileMonitor(new FileChangeListener(dob));
+		 fm.setRecursive(true);
+		 fm.addFile(listendir);
+		 fm.start();
 	}
 
 	/**
@@ -307,18 +348,17 @@ public class ViewController {
 
 		// insert DAO and update VIEW
 		for (String currentDroppedElement : droppedFileInformation) {
-			File element = new File(currentDroppedElement);		
 			dropTreeElements(new File(currentDroppedElement), dragOverFolder);
 		}
 		
 		// TODO Insert in Filesystem and Error handling Results
 		IFileSystemCom fileSystem = new FileSystemCom();	
-		CRUDCryptedFileInfo result = 	fileSystem.encryptFile(actualDropFiles, Messages.getPathDropBoxLocal());
+		CRUDCryptedFileInfo result = 	fileSystem.encryptFile(actualDropFiles, Messages.getPathDropBox() + Messages.getShareFolder0name());
 		//Update DB
 		IXmlDatabase fileDB = new EncryptedFileDao();
 		for(EncryptedFileDob fileDob : result.getEncryptedFileListSuccess()){			
 			fileDB.updateElement(fileDob);
-			EncryptedContainer container = new EncryptedContainer(fileDob.getContainerId(),0);
+			EncryptedContainer container = new EncryptedContainer(fileDob.getContainerId(),Integer.parseInt(Messages.getShareFolder0name()));
 			IXmlDatabase containerDB = new ContainerDao();
 			containerDB.newElement(container);
 			Status status = Status.getInstance();
@@ -327,6 +367,7 @@ public class ViewController {
 		for(EncryptedFileDob fileDob: result.getEncryptedFileListError()){
 			Status status = Status.getInstance();
 			status.setMessage(fileDob.getName() + " -> encryption not worked");
+			//TODO update tree
 		}
 		//Delete Error Files on DB
 		fileDB.deleteElement(result.getEncryptedFileListError());
@@ -370,7 +411,6 @@ public class ViewController {
 					droppedElement.getPath(), 
 					parent);			
 			IXmlDatabase folderDB = new GhostFolderDao();
-			folderDob = (GhostFolderDob) folderDB.newElement(folderDob);
 			GhostFolderDob encryptedPersistedFolder = (GhostFolderDob) folderDB.newElement(folderDob);
 			parent.addFolder(encryptedPersistedFolder);
 			for (File file : droppedElement.listFiles()) {
@@ -416,10 +456,7 @@ public class ViewController {
 				}
 			}
 			ShareManager shareManager = new ShareManager();
-			shareManager.newShareRelation(fileList, password);
-			
-		}
-		
-
+			shareManager.newShareRelation(fileList, password);			
+		}	
 	}
 }

@@ -32,8 +32,7 @@ public class FileInfoConverter {
 				if (fileDob.getId() == fileInfo.getFileID()) {
 					fileDob.setContainerId(fileInfo.getContainerInfo()
 							.getContainerID());
-					fileDob.setPath(fileInfo.getContainerInfo()
-							.getParentContainerPath());
+					fileDob.setPath(fileInfo.getContainerInfo().getShareRelationPath());
 					encryptedFileListSuccess.add(fileDob);
 				}
 			}

@@ -51,7 +51,8 @@ public class ShareManager {
 			IXmlDatabase fileDB = new EncryptedFileDao();
 			fileDB.updateElement(fileDob);
 		}
-		//
-		
+		//		
 	}
+	
+	
 }
