@@ -137,6 +137,7 @@ public class FileSystemCom implements IFileSystemCom {
 					sharedFolder.getPath() + sharedFolder.getID()));
 		}
 		KeyRelation relation = getKeyRelation(hashSet);
+		relation.addKeyOfShareRelation(sharedFolder.getPath(), sharedFolder.getKey());
 		IFileSystem ifile = new FileSystemHandler();
 		filehandling_result = ifile.moveFiles(fileInfoList,relation);
 		// Convert to FileCRUDResults
