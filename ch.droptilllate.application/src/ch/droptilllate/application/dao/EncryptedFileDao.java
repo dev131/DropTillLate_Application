@@ -6,6 +6,7 @@ import java.util.List;
 import ch.droptilllate.application.com.IXmlDatabase;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
+import ch.droptilllate.application.query.ContainerQuery;
 import ch.droptilllate.application.query.FileQuery;
 
 
@@ -58,6 +59,12 @@ public class EncryptedFileDao implements IXmlDatabase {
 		if (filequery == null)
 			filequery = new FileQuery();		
 		return filequery.checkDatabase((List<EncryptedFileDob>) obj);
+	}
+	
+	public Object getFileIdsByContainerId(Integer id){
+		if (filequery == null)
+			filequery = new FileQuery();	
+		return filequery.getFileIdsByContainerId(id);
 	}
 
 }

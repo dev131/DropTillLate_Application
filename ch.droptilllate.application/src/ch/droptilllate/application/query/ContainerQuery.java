@@ -164,4 +164,20 @@ public class ContainerQuery {
 		return result;
 	}
 
+	public Object getContainerBySharedFolderId(Integer id) {
+		conn.getXML();
+		// cast the result to a DOM NodeList
+		NodeList nodes = conn.executeQuery("//" + childElement + "[@shareFolderID='" + id
+				+ "']");
+		ArrayList<EncryptedContainer> containerList = new ArrayList<EncryptedContainer>();
+		for (int idx = 0; idx < nodes.getLength(); idx++) {
+			EncryptedContainer container = new EncryptedContainer(
+					Integer.parseInt(nodes.item(idx).getAttributes().getNamedItem("id").getNodeValue()),
+					Integer.parseInt(nodes.item(idx).getAttributes().getNamedItem("shareFolderID").getNodeValue())
+					);
+			containerList.add(container);
+		}
+		return containerList;
+	}
+
 }

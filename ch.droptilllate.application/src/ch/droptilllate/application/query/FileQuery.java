@@ -11,8 +11,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import ch.droptilllate.application.com.IXmlConnection;
 import ch.droptilllate.application.com.XmlConnection;
+import ch.droptilllate.application.dnb.EncryptedContainer;
 import ch.droptilllate.application.info.CRUDCryptedFileInfo;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
@@ -239,5 +241,16 @@ public class FileQuery {
 		result.setEncryptedFileListError(fileErrorList);
 		result.setEncryptedFileListSuccess(fileSuccessList);
 		return result;
+	}
+
+	public Object getFileIdsByContainerId(Integer id) {
+		List<Integer> ids = new ArrayList<Integer>();
+		document = conn.getXML();
+		NodeList nodes = conn.executeQuery("//" + childElement + "[@containerID='"
+				+ id + "']");
+		for (int i = 0; i < nodes.getLength(); i++) {					 
+			ids.add(Integer.parseInt(nodes.item(i).getAttributes().getNamedItem("id").getNodeValue()));
+		}
+		return ids;
 	}
 }

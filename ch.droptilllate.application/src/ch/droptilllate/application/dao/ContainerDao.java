@@ -54,5 +54,10 @@ public class ContainerDao implements IXmlDatabase {
 			containerQuery = new ContainerQuery();		
 		return containerQuery.checkDatabase((List<EncryptedContainer>) obj);
 	}
+	public Object getContainerBySharedFolderId(Integer id){
+		if (containerQuery == null)
+			containerQuery = new ContainerQuery();		
+		return containerQuery.getContainerBySharedFolderId(id);
+	}
 
 }

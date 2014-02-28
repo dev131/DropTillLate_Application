@@ -16,13 +16,8 @@ public class Messages extends NLS {
 	public static String CreatePassword;
 	public static String SaltMasterPassword;
 	public static String CreateSharePasswordDialog;
-	public static String PathShareFolderXML;
-	public static String PathContainerXML;
-	public static String PathFilesXML;
-	public static String PathFolderXML;
 	public static String PathDropBox;
 	public static String PathLocalTemp;
-	public static String PathShareRealtionXML;
 	public static String ShareFolder0name;
 	
 	static {
@@ -51,20 +46,20 @@ public class Messages extends NLS {
 	}
 	
 
-	public static String getPathShareFolderXML() {
-		return PathShareFolderXML;
+	public static String getPathShareFolderXML() {		
+		return getPathDropBox() +"XML/sharefolderxml.xml"; 
 	}
 
 	public static String getPathContainerXML() {
-		return PathContainerXML;
+		return getPathDropBox()  +"XML/containerxml.xml";
 	}
 
 	public static String getPathFilesXML() {
-		return PathFilesXML;
+		return getPathDropBox()  +"XML/filesxml.xml";
 	}
 
 	public static String getPathFolderXML() {
-		return PathFolderXML;
+		return getPathDropBox() +"XML/folderxml.xml";
 	}
 
 	public static String getPathDropBox() {
@@ -77,7 +72,7 @@ public class Messages extends NLS {
 	
 
 	public static String getPathShareRealtionXML() {
-		return PathShareRealtionXML;
+		return getPathDropBox() +"XML/sharerelation.xml";
 	}
 
 	public static String getShareFolder0name() {
