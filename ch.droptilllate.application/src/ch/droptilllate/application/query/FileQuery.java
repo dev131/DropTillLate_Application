@@ -243,14 +243,47 @@ public class FileQuery {
 		return result;
 	}
 
-	public Object getFileIdsByContainerId(Integer id) {
+	public Object getFileIdsByContainerId(Integer containerid) {
 		List<Integer> ids = new ArrayList<Integer>();
 		document = conn.getXML();
 		NodeList nodes = conn.executeQuery("//" + childElement + "[@containerID='"
-				+ id + "']");
+				+ containerid + "']");
 		for (int i = 0; i < nodes.getLength(); i++) {					 
 			ids.add(Integer.parseInt(nodes.item(i).getAttributes().getNamedItem("id").getNodeValue()));
 		}
 		return ids;
+	}
+	
+	public List<EncryptedFileDob> getFileByContainerId(Integer containerid){
+		List<EncryptedFileDob> files = new ArrayList<EncryptedFileDob>();
+		document = conn.getXML();
+		NodeList nodes = conn.executeQuery("//" + childElement + "[@containerID='"
+				+ containerid + "']");
+		for (int i = 0; i < nodes.getLength(); i++) {
+			String date1 = nodes.item(i).getAttributes().getNamedItem("date")
+					.getNodeValue().toString();
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			Date parsed = null;
+			try {
+				parsed = format.parse(date1);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			java.sql.Date sqlDate = new java.sql.Date(parsed.getTime());
+			long size = Long.parseLong(nodes.item(i).getAttributes()
+					.getNamedItem("size").getNodeValue());
+			//Integer id, String name, Date date, String path, GhostFolderDob parent, String type, Long size, Integer containerId
+			EncryptedFileDob fileDob = new EncryptedFileDob(
+					Integer.parseInt(nodes.item(i).getAttributes().getNamedItem("id").getNodeValue()), 
+					nodes.item(i).getAttributes().getNamedItem("name").getNodeValue(), 
+					sqlDate, 
+					nodes.item(i).getAttributes().getNamedItem("path").getNodeValue(), 
+					null, 
+					nodes.item(i).getAttributes().getNamedItem("type").getNodeValue(),  
+					size, 
+					Integer.parseInt(nodes.item(i).getAttributes().getNamedItem("containerID").getNodeValue()));
+			files.add(fileDob);
+		}
+		return files;		
 	}
 }

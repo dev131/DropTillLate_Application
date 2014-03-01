@@ -159,10 +159,10 @@ public class FileSystemCom implements IFileSystemCom {
 		KeyRelation relation = new KeyRelation();
 		if(hashSet.isEmpty()) relation = null;
 		for (Integer ContainerId : hashSet) {
-			IXmlDatabase containerDao = new ContainerDao();
+			AbstractXmlDatabase containerDao = new ContainerDao();
 			EncryptedContainer container = (EncryptedContainer) containerDao
 					.getElementByID(ContainerId);
-			IXmlDatabase shareFolderDao = new ShareFolderDao();
+			AbstractXmlDatabase shareFolderDao = new ShareFolderDao();
 			ShareFolder shareFolder = (ShareFolder) shareFolderDao
 					.getElementByID(container.getShareFolderId());
 			relation.addKeyOfShareRelation(shareFolder.getPath()+shareFolder.getID(),

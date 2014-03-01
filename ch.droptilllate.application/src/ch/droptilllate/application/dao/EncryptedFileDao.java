@@ -3,14 +3,14 @@ package ch.droptilllate.application.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.droptilllate.application.com.IXmlDatabase;
+import ch.droptilllate.application.com.AbstractXmlDatabase;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.query.ContainerQuery;
 import ch.droptilllate.application.query.FileQuery;
 
 
-public class EncryptedFileDao implements IXmlDatabase {
+public class EncryptedFileDao extends AbstractXmlDatabase {
 
 	private FileQuery filequery;
 
@@ -65,6 +65,12 @@ public class EncryptedFileDao implements IXmlDatabase {
 		if (filequery == null)
 			filequery = new FileQuery();	
 		return filequery.getFileIdsByContainerId(id);
+	}
+	
+	public List<EncryptedFileDob> getFileByContainerId(Integer containerid){
+		if (filequery == null)
+			filequery = new FileQuery();	
+		return filequery.getFileByContainerId(containerid);
 	}
 
 }

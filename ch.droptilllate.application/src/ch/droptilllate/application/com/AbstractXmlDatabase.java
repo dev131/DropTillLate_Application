@@ -1,30 +1,34 @@
 package ch.droptilllate.application.com;
 
+import java.util.List;
 
-public interface IXmlDatabase {
+import ch.droptilllate.application.model.EncryptedFileDob;
+
+
+public abstract class AbstractXmlDatabase {
 	/**
 	 * Insert Element
 	 * @param obj
 	 * @return Dob
 	 */
-	public Object newElement(Object obj);
+	public abstract Object newElement(Object obj);
 	/**
 	 * Get Element by ID
 	 * @param id int
 	 */
-	public Object getElementByID(int id);
+	public abstract Object getElementByID(int id);
 
 	/**
 	 * Update Element Data
 	 * @param Dob 
 	 */
-	public void updateElement(Object obj);
+	public abstract void updateElement(Object obj);
 	
 	/**
 	 * Delete Element 
 	 * @param obj list of Dob
 	 */
-	public void deleteElement(Object obj);
+	public abstract void deleteElement(Object obj);
 	
 	/**
 	 * Check Database if Entries exists
@@ -33,6 +37,6 @@ public interface IXmlDatabase {
 	 * @param obj List of Dob
 	 * @return CRUDResults
 	 */
-	public Object checkDatabase(Object obj);
+	public abstract Object checkDatabase(Object obj);
 	
 }

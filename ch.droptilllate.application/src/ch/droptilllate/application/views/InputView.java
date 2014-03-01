@@ -24,7 +24,10 @@ public class InputView extends TitleAreaDialog {
 	  private String passwordString;
 	  private Text EmailText;
 	  private String emailString;
-
+	  private Label lblEmail;
+	  private Text foldernameText;
+	  private  Label lblFolderName;
+	  private String foldernameString;
 
 	  @Override
 	  public void create() {
@@ -44,14 +47,25 @@ public class InputView extends TitleAreaDialog {
 
 	    createLastName(container);
 	    
-	    Label lblEmail = new Label(container, SWT.NONE);
-	    lblEmail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+	    lblEmail = new Label(container, SWT.NONE);
 	    lblEmail.setText("E-mail");
 	    
 	    EmailText = new Text(container, SWT.BORDER);
 	    EmailText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-
+	    
+	    lblFolderName = new Label(container, SWT.NONE);
+	    lblFolderName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+	    lblFolderName.setText("Folder Name");
+	    
+	    foldernameText = new Text(container, SWT.BORDER);
+	    foldernameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+	    foldernameText.setVisible(false);
+	    lblFolderName.setVisible(false);
 	    return area;
+	  }
+	  public void setFolderNameVisible(){
+		  foldernameText.setVisible(true);
+		    lblFolderName.setVisible(true);
 	  }
 
 	  
@@ -78,6 +92,7 @@ public class InputView extends TitleAreaDialog {
 	  private void saveInput() {
 		  passwordString = PasswordText.getText();
 		  emailString = EmailText.getText();
+		  foldernameString = foldernameText.getText();
 	  }
 
 	  @Override
@@ -93,4 +108,10 @@ public class InputView extends TitleAreaDialog {
 	  public String getEmail(){
 		  return emailString;
 	  }
+
+	public String getFoldernameString() {
+		return foldernameString;
+	}
+	  
+	  
 	} 

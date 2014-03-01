@@ -11,7 +11,6 @@ import org.eclipse.swt.widgets.MessageBox;
 
 import ch.droptilllate.application.com.FileSystemCom;
 import ch.droptilllate.application.com.IFileSystemCom;
-import ch.droptilllate.application.com.IXmlDatabase;
 import ch.droptilllate.application.dao.ContainerDao;
 import ch.droptilllate.application.dao.EncryptedFileDao;
 import ch.droptilllate.application.dao.ShareFolderDao;
@@ -81,7 +80,7 @@ public class ShareManager {
 	}
 
 	private void insertShareRelation(ShareFolder shareFolder) {
-		IXmlDatabase dao = new ShareRelationDao();
+		ShareRelationDao dao = new ShareRelationDao();
 		ShareRelation sharerelation = new ShareRelation(shareFolder.getID(), Messages.getOwnerMail());
 		dao.newElement(sharerelation);
 		for(String mail : emailList){
@@ -101,7 +100,7 @@ public class ShareManager {
 		KeyManager km = new KeyManager();
 		String key = null;		
 		// Create and insert newShareFolder in DB and create Id
-		IXmlDatabase shareDao = new ShareFolderDao();
+		ShareFolderDao shareDao = new ShareFolderDao();
 		ShareFolder sharedFolder = new ShareFolder(null,
 				Messages.getPathDropBox(), null);
 		sharedFolder = (ShareFolder) shareDao.newElement(sharedFolder);
@@ -119,12 +118,12 @@ public class ShareManager {
 		// Update Database
 		HashSet<Integer> hashSet = new HashSet<Integer>();
 		for (EncryptedFileDob fileDob : result.getEncryptedFileListSuccess()) {
-			IXmlDatabase fileDB = new EncryptedFileDao();
+			EncryptedFileDao fileDB = new EncryptedFileDao();
 			fileDB.updateElement(fileDob);
 			hashSet.add(fileDob.getContainerId());
 		}
 		//Update Containers
-		IXmlDatabase containerDB = new ContainerDao();
+		ContainerDao containerDB = new ContainerDao();
 		for(Integer i : hashSet){
 			//TODO Delete not used container in db
 			EncryptedContainer container = new EncryptedContainer(i, sharedFolder.getID());
@@ -132,12 +131,34 @@ public class ShareManager {
 		}
 		//Insert new ShareRelations
 		insertShareRelation(sharedFolder);
+		
+		createUpdateFiles(sharedFolder);
 	}
 	
+	private void createUpdateFiles(ShareFolder sharedFolder) {
+	ContainerDao contDao = new ContainerDao();
+	List<EncryptedContainer> contList = (List<EncryptedContainer>) contDao.getContainerBySharedFolderId(sharedFolder.getID());
+	EncryptedFileDao fileDao = new EncryptedFileDao();
+	List<EncryptedFileDob> dobfileList = new ArrayList<EncryptedFileDob>();
+	for(EncryptedContainer container : contList){
+		List<EncryptedFileDob> dobfilelistTemp = fileDao.getFileByContainerId(container.getId());
+		for(EncryptedFileDob tempDob : dobfilelistTemp){
+			dobfileList.add(tempDob);
+		}
+	}	
+	ShareRelationDao shareDao = new ShareRelationDao();
+	List<ShareRelation> shareRelationList = (List<ShareRelation>) shareDao.getElementByID(sharedFolder.getID());
+	UpdateXMLGenerator gen = new UpdateXMLGenerator();
+	gen.createContainerUpdateXML(sharedFolder.getPath() + sharedFolder.getID(), contList);
+	gen.createFileUpdateXML(sharedFolder.getPath()+ sharedFolder.getID(), dobfileList);
+	gen.creatShareRelationUpdateXML(sharedFolder.getPath()+ sharedFolder.getID(), shareRelationList);
+	
+	}
+
 	private void alertMembers(HashSet<Integer> hashSet_shareFolderList){
 		List<ShareRelation> shareRelationList = new ArrayList<ShareRelation>();	
 		for(Integer i : hashSet_shareFolderList){
-			IXmlDatabase dao = new ShareRelationDao();
+			ShareRelationDao dao = new ShareRelationDao();
 			//Return list of all shareRelation
 			List<ShareRelation> shareRelationListTemp = (List<ShareRelation>) dao.getElementByID(i);
 			for(ShareRelation relation : shareRelationListTemp){
@@ -152,8 +173,8 @@ public class ShareManager {
 
 	private boolean checkIfMoreFilesAvailable(Integer shareFolderId,
 			List<EncryptedFileDob> fileList) {
-		IXmlDatabase dao = new ContainerDao();
-		IXmlDatabase daof = new EncryptedFileDao();
+		ContainerDao dao = new ContainerDao();
+		EncryptedFileDao daof = new EncryptedFileDao();
 		List<EncryptedContainer> containerlist = new ArrayList<EncryptedContainer>();
 		containerlist = (List<EncryptedContainer>) ((ContainerDao) dao)
 				.getContainerBySharedFolderId(shareFolderId);
@@ -173,7 +194,7 @@ public class ShareManager {
 	}
 
 	private HashSet<Integer> getShareFolderList(List<EncryptedFileDob> fileList) {
-		IXmlDatabase dao = new ContainerDao();
+		ContainerDao dao = new ContainerDao();
 		HashSet<Integer> hashSet = new HashSet<Integer>();
 		for (EncryptedFileDob fileDob : fileList) {
 			EncryptedContainer container = (EncryptedContainer) dao
@@ -186,7 +207,7 @@ public class ShareManager {
 	private HashMap<Integer, ArrayList<EncryptedFileDob>> getHashMap(
 			List<EncryptedFileDob> fileList, HashSet<Integer> hashSet) {
 		HashMap<Integer, ArrayList<EncryptedFileDob>> hashmap = new HashMap<Integer, ArrayList<EncryptedFileDob>>();
-		IXmlDatabase dao = new ContainerDao();
+		ContainerDao dao = new ContainerDao();
 		for (Integer sharefolderId : hashSet) {
 			ArrayList<EncryptedFileDob> arraylist = new ArrayList<EncryptedFileDob>();
 			for (EncryptedFileDob fileDob : fileList) {

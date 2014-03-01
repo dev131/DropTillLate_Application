@@ -3,13 +3,13 @@ package ch.droptilllate.application.dao;
 import java.util.Iterator;
 import java.util.List;
 
-import ch.droptilllate.application.com.IXmlDatabase;
+import ch.droptilllate.application.com.AbstractXmlDatabase;
 import ch.droptilllate.application.dnb.ShareFolder;
 import ch.droptilllate.application.dnb.ShareRelation;
 import ch.droptilllate.application.query.ShareFolderQuery;
 import ch.droptilllate.application.query.ShareRelationQuery;
 
-public class ShareRelationDao implements IXmlDatabase {
+public class ShareRelationDao extends AbstractXmlDatabase {
 
 	private ShareRelationQuery shareRelationQuery;
 

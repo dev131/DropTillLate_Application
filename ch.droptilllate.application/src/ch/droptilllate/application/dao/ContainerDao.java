@@ -7,7 +7,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import ch.droptilllate.application.com.IXmlDatabase;
+import ch.droptilllate.application.com.AbstractXmlDatabase;
 import ch.droptilllate.application.dnb.EncryptedContainer;
 import ch.droptilllate.application.dnb.ShareFolder;
 import ch.droptilllate.application.model.GhostFolderDob;
@@ -15,7 +15,7 @@ import ch.droptilllate.application.query.ContainerQuery;
 import ch.droptilllate.application.query.GhostFolderQuery;
 import ch.droptilllate.application.query.ShareFolderQuery;
 
-public class ContainerDao implements IXmlDatabase {
+public class ContainerDao extends AbstractXmlDatabase {
 	ContainerQuery containerQuery;
 
 	@Override

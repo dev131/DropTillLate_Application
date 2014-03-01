@@ -20,10 +20,19 @@ public class Messages extends NLS {
 	public static String PathLocalTemp;
 	public static String ShareFolder0name;
 	public static String OwnerMail;
+	public static String FileUpdateXML;
+	public static String FolderUpdateXML;
+	public static String ContainerUpdateXML;
+	public static String ShareRelationUpdateXML;
+	public static String ImportDialog;
 	
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
+	}
+
+	public static String getImportDialog() {
+		return ImportDialog;
 	}
 
 	public static String getOwnerMail() {
@@ -49,22 +58,21 @@ public class Messages extends NLS {
 	public static String getEncryptview_ID() {
 		return Encryptview_ID;
 	}
-	
 
-	public static String getPathShareFolderXML() {		
-		return getPathDropBox() +"XML/sharefolderxml.xml"; 
+	public static String getPathShareFolderXML() {
+		return getPathDropBox() + "XML/sharefolderxml.xml";
 	}
 
 	public static String getPathContainerXML() {
-		return getPathDropBox()  +"XML/containerxml.xml";
+		return getPathDropBox() + "XML/containerxml.xml";
 	}
 
 	public static String getPathFilesXML() {
-		return getPathDropBox()  +"XML/filesxml.xml";
+		return getPathDropBox() + "XML/filesxml.xml";
 	}
 
 	public static String getPathFolderXML() {
-		return getPathDropBox() +"XML/folderxml.xml";
+		return getPathDropBox() + "XML/folderxml.xml";
 	}
 
 	public static String getPathDropBox() {
@@ -74,14 +82,30 @@ public class Messages extends NLS {
 	public static String getPathLocalTemp() {
 		return PathLocalTemp;
 	}
-	
 
 	public static String getPathShareRealtionXML() {
-		return getPathDropBox() +"XML/sharerelation.xml";
+		return getPathDropBox() + "XML/sharerelation.xml";
 	}
 
 	public static String getShareFolder0name() {
 		return ShareFolder0name;
+	}
+	
+
+	public static String getFileUpdateXML() {
+		return FileUpdateXML;
+	}
+
+	public static String getFolderUpdateXML() {
+		return FolderUpdateXML;
+	}
+
+	public static String getContainerUpdateXML() {
+		return ContainerUpdateXML;
+	}
+
+	public static String getShareRelationUpdateXML() {
+		return ShareRelationUpdateXML;
 	}
 
 	public static String getTableColumnTitle(TableIdentifier identifier) {

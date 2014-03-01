@@ -15,7 +15,7 @@ import javax.xml.transform.TransformerException;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-import ch.droptilllate.application.com.IXmlDatabase;
+import ch.droptilllate.application.com.AbstractXmlDatabase;
 import ch.droptilllate.application.dao.EncryptedFileDao;
 import ch.droptilllate.application.dao.GhostFolderDao;
 import ch.droptilllate.application.dnb.EncryptedFile;
@@ -52,8 +52,8 @@ public class FileStructureDB {
 		
 		//DAO
 		//INSERT
-		IXmlDatabase fileDao = new EncryptedFileDao();
-		IXmlDatabase folderDao = new GhostFolderDao();
+		AbstractXmlDatabase fileDao = new EncryptedFileDao();
+		AbstractXmlDatabase folderDao = new GhostFolderDao();
 		GhostFolderDob tempFolderDob = (GhostFolderDob) folderDao.newElement(child);
 		EncryptedFileDob tempFileDob = (EncryptedFileDob) fileDao.newElement(dobf);		
 		//GET PRINT OUT

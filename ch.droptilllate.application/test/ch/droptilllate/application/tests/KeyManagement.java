@@ -2,7 +2,7 @@ package ch.droptilllate.application.tests;
 
 import org.junit.Test;
 
-import ch.droptilllate.application.com.IXmlDatabase;
+import ch.droptilllate.application.com.AbstractXmlDatabase;
 import ch.droptilllate.application.dao.ContainerDao;
 import ch.droptilllate.application.dao.ShareFolderDao;
 import ch.droptilllate.application.dnb.EncryptedContainer;
@@ -17,8 +17,8 @@ public class KeyManagement {
 		// Container(int id, int shareFolderID)
 		// public ShareFolder(int id, String path, String key)
 		int anzahl = 10;
-		IXmlDatabase cDao = new ContainerDao();
-		IXmlDatabase sDao = new ShareFolderDao();
+		AbstractXmlDatabase cDao = new ContainerDao();
+		AbstractXmlDatabase sDao = new ShareFolderDao();
 //		ContainerQuery containerQuery = new ContainerQuery();
 //		ShareFolderQuery sharefolderQuery = new ShareFolderQuery();
 		// Create

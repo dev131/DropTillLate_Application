@@ -13,7 +13,7 @@ import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.widgets.TreeItem;
 
-import ch.droptilllate.application.com.IXmlDatabase;
+import ch.droptilllate.application.com.AbstractXmlDatabase;
 import ch.droptilllate.application.dao.EncryptedFileDao;
 import ch.droptilllate.application.dao.GhostFolderDao;
 import ch.droptilllate.application.dnb.DroppedElement;
@@ -69,8 +69,8 @@ public class TreeDropTargetAdapter extends DropTargetAdapter {
 
 	@Override
 	public void drop(DropTargetEvent event) {
-		IXmlDatabase encryptedFileDao = new EncryptedFileDao();
-		IXmlDatabase encryptedFolderDao = new GhostFolderDao();
+		AbstractXmlDatabase encryptedFileDao = new EncryptedFileDao();
+		AbstractXmlDatabase encryptedFolderDao = new GhostFolderDao();
 		// Handle Drag'N'Drop from Desktop into tree
 		if (fileTransfer.isSupportedType(event.currentDataType)) {
 			final String[] droppedFileInformation = (String[]) event.data;

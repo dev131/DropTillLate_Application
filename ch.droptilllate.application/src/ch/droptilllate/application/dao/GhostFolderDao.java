@@ -3,11 +3,11 @@ package ch.droptilllate.application.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.droptilllate.application.com.IXmlDatabase;
+import ch.droptilllate.application.com.AbstractXmlDatabase;
 import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.query.GhostFolderQuery;
 
-public class GhostFolderDao implements IXmlDatabase {
+public class GhostFolderDao extends AbstractXmlDatabase {
 
 	private GhostFolderQuery folderquery;
 
