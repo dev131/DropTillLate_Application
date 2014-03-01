@@ -17,7 +17,7 @@ public class ShareRelationDao implements IXmlDatabase {
 	public Object newElement(Object obj) {
 		if (shareRelationQuery == null)
 			shareRelationQuery = new ShareRelationQuery();		 
-		 return shareRelationQuery.newShareFolder((ShareRelation) obj);
+		 return shareRelationQuery.newShareRelation((ShareRelation) obj);
 	}
 
 	@Override

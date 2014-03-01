@@ -15,7 +15,7 @@ public class KeyManager {
 	public void initPassword(String password, String salt){
 		KeysGenerator kg = new KeysGenerator();
 		IXmlDatabase dao = new ShareFolderDao();
-		ShareFolder	folder = new ShareFolder(Integer.parseInt(Messages.getShareFolder0name()), Messages.getPathDropBox() + Messages.getShareFolder0name(), kg.getKey(password, salt));
+		ShareFolder	folder = new ShareFolder(Integer.parseInt(Messages.getShareFolder0name()), Messages.getPathDropBox(), kg.getKey(password, salt));
 		dao.newElement(folder);
 	}
 	

@@ -1,5 +1,6 @@
 package ch.droptilllate.application.query;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +26,12 @@ public class ShareRelationQuery {
 
 	public ShareRelationQuery() {
 		conn = new XmlConnection(Messages.getPathShareRealtionXML(),
-				rootElement);
-
+				rootElement);	
+		List<ShareRelation> shareRelationList = getShareRelations(Integer.parseInt(Messages.getShareFolder0name()));
+		if(shareRelationList.isEmpty()){
+			ShareRelation shareRelation = new ShareRelation(Integer.parseInt(Messages.getShareFolder0name()), Messages.getOwnerMail());
+			newShareRelation(shareRelation);
+		}	
 	}
 
 	/**
@@ -35,7 +40,7 @@ public class ShareRelationQuery {
 	 * @param encryptedFolder
 	 * @return
 	 */
-	public ShareRelation newShareFolder(ShareRelation shareRelation) {
+	public ShareRelation newShareRelation(ShareRelation shareRelation) {
 		document = conn.getXML();
 		Node node = document.getFirstChild();
 		Element folder = document.createElement(childElement);

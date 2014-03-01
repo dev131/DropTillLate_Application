@@ -114,7 +114,7 @@ public class ViewController {
 		viewer.expandToLevel(1);
 		// Register Drag&Drop Listener
 		registerDragDrop();
-
+	
 	}
 
 	/**
@@ -330,7 +330,7 @@ public class ViewController {
 		
 		// TODO Insert in Filesystem and Error handling Results
 		IFileSystemCom fileSystem = new FileSystemCom();	
-		CRUDCryptedFileInfo result = 	fileSystem.encryptFile(actualDropFiles, Messages.getPathDropBox() + Messages.getShareFolder0name());
+		CRUDCryptedFileInfo result = fileSystem.encryptFile(actualDropFiles, Messages.getPathDropBox() + Messages.getShareFolder0name());
 		//Update DB
 		IXmlDatabase fileDB = new EncryptedFileDao();
 		for(EncryptedFileDob fileDob : result.getEncryptedFileListSuccess()){			
@@ -404,14 +404,16 @@ public class ViewController {
 	 */
 	public void shareFiles() {
 		fileList = new ArrayList<EncryptedFileDob>();
+		List<String> mailList = new ArrayList<String>();
 		String password = null;
 		dialog = new InputView(shell, Messages.getCreateSharePasswordDialog());
 		dialog.create();
 		if (dialog.open() == Window.OK) {
 			password = dialog.getPassword();
+			mailList.add(dialog.getEmail());
 		}
-		if(password == null){
-			MessageDialog.openError(shell, "Error", "Error occured no password");
+		if(password == null || mailList.isEmpty()){
+			MessageDialog.openError(shell, "Error", "Error occured no password or email");
 		}
 		else{
 			// TODO Statusline
@@ -433,7 +435,7 @@ public class ViewController {
 				}
 			}
 			ShareManager shareManager = new ShareManager();
-			shareManager.newShareRelation(fileList, password);			
+			shareManager.newShareRelation(fileList, password, mailList);			
 		}	
 	}
 }

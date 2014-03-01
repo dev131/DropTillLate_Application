@@ -19,10 +19,15 @@ public class Messages extends NLS {
 	public static String PathDropBox;
 	public static String PathLocalTemp;
 	public static String ShareFolder0name;
+	public static String OwnerMail;
 	
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
+	}
+
+	public static String getOwnerMail() {
+		return OwnerMail;
 	}
 
 	public static String getCreateSharePasswordDialog() {

@@ -21,8 +21,9 @@ public class InputView extends TitleAreaDialog {
 }
 
 	  private Text PasswordText;
-
 	  private String passwordString;
+	  private Text EmailText;
+	  private String emailString;
 
 
 	  @Override
@@ -42,6 +43,13 @@ public class InputView extends TitleAreaDialog {
 
 
 	    createLastName(container);
+	    
+	    Label lblEmail = new Label(container, SWT.NONE);
+	    lblEmail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+	    lblEmail.setText("E-mail");
+	    
+	    EmailText = new Text(container, SWT.BORDER);
+	    EmailText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 	    return area;
 	  }
@@ -69,7 +77,7 @@ public class InputView extends TitleAreaDialog {
 	  // as soon as the Dialog closes
 	  private void saveInput() {
 		  passwordString = PasswordText.getText();
-
+		  emailString = EmailText.getText();
 	  }
 
 	  @Override
@@ -82,4 +90,7 @@ public class InputView extends TitleAreaDialog {
 	    return passwordString;
 	  }
 
+	  public String getEmail(){
+		  return emailString;
+	  }
 	} 

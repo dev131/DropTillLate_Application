@@ -62,7 +62,7 @@ public class FileSystemCom implements IFileSystemCom {
 					.getElementByID(Integer.parseInt(Messages
 							.getShareFolder0name()));
 			relation = new KeyRelation();
-			relation.addKeyOfShareRelation(shareFolder.getPath(),
+			relation.addKeyOfShareRelation(shareFolder.getPath() + Messages.getShareFolder0name(),
 					shareFolder.getKey());
 		}
 		filehandling_result =ifile.encryptFiles(fileInfoList, relation);
@@ -137,7 +137,7 @@ public class FileSystemCom implements IFileSystemCom {
 					sharedFolder.getPath() + sharedFolder.getID()));
 		}
 		KeyRelation relation = getKeyRelation(hashSet);
-		relation.addKeyOfShareRelation(sharedFolder.getPath(), sharedFolder.getKey());
+		relation.addKeyOfShareRelation(sharedFolder.getPath() + sharedFolder.getID(), sharedFolder.getKey());
 		IFileSystem ifile = new FileSystemHandler();
 		filehandling_result = ifile.moveFiles(fileInfoList,relation);
 		// Convert to FileCRUDResults
@@ -165,7 +165,7 @@ public class FileSystemCom implements IFileSystemCom {
 			IXmlDatabase shareFolderDao = new ShareFolderDao();
 			ShareFolder shareFolder = (ShareFolder) shareFolderDao
 					.getElementByID(container.getShareFolderId());
-			relation.addKeyOfShareRelation(shareFolder.getPath(),
+			relation.addKeyOfShareRelation(shareFolder.getPath()+shareFolder.getID(),
 					shareFolder.getKey());
 		}
 		return relation;
