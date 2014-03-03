@@ -14,37 +14,37 @@ public class ShareRelationDao extends AbstractXmlDatabase {
 	private ShareRelationQuery shareRelationQuery;
 
 	@Override
-	public Object newElement(Object obj) {
+	public Object newElement(Object obj, String key) {
 		if (shareRelationQuery == null)
-			shareRelationQuery = new ShareRelationQuery();		 
+			shareRelationQuery = new ShareRelationQuery(key);		 
 		 return shareRelationQuery.newShareRelation((ShareRelation) obj);
 	}
 
 	@Override
-	public Object getElementByID(int id) {
+	public Object getElementByID(int id, String key) {
 		if (shareRelationQuery == null)
-			shareRelationQuery = new ShareRelationQuery();		
+			shareRelationQuery = new ShareRelationQuery(key);		
 		return  shareRelationQuery.getShareRelations(id);
 	}
 
 	@Override
-	public void updateElement(Object obj) {
+	public void updateElement(Object obj, String key) {
 		if (shareRelationQuery == null)
-			shareRelationQuery = new ShareRelationQuery();		
+			shareRelationQuery = new ShareRelationQuery(key);		
 		shareRelationQuery.updateShareRelation((ShareRelation) obj);	
 	}
 
 	@Override
-	public void deleteElement(Object obj) {
+	public void deleteElement(Object obj, String key) {
 		if (shareRelationQuery == null)
-			shareRelationQuery = new ShareRelationQuery();
+			shareRelationQuery = new ShareRelationQuery(key);
 			shareRelationQuery.deleteShareFolder((ShareRelation) obj);
 	}
 
 	@Override
-	public Object checkDatabase(Object obj) {
+	public Object checkDatabase(Object obj, String key) {
 		if (shareRelationQuery == null)
-			shareRelationQuery = new ShareRelationQuery();		
+			shareRelationQuery = new ShareRelationQuery(key);		
 		return shareRelationQuery.checkDatabase((List<ShareRelation>) obj);
 	}
 

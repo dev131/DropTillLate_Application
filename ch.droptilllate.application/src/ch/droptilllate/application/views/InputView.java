@@ -66,6 +66,8 @@ public class InputView extends TitleAreaDialog {
 	  public void setFolderNameVisible(){
 		  foldernameText.setVisible(true);
 		    lblFolderName.setVisible(true);
+		    EmailText.setVisible(false);
+		    lblEmail.setVisible(false);
 	  }
 
 	  

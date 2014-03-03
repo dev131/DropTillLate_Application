@@ -34,7 +34,10 @@ public class ShareFolder {
 	public void setKey(String key){
 		this.key = key;
 	}
-	
+	/**
+	 * Path = User/Dropbox/Droptilllate/
+	 * @return User/Dropbox/Droptilllate/
+	 */
 	public String getPath(){
 		return path;
 	}

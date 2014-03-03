@@ -123,7 +123,7 @@ public class TreeDropTargetAdapter extends DropTargetAdapter {
 					draggedFile.getParent().removeFile(draggedFile);
 					draggedFile.setParent(dragOverFolder);
 					//Write to Database
-					encryptedFileDao.updateElement(draggedFile);
+					encryptedFileDao.updateElement(draggedFile, null);
 					dragOverFolder.addFile(draggedFile);
 				} else if (draggedElement instanceof GhostFolderDob) {
 					GhostFolderDob draggedFolder = (GhostFolderDob) draggedElement;
@@ -141,7 +141,7 @@ public class TreeDropTargetAdapter extends DropTargetAdapter {
 
 					draggedFolder.getParent().removeFolder(draggedFolder);
 					draggedFolder.setParent(dragOverFolder);
-					encryptedFolderDao.updateElement(draggedFolder);
+					encryptedFolderDao.updateElement(draggedFolder, null);
 					dragOverFolder.addFolder(draggedFolder);
 				}
 				// set dragOverFolder back to root for next drop. Otherwise

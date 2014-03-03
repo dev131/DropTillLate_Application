@@ -20,38 +20,38 @@ public class ShareFolderDao extends AbstractXmlDatabase {
 	private ShareFolderQuery sharefolderQuery;
 
 	@Override
-	public Object newElement(Object obj) {
+	public Object newElement(Object obj, String key) {
 		if (sharefolderQuery == null)
-			sharefolderQuery = new ShareFolderQuery();		 
+			sharefolderQuery = new ShareFolderQuery(key);		 
 		 return sharefolderQuery.newShareFolder((ShareFolder) obj);
 	}
 
 	@Override
-	public Object getElementByID(int id) {
+	public Object getElementByID(int id, String key) {
 		if (sharefolderQuery == null)
-			sharefolderQuery = new ShareFolderQuery();		
+			sharefolderQuery = new ShareFolderQuery(key);		
 		return  sharefolderQuery.getShareFolder(id);
 	}
 
 	@Override
-	public void updateElement(Object obj) {
+	public void updateElement(Object obj, String key) {
 		if (sharefolderQuery == null)
-			sharefolderQuery = new ShareFolderQuery();		
+			sharefolderQuery = new ShareFolderQuery(key);		
 		sharefolderQuery.updateShareFolder((ShareFolder) obj);	
 	}
 
 	@Override
-	public void deleteElement(Object obj) {
+	public void deleteElement(Object obj, String key) {
 		if (sharefolderQuery == null)
-			sharefolderQuery = new ShareFolderQuery();
+			sharefolderQuery = new ShareFolderQuery(key);
 			sharefolderQuery.deleteShareFolder((List<ShareFolder>) obj);
 	
 	}
 
 	@Override
-	public Object checkDatabase(Object obj) {
+	public Object checkDatabase(Object obj, String key) {
 		if (sharefolderQuery == null)
-			sharefolderQuery = new ShareFolderQuery();		
+			sharefolderQuery = new ShareFolderQuery(key);		
 		return sharefolderQuery.checkDatabase((List<ShareFolder>) obj);
 	}
 }

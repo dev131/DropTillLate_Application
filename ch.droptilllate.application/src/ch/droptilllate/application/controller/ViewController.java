@@ -3,23 +3,12 @@ package ch.droptilllate.application.controller;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardWatchEventKinds;
-import java.nio.file.WatchEvent;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
+
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.swing.JFileChooser;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-
-import org.apache.commons.io.monitor.FileAlterationMonitor;
-import org.apache.commons.io.monitor.FileAlterationObserver;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemManager;
@@ -72,6 +61,7 @@ import ch.droptilllate.application.views.InputView;
 import ch.droptilllate.application.views.Messages;
 import ch.droptilllate.application.views.Status;
 import ch.droptilllate.application.views.TableIdentifier;
+import ch.droptilllate.application.views.XMLConstruct;
 
 public class ViewController {
 	private Tree tree;
@@ -162,9 +152,9 @@ public class ViewController {
 		AbstractXmlDatabase encryptedFolderDao = new GhostFolderDao();
 		AbstractXmlDatabase encryptedFileDao = new EncryptedFileDao();
 		folder.addFiles(((EncryptedFileDao) encryptedFileDao)
-				.getFilesInFolder(folder));
+				.getFilesInFolder(folder, null));
 		List<GhostFolderDob> childFolders = ((GhostFolderDao) encryptedFolderDao)
-				.getFoldersInFolder(folder);
+				.getFoldersInFolder(folder, null);
 		if (childFolders != null && childFolders.size() > 0) {
 			folder.addFolders(childFolders);
 			for (GhostFolderDob childFolder : childFolders) {
@@ -220,7 +210,7 @@ public class ViewController {
 		}
 		//Delete on DB
 		AbstractXmlDatabase fileDB = new EncryptedFileDao();
-		fileDB.deleteElement(result.getEncryptedFileListSuccess());
+		fileDB.deleteElement(result.getEncryptedFileListSuccess(), null);
 		// Check Folder
 		for(EncryptedFileDob fileDob : result.getEncryptedFileListError()){
 			for(GhostFolderDob folderDob : folderList){
@@ -230,7 +220,7 @@ public class ViewController {
 			}
 		}
 		AbstractXmlDatabase folderDb = new GhostFolderDao();
-		folderDb.deleteElement(folderList);
+		folderDb.deleteElement(folderList, null);
 		deleteTreeFiles(fileList);
 		deleteTreeFolders(folderList);
 		
@@ -276,9 +266,9 @@ public class ViewController {
 		for(EncryptedFileDob fileDob : result.getEncryptedFileListSuccess()){
 			Status status = Status.getInstance();
 			status.setMessage(fileDob.getName() + " -> decryption worked");
-			System.out.println(Messages.PathLocalTemp + fileDob.getId() +"."+ fileDob.getType());
 			File file = new File(Messages.PathLocalTemp + fileDob.getId() +"."+ fileDob.getType());	
-			setFileListener(file, fileDob);
+			FileHandler fileHanlder = new FileHandler();
+			fileHanlder.setFileListener(file, fileDob);
 			try {
 				Desktop.getDesktop().edit(file);
 			
@@ -292,21 +282,6 @@ public class ViewController {
 			status.setMessage(fileDob.getName() + " -> decryption not worked");
 		}
 	}
-	
-	private void setFileListener(File file, EncryptedFileDob dob){
-		FileObject listendir = null;
-		try {
-			FileSystemManager fsManager = VFS.getManager();
-			listendir = fsManager.resolveFile(file.getPath());
-		} catch (FileSystemException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		DefaultFileMonitor fm = new DefaultFileMonitor(new FileChangeListener(dob));
-		 fm.setRecursive(true);
-		 fm.addFile(listendir);
-		 fm.start();
-	}
 
 	/**
 	 * Insert new Folder
@@ -318,7 +293,7 @@ public class ViewController {
 		File newFile = new File(name);
 		GhostFolderDob dob = new GhostFolderDob(null, newFile.getName(), new Date(System.currentTimeMillis()), newFile.getPath(), root);
 		// insert in DB and Treeview
-		root.addFolder((GhostFolderDob) folderDao.newElement(dob));
+		root.addFolder((GhostFolderDob) folderDao.newElement(dob, null));
 	}
 
 	/**
@@ -340,12 +315,12 @@ public class ViewController {
 		IFileSystemCom fileSystem = new FileSystemCom();	
 		CRUDCryptedFileInfo result = fileSystem.encryptFile(actualDropFiles, Messages.getPathDropBox() + Messages.getShareFolder0name());
 		//Update DB
-		AbstractXmlDatabase fileDB = new EncryptedFileDao();
+		EncryptedFileDao fileDB = new EncryptedFileDao();
 		for(EncryptedFileDob fileDob : result.getEncryptedFileListSuccess()){			
-			fileDB.updateElement(fileDob);
+			fileDB.updateElement(fileDob, null);
 			EncryptedContainer container = new EncryptedContainer(fileDob.getContainerId(),Integer.parseInt(Messages.getShareFolder0name()));
 			AbstractXmlDatabase containerDB = new ContainerDao();
-			containerDB.newElement(container);
+			containerDB.newElement(container, null);
 			Status status = Status.getInstance();
 			status.setMessage(fileDob.getName() + " -> encryption worked");
 		}
@@ -355,7 +330,7 @@ public class ViewController {
 			//TODO update tree
 		}
 		//Delete Error Files on DB
-		fileDB.deleteElement(result.getEncryptedFileListError());
+		fileDB.deleteElement(result.getEncryptedFileListError(), null);
 			//TODO maybe dropped element Delete
 			// droppedElement.delete();
 			// droppedFile.setPath(Messages.getLocalPathDropbox());
@@ -383,8 +358,8 @@ public class ViewController {
 					droppedElement.length(), 
 					null);					
 			// Insert new Node in DB
-			AbstractXmlDatabase fileDB = new EncryptedFileDao();
-			EncryptedFileDob encryptedPersistedFile = (EncryptedFileDob) fileDB.newElement(fileDob);
+			EncryptedFileDao fileDB = new EncryptedFileDao();
+			EncryptedFileDob encryptedPersistedFile = (EncryptedFileDob) fileDB.newElement(fileDob, null);
 			parent.addFile(encryptedPersistedFile);
 			// add to list
 			actualDropFiles.add(encryptedPersistedFile);
@@ -395,8 +370,8 @@ public class ViewController {
 					new Date(System.currentTimeMillis()),
 					droppedElement.getPath(), 
 					parent);			
-			AbstractXmlDatabase folderDB = new GhostFolderDao();
-			GhostFolderDob encryptedPersistedFolder = (GhostFolderDob) folderDB.newElement(folderDob);
+			GhostFolderDao folderDB = new GhostFolderDao();
+			GhostFolderDob encryptedPersistedFolder = (GhostFolderDob) folderDB.newElement(folderDob, null);
 			parent.addFolder(encryptedPersistedFolder);
 			for (File file : droppedElement.listFiles()) {
 				dropTreeElements(file, encryptedPersistedFolder);
@@ -478,11 +453,7 @@ public class ViewController {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-		    UpdateXMLImporter importer = new UpdateXMLImporter();
-		    List<EncryptedFileDob> fileDobList = importer.getFileUpdateXML(destinationPath+"/"+ Messages.getFileUpdateXML());
-		    List<EncryptedContainer> containerDobList = importer.getContainerUpdateXML(destinationPath+"/"+ Messages.getContainerUpdateXML());
-		    List<ShareRelation> shareRelationDobList = importer.getShareRelationUpdateXML(destinationPath+"/"+ Messages.getShareRelationUpdateXML());		    
+			}			    
 		 
 		    //OpenDialog to get Password and foldername
 		    dialog = new InputView(shell, Messages.getImportDialog());
@@ -497,34 +468,44 @@ public class ViewController {
 		    if(password == null || foldername == null){
 		    MessageDialog.openError(shell, "Error", "Error occured no password or foldername");
 		    }
+		    
 		    //Insert ShareFolder
 		    ShareFolderDao shareFolderDao = new ShareFolderDao();
 		    KeyManager keyManager = new KeyManager();
 		    String key =keyManager.generatePassword(password, foldername);
 		    ShareFolder sharefolder = new ShareFolder(Integer.parseInt(source.getName()), Messages.getPathDropBox(), key);
-		    shareFolderDao.newElement(sharefolder);
+		    shareFolderDao.newElement(sharefolder, null);
 		    //Insert GhostFolder
 		    GhostFolderDob ghostFolderDob = new GhostFolderDob(null, foldername, 
 					new Date(
 					System.currentTimeMillis()), "", root);
 		    GhostFolderDao ghostfolderDao = new GhostFolderDao();
-		    ghostFolderDob = (GhostFolderDob) ghostfolderDao.newElement(ghostFolderDob);
+		    ghostFolderDob = (GhostFolderDob) ghostfolderDao.newElement(ghostFolderDob, null);
+		    
+			//Encrypt UploadFile
+			IFileSystemCom com = new FileSystemCom();
+			com.decryptFile(sharefolder,false);
+			//UpdateFile Import
+		    UpdateXMLImporter importer = new UpdateXMLImporter(sharefolder.getKey());
+		    List<EncryptedFileDob> fileDobList = importer.getFileUpdateXML();
+		    List<EncryptedContainer> containerDobList = importer.getContainerUpdateXML();
+		    List<ShareRelation> shareRelationDobList = importer.getShareRelationUpdateXML();
 		    //Update/Insert fileList
 		    EncryptedFileDao fileDao = new EncryptedFileDao();
 		    for(int i= 0; i<fileDobList.size(); i++){
 		    	fileDobList.get(i).setParent(ghostFolderDob);
-		    	fileDobList.get(i).setPath(Messages.getPathDropBox() + foldername);
-		    	fileDao.newElement(fileDobList.get(i));
+		    	fileDobList.get(i).setPath(Messages.getPathDropBox() + sharefolder.getID());
+		    	fileDao.newElement(fileDobList.get(i), null);
 		    }
 		    //Insert ShareRelations
 		    ShareRelationDao shareDao = new ShareRelationDao();
 		    for(ShareRelation relation : shareRelationDobList){
-			    shareDao.newElement(relation);
+			    shareDao.newElement(relation, null);
 		    }	    
 		    //Insert Containers
 		    ContainerDao containerDao = new ContainerDao();
 		    for(EncryptedContainer container : containerDobList){
-		    	containerDao.newElement(container);
+		    	containerDao.newElement(container, null);
 		    }
 		    //Update Tree
 		    root.addFolder(ghostFolderDob);

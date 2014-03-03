@@ -26,25 +26,25 @@ public class KeyManagement {
 			EncryptedContainer container = new EncryptedContainer(i, i);
 			ShareFolder sharefolder = new ShareFolder(i, "testpath",
 					"a88aasdf8dsf8asdf:" + i);
-			cDao.newElement(container);
-			sDao.newElement(sharefolder);
-		}
-		// Get All Keys per container
-		for (int i = 0; i < anzahl; i++) {
-			EncryptedContainer container = (EncryptedContainer) cDao.getElementByID(i);
-			ShareFolder sharefolder = (ShareFolder) sDao.getElementByID(container
-					.getShareFolderId());
-			System.out.println("Container " + i + " in " + sharefolder.getID()
-					+ " with key: " + sharefolder.getKey());
-		}
-
-		// delete all Entrys
-		for (int i = 0; i < anzahl; i++) {
-			EncryptedContainer container = new EncryptedContainer(i, i);
-			ShareFolder sharefolder = new ShareFolder(i, "testpath",
-					"a88aasdf8dsf8asdf:" + i);
-			sDao.deleteElement(sharefolder);
-			cDao.deleteElement(container);
+//			cDao.newElement(container);
+//			sDao.newElement(sharefolder);
+//		}
+//		// Get All Keys per container
+//		for (int i = 0; i < anzahl; i++) {
+//			EncryptedContainer container = (EncryptedContainer) cDao.getElementByID(i);
+//			ShareFolder sharefolder = (ShareFolder) sDao.getElementByID(container
+//					.getShareFolderId());
+//			System.out.println("Container " + i + " in " + sharefolder.getID()
+//					+ " with key: " + sharefolder.getKey());
+//		}
+//
+//		// delete all Entrys
+//		for (int i = 0; i < anzahl; i++) {
+//			EncryptedContainer container = new EncryptedContainer(i, i);
+//			ShareFolder sharefolder = new ShareFolder(i, "testpath",
+//					"a88aasdf8dsf8asdf:" + i);
+//			sDao.deleteElement(sharefolder);
+//			cDao.deleteElement(container);
 		}
 
 	}

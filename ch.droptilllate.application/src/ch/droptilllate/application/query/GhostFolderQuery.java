@@ -6,24 +6,22 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import ch.droptilllate.application.com.IXmlConnection;
+
 import ch.droptilllate.application.com.XmlConnection;
 import ch.droptilllate.application.info.CRUDGhostFolderInfo;
 import ch.droptilllate.application.model.GhostFolderDob;
-import ch.droptilllate.application.views.Messages;
+import ch.droptilllate.application.views.XMLConstruct;
 
 public class GhostFolderQuery {
-	private Document document;
-	private IXmlConnection conn;
-	private String rootElement = "collection";
-	private String childElement = "folder";
+	private XmlConnection conn;
 
-	public GhostFolderQuery() {
-		conn = new XmlConnection(Messages.getPathFolderXML(), rootElement);
+	public GhostFolderQuery(String key) {
+		conn = new XmlConnection(true, key);
 	}
 
 	/**
@@ -42,17 +40,17 @@ public class GhostFolderQuery {
 			}
 			folderDob.setId(id);
 		}		
-		document = conn.getXML();
-		Node node = document.getFirstChild();
+		Document document = conn.getXML();
+		NodeList nodelist = document.getElementsByTagName(XMLConstruct.getRootElementGhostFolder());
+		Node node = nodelist.item(0);
 		// TODO Generate ID and Check if it exist
-		Element folder = document.createElement(childElement);
-		folder.setAttribute("id", Integer.toString(folderDob.getId()));
-		folder.setIdAttribute("id", true);
+		Element folder = document.createElement(XMLConstruct.getChildElementGhostFolder());
+		folder.setAttribute(XMLConstruct.getAttId(), Integer.toString(folderDob.getId()));
 		int parentID = folderDob.getParent().getId();
-		folder.setAttribute("name", folderDob.getName());
-		folder.setAttribute("date", folderDob.getDate().toString());
-		folder.setAttribute("path", folderDob.getPath().toString());
-		folder.setAttribute("parentID", Integer.toString(parentID));
+		folder.setAttribute(XMLConstruct.getAttFolderName(), folderDob.getName());
+		folder.setAttribute(XMLConstruct.getAttDate(), folderDob.getDate().toString());
+		folder.setAttribute(XMLConstruct.getAttPath(), folderDob.getPath().toString());
+		folder.setAttribute(XMLConstruct.getAttParentId(), Integer.toString(parentID));
 		node.appendChild(folder);
 
 		conn.writeToXML();
@@ -60,10 +58,10 @@ public class GhostFolderQuery {
 	}
 
 	private boolean checkExist(int folderID) {
-		document = conn.getXML();
+		Document document = conn.getXML();
 		boolean result = false;
 		// cast the result to a DOM NodeList
-		NodeList nodes = conn.executeQuery("//" + childElement + "[@id='"
+		NodeList nodes = conn.executeQuery(XMLConstruct.getGhostFolderExpression()+"[@"+XMLConstruct.getAttId()+"='"
 				+ folderID + "']");
 		if(nodes.getLength()>0)
 			result = true;
@@ -78,12 +76,12 @@ public class GhostFolderQuery {
 	 */
 	public List<GhostFolderDob> getFolderInFolder(GhostFolderDob folder) {
 		List<GhostFolderDob> folders = new ArrayList<GhostFolderDob>();
-		document = conn.getXML();
+		Document document = conn.getXML();
 		// cast the result to a DOM NodeList
-		NodeList nodes = conn.executeQuery("//" + childElement + "[@parentID='"
+		NodeList nodes = conn.executeQuery(XMLConstruct.getGhostFolderExpression()+ "[@"+XMLConstruct.getAttParentId()+"='"
 				+ folder.getId() + "']");
 		for (int i = 0; i < nodes.getLength(); i++) {
-			String date1 = nodes.item(i).getAttributes().getNamedItem("date")
+			String date1 = nodes.item(i).getAttributes().getNamedItem(XMLConstruct.getAttDate())
 					.getNodeValue().toString();
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			Date parsed = null;
@@ -95,10 +93,10 @@ public class GhostFolderQuery {
 			java.sql.Date sqlDate = new java.sql.Date(parsed.getTime());
 			//Integer id, String name, Date date, String path, GhostFolderDob parent
 			GhostFolderDob dob = new GhostFolderDob(
-					Integer.parseInt(nodes.item(i).getAttributes().getNamedItem("id").getNodeValue()),
-					nodes.item(i).getAttributes().getNamedItem("name").getNodeValue(), 
+					Integer.parseInt(nodes.item(i).getAttributes().getNamedItem(XMLConstruct.getAttId()).getNodeValue()),
+					nodes.item(i).getAttributes().getNamedItem(XMLConstruct.getAttFolderName()).getNodeValue(), 
 					sqlDate, 
-					nodes.item(i).getAttributes().getNamedItem("path").getNodeValue(),
+					nodes.item(i).getAttributes().getNamedItem(XMLConstruct.getAttPath()).getNodeValue(),
 					folder);			
 			folders.add(dob);
 		}
@@ -113,12 +111,12 @@ public class GhostFolderQuery {
 	 */
 	public void updateFolder(GhostFolderDob encryptedFolder) {
 		int newParentID = encryptedFolder.getParent().getId();
-		document = conn.getXML();
+		Document document = conn.getXML();
 		// cast the result to a DOM NodeList
-		NodeList nodes = conn.executeQuery("//" + childElement + "[@id='"
+		NodeList nodes = conn.executeQuery(XMLConstruct.getGhostFolderExpression()+ "[@"+XMLConstruct.getAttId()+"='"
 				+ encryptedFolder.getId() + "']");
 		for (int idx = 0; idx < nodes.getLength(); idx++) {
-			nodes.item(idx).getAttributes().getNamedItem("parentID")
+			nodes.item(idx).getAttributes().getNamedItem(XMLConstruct.getAttParentId())
 					.setNodeValue(Integer.toString(newParentID));
 		}
 		System.out.println("Everything replaced.");
@@ -133,9 +131,9 @@ public class GhostFolderQuery {
 	 * @return
 	 */
 	public void deleteFolder(List<GhostFolderDob> encryptedFolder) {
-		document = conn.getXML();
+		Document document = conn.getXML();
 		for(GhostFolderDob dob : encryptedFolder){
-		NodeList nodes = conn.executeQuery("//" + childElement + "[@id='"
+		NodeList nodes = conn.executeQuery(XMLConstruct.getGhostFolderExpression()+ "[@"+XMLConstruct.getAttId()+"='"
 				+ dob.getId() + "']");
 		for (int idx = 0; idx < nodes.getLength(); idx++) {
 			nodes.item(idx).getParentNode().removeChild(nodes.item(idx));
@@ -149,12 +147,12 @@ public class GhostFolderQuery {
 	 * @return FolderCRUDResults 
 	 */
 	public CRUDGhostFolderInfo checkDatabase(List<GhostFolderDob> folderDob){
-		document = conn.getXML();
+		Document document = conn.getXML();
 		List<GhostFolderDob> folderSuccessList = new ArrayList<GhostFolderDob>();
 		List<GhostFolderDob> folderErrorList = new ArrayList<GhostFolderDob>();
 		Iterator<GhostFolderDob> folderInfoListErrorIterator = folderDob.iterator();		
 		while (folderInfoListErrorIterator.hasNext()) {
-			NodeList nodes = conn.executeQuery("//" + childElement + "[@id='"
+			NodeList nodes = conn.executeQuery(XMLConstruct.getGhostFolderExpression()+ "[@"+XMLConstruct.getAttId()+"='"
 					+ folderInfoListErrorIterator.next().getId() + "']");
 			if(nodes.getLength()>0){
 				folderSuccessList.add(folderInfoListErrorIterator.next());

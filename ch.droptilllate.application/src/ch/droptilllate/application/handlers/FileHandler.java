@@ -7,11 +7,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class FileHandler {
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileSystemManager;
+import org.apache.commons.vfs2.VFS;
+import org.apache.commons.vfs2.impl.DefaultFileMonitor;
 
-	public FileHandler() throws IOException{
-		
-	}
+import ch.droptilllate.application.listener.FileChangeListener;
+import ch.droptilllate.application.model.EncryptedFileDob;
+
+public class FileHandler {
+	
+	public void FileHanlder(){}
 	
 	public void copyFile(File source, File dest) throws IOException {
 		
@@ -68,6 +75,21 @@ public class FileHandler {
 		}
 		return resource.delete();
 		
+	}
+	
+	public void setFileListener(File file, EncryptedFileDob dob){
+		FileObject listendir = null;
+		try {
+			FileSystemManager fsManager = VFS.getManager();
+			listendir = fsManager.resolveFile(file.getPath());
+		} catch (FileSystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		DefaultFileMonitor fm = new DefaultFileMonitor(new FileChangeListener(dob));
+		 fm.setRecursive(true);
+		 fm.addFile(listendir);
+		 fm.start();
 	}
 	
 }

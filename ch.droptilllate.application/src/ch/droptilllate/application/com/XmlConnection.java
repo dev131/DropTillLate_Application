@@ -19,23 +19,93 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileSystemManager;
+import org.apache.commons.vfs2.VFS;
+import org.apache.commons.vfs2.impl.DefaultFileMonitor;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class XmlConnection implements IXmlConnection {
+import ch.droptilllate.application.dnb.ShareFolder;
+import ch.droptilllate.application.handlers.FileHandler;
+import ch.droptilllate.application.info.CRUDCryptedFileInfo;
+import ch.droptilllate.application.listener.FileChangeListener;
+import ch.droptilllate.application.model.EncryptedFileDob;
+import ch.droptilllate.application.views.Messages;
+import ch.droptilllate.application.views.XMLConstruct;
+
+public class XmlConnection {
 
 	private String path;
 	private DocumentBuilderFactory factory;
 	private DocumentBuilder builder;
 	private Document document;
 
-	public XmlConnection(String path, String rootElement) {
-		this.path = path;
-		File f = new File(path);
-		if (!f.exists())
-			createFile(path, rootElement);
+	
+	public XmlConnection(Boolean local, String key) {
+		if(local){
+			path = Messages.getPathLocalTemp() + XMLConstruct.getPathLocalXML();
+			//TODO tillate expression
+			File f = new File(Messages.getPathLocalTemp() + XMLConstruct.getIdLocalXMLContainer()+ ".tilllate");
+			//IF exist create new register to listener ELSE decrypt and register to listener
+			if (!f.exists()){
+				createFile(path);
+				encryptFile(key);
+				deleteFile(path);
+				decryptFile(key);
+			}
+			else{
+				File f1 = new File(path);
+				//If not decrypted
+				if(!f1.exists())decryptFile(key);
+			}
+				
+		}
+		else{
+			path = Messages.getPathLocalTemp() + XMLConstruct.getPathShareXML(); 
+			File f = new File(path);
+			if (!f.exists())
+				createFile(path);
+		}
+	}
+
+	private void decryptFile(String key) {
+		IFileSystemCom fileSystem = new FileSystemCom();
+		ShareFolder shareFolder = new ShareFolder(Integer.parseInt(Messages.ShareFolder0name), Messages.getPathDropBox(), key);
+		CRUDCryptedFileInfo fileInfoList  = fileSystem.decryptFile(shareFolder, true);
+		File file = new File(path);	
+		for(EncryptedFileDob dob : fileInfoList.getEncryptedFileListSuccess()){
+			FileHandler fileHanlder = new FileHandler();
+			fileHanlder.setFileListener(file, dob);
+		}
+	}
+
+	private void deleteFile(String path2) {
+		try{			 
+    		File file = new File(path2);
+ 
+    		if(file.delete()){
+    			System.out.println(file.getName() + " is deleted!");
+    		}else{
+    			System.out.println("Delete operation is failed.");
+    		}
+ 
+    	}catch(Exception e){
+ 
+    		e.printStackTrace();
+ 
+    	}
+		
+	}
+
+	private void encryptFile(String key) {
+		// TODO Auto-generated method stub
+		IFileSystemCom fileSystem = new FileSystemCom();
+		ShareFolder shareFolder = new ShareFolder(Integer.parseInt(Messages.ShareFolder0name), Messages.getPathDropBox(), key);
+		fileSystem.encryptFile(shareFolder, true);
 	}
 
 	/**
@@ -44,15 +114,32 @@ public class XmlConnection implements IXmlConnection {
 	 * @param path
 	 * @param rootElement
 	 */
-	private void createFile(String path, String rootElement) {
+	private void createFile(String path) {
 		try {
 			DocumentBuilderFactory documentFactory = DocumentBuilderFactory
 					.newInstance();
 			DocumentBuilder documentBuilder = documentFactory
 					.newDocumentBuilder();
 			Document document = documentBuilder.newDocument();
-			Element root = document.createElement(rootElement);
-			document.appendChild(root);
+			//CreateRoot Element
+			Element collection = document.createElement(XMLConstruct.getRootElement());
+			document.appendChild(collection);
+			//Create SubContainerElement
+			Element containers = document.createElement(XMLConstruct.getRootElementContainer());
+			collection.appendChild(containers);
+			//Create SubFileElement
+			Element files = document.createElement(XMLConstruct.getRootElementFile());
+			collection.appendChild(files);
+			//Create SubFolderElement
+			Element folders = document.createElement(XMLConstruct.getRootElementGhostFolder());
+			collection.appendChild(folders);
+			//Create SubShareRelationElement
+			Element shareRelations = document.createElement(XMLConstruct.getRootElementShareRelation());
+			collection.appendChild(shareRelations);
+			//Create SubShareFolderElement
+			Element shareFolders = document.createElement(XMLConstruct.getRootElementShareFolder());
+			collection.appendChild(shareFolders);
+			
 			TransformerFactory transformerFactory = TransformerFactory
 					.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
@@ -71,7 +158,6 @@ public class XmlConnection implements IXmlConnection {
 
 	}
 
-	@Override
 	public Document getXML() {
 		factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);
@@ -91,7 +177,6 @@ public class XmlConnection implements IXmlConnection {
 
 	}
 
-	@Override
 	public void writeToXML() {
 		TransformerFactory transformerFactory = TransformerFactory
 				.newInstance();
@@ -109,7 +194,6 @@ public class XmlConnection implements IXmlConnection {
 
 	}
 
-	@Override
 	public NodeList executeQuery(String query) {
 		NodeList nodes = null;
 		XPathExpression expr = null;
@@ -131,6 +215,6 @@ public class XmlConnection implements IXmlConnection {
 		// cast the result to a DOM NodeList
 		nodes = (NodeList) result;
 		return nodes;
-
 	}
+
 }

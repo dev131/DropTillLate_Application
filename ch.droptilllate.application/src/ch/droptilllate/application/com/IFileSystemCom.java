@@ -39,5 +39,23 @@ public interface IFileSystemCom {
 	 * @return FileInfoList
 	 */
 	public CRUDCryptedFileInfo moveFiles(List<EncryptedFileDob> fileList, ShareFolder sharedFolder);
+	/**
+	 *  Encrypt local/share File in specified Container ID
+	 * @param dob
+	 *  * @param local
+	 * @param destinationShareFolder
+	 * @return FileInfoList
+	 */
+	public CRUDCryptedFileInfo encryptFile(ShareFolder destinationShareFolder, boolean local);
 
+	/**
+	 * Decrypte local/share XML files
+	 * @param sourceShareFolder
+	 * @param local
+	 * @return FileInfoList
+	 */
+	public CRUDCryptedFileInfo decryptFile(ShareFolder sourceShareFolder, boolean local);
+	
+	
+	
 }

@@ -53,15 +53,15 @@ public class FileSystem {
 		// EncryptedFileDob(int id, String name, String type, long size,Date
 		// date, String path, int containerID)
 		// List<EncryptedFileDob> droppedFiles, String containerPath
-		List<EncryptedFileDob> newFiles = new ArrayList<EncryptedFileDob>();
-		EncryptedFileDob fdob = new EncryptedFileDob(id, name, type, size,
-				date, path, containerID);
-		newFiles.add(fdob);
+//		List<EncryptedFileDob> newFiles = new ArrayList<EncryptedFileDob>();
+//		EncryptedFileDob fdob = new EncryptedFileDob(id, name, type, size,
+//				date, path, containerID);
+	//	newFiles.add(fdob);
 //		ifileSystem.encryptFile(newFiles,
 //				"/Users/marcobetschart/Documents/BDA_project/TestFolder/");
 //		ifileSystem.decryptFile(newFiles,
 //				"/Users/marcobetschart/Documents/BDA_project/TestFolder/");
-		ifileSystem.deleteFile(newFiles);
+//		ifileSystem.deleteFile(newFiles);
 	}
 
 }

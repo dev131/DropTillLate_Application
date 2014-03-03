@@ -15,8 +15,9 @@ public class KeyManager {
 	public void initPassword(String password, String salt){
 		KeysGenerator kg = new KeysGenerator();
 		AbstractXmlDatabase dao = new ShareFolderDao();
-		ShareFolder	folder = new ShareFolder(Integer.parseInt(Messages.getShareFolder0name()), Messages.getPathDropBox(), kg.getKey(password, salt));
-		dao.newElement(folder);
+		String key  = kg.getKey(password, salt);
+		ShareFolder	folder = new ShareFolder(Integer.parseInt(Messages.getShareFolder0name()), Messages.getPathDropBox(),key );
+		dao.newElement(folder, key);
 	}
 	
 	/**
@@ -25,7 +26,7 @@ public class KeyManager {
 	 */
 	public boolean checkMasterPasswordExisting(){
 		AbstractXmlDatabase dao = new ShareFolderDao();
-		ShareFolder folder = (ShareFolder) dao.getElementByID(Integer.parseInt(Messages.getShareFolder0name()));
+		ShareFolder folder = (ShareFolder) dao.getElementByID(Integer.parseInt(Messages.getShareFolder0name()), null);
 		if(folder == null ){
 			return false;
 		}
@@ -40,7 +41,7 @@ public class KeyManager {
 		Boolean exist = false;
 		KeysGenerator kg = new KeysGenerator();
 		AbstractXmlDatabase dao = new ShareFolderDao();
-		ShareFolder folder = (ShareFolder) dao.getElementByID(shareID);
+		ShareFolder folder = (ShareFolder) dao.getElementByID(shareID, null);
 		if(folder != null){
 			if(folder.getKey().equals(kg.getKey(password, salt)))exist= true;	
 		}	
