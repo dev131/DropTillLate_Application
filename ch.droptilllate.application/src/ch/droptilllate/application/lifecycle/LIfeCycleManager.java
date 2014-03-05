@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Shell;
 
 // for a extended example see
 // https://bugs.eclipse.org/382224
-public class Manager {
+public class LIfeCycleManager {
   @PostContextCreate
   void postContextCreate(IApplicationContext appContext, Display display) {
     final Shell shell = new Shell(SWT.TOOL | SWT.NO_TRIM);
