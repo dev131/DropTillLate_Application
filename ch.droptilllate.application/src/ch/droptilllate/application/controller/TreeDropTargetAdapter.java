@@ -69,8 +69,8 @@ public class TreeDropTargetAdapter extends DropTargetAdapter {
 
 	@Override
 	public void drop(DropTargetEvent event) {
-		AbstractXmlDatabase encryptedFileDao = new EncryptedFileDao();
-		AbstractXmlDatabase encryptedFolderDao = new GhostFolderDao();
+		EncryptedFileDao encryptedFileDao = new EncryptedFileDao();
+		GhostFolderDao encryptedFolderDao = new GhostFolderDao();
 		// Handle Drag'N'Drop from Desktop into tree
 		if (fileTransfer.isSupportedType(event.currentDataType)) {
 			final String[] droppedFileInformation = (String[]) event.data;

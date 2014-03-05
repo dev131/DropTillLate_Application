@@ -165,10 +165,10 @@ public class FileSystemCom implements IFileSystemCom {
 		KeyRelation relation = new KeyRelation();
 		if(hashSet.isEmpty()) relation = null;
 		for (Integer ContainerId : hashSet) {
-			AbstractXmlDatabase containerDao = new ContainerDao();
+			ContainerDao containerDao = new ContainerDao();
 			EncryptedContainer container = (EncryptedContainer) containerDao
 					.getElementByID(ContainerId, null);
-			AbstractXmlDatabase shareFolderDao = new ShareFolderDao();
+			ShareFolderDao shareFolderDao = new ShareFolderDao();
 			ShareFolder shareFolder = (ShareFolder) shareFolderDao
 					.getElementByID(container.getShareFolderId(), null);
 			relation.addKeyOfShareRelation(shareFolder.getPath()+shareFolder.getID(),

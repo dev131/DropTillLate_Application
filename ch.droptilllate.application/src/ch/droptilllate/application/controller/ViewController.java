@@ -28,7 +28,6 @@ import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.DirectoryDialog;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
@@ -36,10 +35,8 @@ import org.eclipse.swt.widgets.TreeItem;
 
 import ch.droptilllate.application.com.FileSystemCom;
 import ch.droptilllate.application.com.IFileSystemCom;
-import ch.droptilllate.application.com.AbstractXmlDatabase;
 import ch.droptilllate.application.core.KeyManager;
 import ch.droptilllate.application.core.ShareManager;
-import ch.droptilllate.application.core.UpdateXMLImporter;
 import ch.droptilllate.application.dao.ContainerDao;
 import ch.droptilllate.application.dao.EncryptedFileDao;
 import ch.droptilllate.application.dao.GhostFolderDao;
@@ -51,7 +48,6 @@ import ch.droptilllate.application.dnb.ShareFolder;
 import ch.droptilllate.application.dnb.ShareRelation;
 import ch.droptilllate.application.handlers.FileHandler;
 import ch.droptilllate.application.info.CRUDCryptedFileInfo;
-import ch.droptilllate.application.listener.FileChangeListener;
 import ch.droptilllate.application.listener.TreeDragSourceListener;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
@@ -61,7 +57,6 @@ import ch.droptilllate.application.views.InputView;
 import ch.droptilllate.application.views.Messages;
 import ch.droptilllate.application.views.Status;
 import ch.droptilllate.application.views.TableIdentifier;
-import ch.droptilllate.application.views.XMLConstruct;
 
 public class ViewController {
 	private Tree tree;
@@ -149,8 +144,8 @@ public class ViewController {
 	 * Needed by getInitialInput() to fill all (sub)folders with files.
 	 */
 	private void getFolderContent(GhostFolderDob folder) {
-		AbstractXmlDatabase encryptedFolderDao = new GhostFolderDao();
-		AbstractXmlDatabase encryptedFileDao = new EncryptedFileDao();
+		GhostFolderDao encryptedFolderDao = new GhostFolderDao();
+		EncryptedFileDao encryptedFileDao = new EncryptedFileDao();
 		folder.addFiles(((EncryptedFileDao) encryptedFileDao)
 				.getFilesInFolder(folder, null));
 		List<GhostFolderDob> childFolders = ((GhostFolderDao) encryptedFolderDao)
@@ -209,7 +204,7 @@ public class ViewController {
 			status.setMessage(fileDob.getName() + " -> successfully deleted");
 		}
 		//Delete on DB
-		AbstractXmlDatabase fileDB = new EncryptedFileDao();
+		EncryptedFileDao fileDB = new EncryptedFileDao();
 		fileDB.deleteElement(result.getEncryptedFileListSuccess(), null);
 		// Check Folder
 		for(EncryptedFileDob fileDob : result.getEncryptedFileListError()){
@@ -219,7 +214,7 @@ public class ViewController {
 				}
 			}
 		}
-		AbstractXmlDatabase folderDb = new GhostFolderDao();
+		GhostFolderDao folderDb = new GhostFolderDao();
 		folderDb.deleteElement(folderList, null);
 		deleteTreeFiles(fileList);
 		deleteTreeFolders(folderList);
@@ -289,7 +284,7 @@ public class ViewController {
 	 * @param name
 	 */
 	public void newFolder(String name) {
-		AbstractXmlDatabase folderDao = new GhostFolderDao();
+		GhostFolderDao folderDao = new GhostFolderDao();
 		File newFile = new File(name);
 		GhostFolderDob dob = new GhostFolderDob(null, newFile.getName(), new Date(System.currentTimeMillis()), newFile.getPath(), root);
 		// insert in DB and Treeview
@@ -319,7 +314,7 @@ public class ViewController {
 		for(EncryptedFileDob fileDob : result.getEncryptedFileListSuccess()){			
 			fileDB.updateElement(fileDob, null);
 			EncryptedContainer container = new EncryptedContainer(fileDob.getContainerId(),Integer.parseInt(Messages.getShareFolder0name()));
-			AbstractXmlDatabase containerDB = new ContainerDao();
+			ContainerDao containerDB = new ContainerDao();
 			containerDB.newElement(container, null);
 			Status status = Status.getInstance();
 			status.setMessage(fileDob.getName() + " -> encryption worked");
@@ -486,10 +481,10 @@ public class ViewController {
 			IFileSystemCom com = new FileSystemCom();
 			com.decryptFile(sharefolder,false);
 			//UpdateFile Import
-		    UpdateXMLImporter importer = new UpdateXMLImporter(sharefolder.getKey());
-		    List<EncryptedFileDob> fileDobList = importer.getFileUpdateXML();
-		    List<EncryptedContainer> containerDobList = importer.getContainerUpdateXML();
-		    List<ShareRelation> shareRelationDobList = importer.getShareRelationUpdateXML();
+			ShareManager shareManager = new ShareManager();
+		    List<EncryptedFileDob> fileDobList = shareManager.getUpdateFiles(sharefolder.getKey());
+		    List<EncryptedContainer> containerDobList = shareManager.getUpdateContainers(sharefolder.getKey());
+		    List<ShareRelation> shareRelationDobList = shareManager.getUpdateShareRelation(sharefolder.getKey());
 		    //Update/Insert fileList
 		    EncryptedFileDao fileDao = new EncryptedFileDao();
 		    for(int i= 0; i<fileDobList.size(); i++){

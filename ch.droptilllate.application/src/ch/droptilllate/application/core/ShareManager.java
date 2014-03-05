@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+
 import ch.droptilllate.application.com.FileSystemCom;
 import ch.droptilllate.application.com.IFileSystemCom;
 import ch.droptilllate.application.dao.ContainerDao;
@@ -76,6 +77,21 @@ public class ShareManager {
 		}
 	}
 
+	public  List<EncryptedFileDob> getUpdateFiles(String key){
+		UpdateXMLImporter importer = new UpdateXMLImporter(key);
+		return importer.getFileUpdateXML();	
+	}
+	
+	public List<EncryptedContainer> getUpdateContainers(String key){
+		UpdateXMLImporter importer = new UpdateXMLImporter(key);
+		return importer.getContainerUpdateXML();
+	}
+	
+	public List<ShareRelation> getUpdateShareRelation(String key){
+		UpdateXMLImporter importer = new UpdateXMLImporter(key);
+		return importer.getShareRelationUpdateXML();
+	}
+	    
 	private void insertShareRelation(ShareFolder shareFolder) {
 		ShareRelationDao dao = new ShareRelationDao();
 		ShareRelation sharerelation = new ShareRelation(shareFolder.getID(), Messages.getOwnerMail());
