@@ -2,13 +2,16 @@ package ch.droptilllate.application.views;
 
 import org.eclipse.osgi.util.NLS;
 
+import ch.droptilllate.application.lifecycle.OSValidator;
+
 public class Messages extends NLS {
 	// =========================================================================
+	private static String OS = System.getProperty("os.name").toLowerCase();
 	public static String FilesTableIdentifier_NAME;
 	public static String FilesTableIdentifier_TYPE;
 	public static String FilesTableIdentifier_SIZE;
 	public static String FilesTableIdentifier_DATE;
-	public static String BUNDLE_NAME = "ch.droptilllate.application.views.messages";
+	public static String BUNDLE_NAME;
 	public static String DATE_FORMAT;
 	public static String FILE;
 	public static String Encryptview_ID;
@@ -24,6 +27,20 @@ public class Messages extends NLS {
 	public static String ImportDialog;
 	
 	static {
+ 
+		if (OSValidator.isWindows()) {
+			System.out.println("This is Windows");
+			BUNDLE_NAME = "ch.droptilllate.application.views.messages_windows";
+		} else if (OSValidator.isMac()) {
+			System.out.println("This is Mac");
+			BUNDLE_NAME = "ch.droptilllate.application.views.messages_osx";
+		} else if (OSValidator.isUnix()) {
+			System.out.println("This is Unix or Linux");
+		} else if (OSValidator.isSolaris()) {
+			System.out.println("This is Solaris");
+		} else {
+			System.out.println("Your OS is not support!!");
+		}
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
