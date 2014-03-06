@@ -168,15 +168,10 @@ public class ShareManager {
 	//Encrypt XMLs
 	IFileSystemCom com = new FileSystemCom();
 	//TODO use right encryptFile with right sharedFolder
-	CRUDCryptedFileInfo result =com.encryptFile(sharedFolder, false);
-	if(result.getEncryptedFileListSuccess().size()>0){
-		Status status = Status.getInstance();
-		status.setMessage("Created sharexml");
+	if(com.encryptFile(sharedFolder, false)){
+		//TODO if true -> successfull
 	}
-	else{
-		Status status = Status.getInstance();
-		status.setMessage("Failed to create sharexml");
-	}
+	
 	
 	}
 

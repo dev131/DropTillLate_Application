@@ -1,10 +1,13 @@
 package ch.droptilllate.application.core;
 
 
+import java.io.File;
+
 import ch.droptilllate.application.com.AbstractXmlDatabase;
 import ch.droptilllate.application.dao.ShareFolderDao;
 import ch.droptilllate.application.dnb.ShareFolder;
 import ch.droptilllate.application.views.Messages;
+import ch.droptilllate.application.views.XMLConstruct;
 
 public class KeyManager {
 
@@ -57,6 +60,20 @@ public class KeyManager {
 	public String generatePassword(String password, String salt){
 		KeysGenerator kg = new KeysGenerator();
 		return kg.getKey(password, salt);
+	}
+
+	/**
+	 * Return true if Dropbox/100000.xml exist
+	 * @return
+	 */
+	public boolean checkIfStructureFileExist() {
+		File file = new File(Messages.getPathDropBox() + XMLConstruct.getNameLocalXML());
+		if(file.exists()){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 	
 

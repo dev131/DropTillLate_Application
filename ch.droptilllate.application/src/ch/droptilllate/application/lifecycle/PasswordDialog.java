@@ -73,7 +73,7 @@ public class PasswordDialog extends Dialog {
     lblResult.setVisible(false);
     
     KeyManager km = new KeyManager();
-    if(!km.checkMasterPasswordExisting()){
+		if (!km.checkIfStructureFileExist()){
     	lblLoginPassword.setText("Create Password");
     	newUser = true;
     }

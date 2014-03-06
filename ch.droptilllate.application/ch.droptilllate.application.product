@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="ch.droptilllate.application" uid="DroptTillLate" id="ch.droptilllate.application.product" application="org.eclipse.e4.ui.workbench.swt.E4Application" version="0.3.6" useFeatures="false" includeLaunchers="true">
+<product name="ch.droptilllate.application" uid="DroptTillLate" id="ch.droptilllate.application.product" application="org.eclipse.e4.ui.workbench.swt.E4Application" version="0.4.0" useFeatures="false" includeLaunchers="true">
 
 
    <configIni use="default">
@@ -14,6 +14,7 @@
 
    <windowImages/>
 
+
    <launcher name="DropTillLate">
       <solaris/>
       <win useIco="false">
@@ -24,6 +25,7 @@
 
    <vm>
    </vm>
+
 
    <plugins>
       <plugin id="ch.droptilllate.application"/>

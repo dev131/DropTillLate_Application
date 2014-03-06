@@ -22,6 +22,7 @@ import ch.droptilllate.application.views.Status;
 import ch.droptilllate.application.views.XMLConstruct;
 import ch.droptilllate.filesystem.info.*;
 import ch.droptilllate.filesystem.security.KeyRelation;
+import ch.droptilllate.filesystem.api.FileError;
 import ch.droptilllate.filesystem.api.FileHandlingSummary;
 import ch.droptilllate.filesystem.api.FileSystemHandler;
 import ch.droptilllate.filesystem.api.IFileSystem;
@@ -190,40 +191,28 @@ public class FileSystemCom implements IFileSystemCom {
 	}
 
 	@Override
-	public CRUDCryptedFileInfo encryptFile(ShareFolder destinationShareFolder,  boolean local) {		
-		FileHandlingSummary filehandling_result = null;
-		List<FileInfoEncrypt> fileInfoList = new ArrayList<FileInfoEncrypt>();		
+	public boolean encryptFile(ShareFolder destinationShareFolder,  boolean local) {		
+		FileInfoEncrypt fileInfo = null;
 		//create ghost file
 		EncryptedFileDob fileDob;
 		if(!local){
-			fileDob = buildXMLDob(Messages.getPathLocalTemp() + XMLConstruct.getPathShareXML(), 
-					Integer.parseInt(XMLConstruct.getIdShareXMLContainer()), 
-					Integer.parseInt(XMLConstruct.getIdShareXMLFiles()));	
+			fileDob = buildXMLDob(Messages.getPathLocalTemp() + XMLConstruct.getNameShareXML(), 
+					Integer.parseInt(XMLConstruct.getIdXMLContainer()), 
+					Integer.parseInt(XMLConstruct.getIdXMLFiles()));	
 		}
 		else{
-			fileDob = buildXMLDob(Messages.getPathLocalTemp() + XMLConstruct.getPathLocalXML(), 
-					Integer.parseInt(XMLConstruct.getIdLocalXMLContainer()), 
-					Integer.parseInt(XMLConstruct.getIdLocalXMLFiles()));
+			fileDob = buildXMLDob(Messages.getPathLocalTemp() + XMLConstruct.getNameLocalXML(), 
+					Integer.parseInt(XMLConstruct.getIdXMLContainer()), 
+					Integer.parseInt(XMLConstruct.getIdXMLFiles()));
 		}
 		//Check if it exist
 		checkFileExisting(fileDob);
 		//TODO encrypt file !!!!!
-		//fileInfo = new FileInfoEncrypt(fileDob.getId(), fileDob.getTempPlainPath(), destination path, fileDob.getContainerId()); 
-		//fileInfoList.add(fileInfo);
+		fileInfo = new FileInfoEncrypt(fileDob.getId(), fileDob.getTempPlainPath(), destinationShareFolder.getPath(), fileDob.getContainerId()); 
 		IFileSystem ifile = new FileSystemHandler();
-		//Create KeyRelation
-		KeyRelation relation = new KeyRelation();
-		relation.addKeyOfShareRelation(destinationShareFolder.getPath() + destinationShareFolder.getID(), destinationShareFolder.getKey());
-		filehandling_result =ifile.encryptFiles(fileInfoList, relation);
-	// Convert to FileCRUDResults
-		FileInfoConverter converter = new FileInfoConverter();
-		CRUDCryptedFileInfo result = new CRUDCryptedFileInfo();
-		List<EncryptedFileDob> fileList = new ArrayList<EncryptedFileDob>();
-		fileList.add(fileDob);
-		result = converter.convertFileInfoList(
-				filehandling_result.getFileInfoSuccessList(),
-				filehandling_result.getFileInfoErrorList(), fileList);
-		return result;
+		fileInfo = ifile.storeFileStructure(fileInfo, destinationShareFolder.getKey());
+		if(fileInfo.getError() == FileError.NONE) return true;
+		return false;
 	}
 	
 	/**
@@ -247,39 +236,30 @@ public class FileSystemCom implements IFileSystemCom {
 	}
 
 	@Override
-	public CRUDCryptedFileInfo decryptFile(ShareFolder sourceShareFolder,boolean local) {
-		FileHandlingSummary filehandling_result = null;
-		List<FileInfoDecrypt> fileInfoList = new ArrayList<FileInfoDecrypt>();
+	public boolean decryptFile(ShareFolder sourceShareFolder,boolean local) {
+		FileInfoDecrypt fileInfo = null;
 		EncryptedFileDob fileDob;
 		if(!local){
 			fileDob = buildXMLDob(sourceShareFolder.getPath(), 
-					Integer.parseInt(XMLConstruct.getIdShareXMLContainer()), 
-					Integer.parseInt(XMLConstruct.getIdShareXMLFiles()));	
+					Integer.parseInt(XMLConstruct.getIdXMLContainer()), 
+					Integer.parseInt(XMLConstruct.getIdXMLFiles()));	
 		}
 		else{
 			fileDob = buildXMLDob(sourceShareFolder.getPath(), 
-					Integer.parseInt(XMLConstruct.getIdLocalXMLContainer()), 
-					Integer.parseInt(XMLConstruct.getIdLocalXMLFiles()));
+					Integer.parseInt(XMLConstruct.getIdXMLContainer()), 
+					Integer.parseInt(XMLConstruct.getIdXMLFiles()));
 		}
 		
 			//Check If File Exist
 			checkFileExisting(fileDob);
-			fileInfoList.add(new FileInfoDecrypt(fileDob.getId(), fileDob
+			fileInfo = new FileInfoDecrypt(fileDob.getId(), fileDob
 					.getType(), Messages.getPathLocalTemp(), fileDob.getShareRelationPath(), fileDob
-					.getContainerId()));
+					.getContainerId());
 		
-		KeyRelation relation = new KeyRelation();
-		relation.addKeyOfShareRelation(sourceShareFolder.getPath(), sourceShareFolder.getKey());
-		IFileSystem ifile = new FileSystemHandler();
-		filehandling_result = ifile.decryptFiles(fileInfoList,relation);
-		// Convert to FileCRUDResults
-		FileInfoConverter converter = new FileInfoConverter();
-		List<EncryptedFileDob> fileList = new ArrayList<EncryptedFileDob>();
-		fileList.add(fileDob);
-		CRUDCryptedFileInfo result = converter.convertFileInfoList(
-				filehandling_result.getFileInfoSuccessList(),
-				filehandling_result.getFileInfoErrorList(), fileList);
-		return result;
+		IFileSystem ifile = new FileSystemHandler();		
+		fileInfo = ifile.loadFileStructure(fileInfo,  sourceShareFolder.getKey());
+		if(fileInfo.getError() == FileError.NONE) return true;
+		return false;
 	}
 
 }

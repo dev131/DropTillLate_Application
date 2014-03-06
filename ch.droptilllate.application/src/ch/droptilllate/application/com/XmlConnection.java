@@ -2,6 +2,7 @@ package ch.droptilllate.application.com;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Date;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -47,9 +48,9 @@ public class XmlConnection {
 	
 	public XmlConnection(Boolean local, String key) {
 		if(local){
-			path = Messages.getPathLocalTemp() + XMLConstruct.getPathLocalXML();
+			path = Messages.getPathLocalTemp() + XMLConstruct.getNameLocalXML();
 			//TODO tillate expression
-			File f = new File(Messages.getPathLocalTemp() + XMLConstruct.getIdLocalXMLContainer()+ ".tilllate");
+			File f = new File(Messages.getPathLocalTemp() + XMLConstruct.getIdXMLContainer()+ ".tilllate");
 			//IF exist create new register to listener ELSE decrypt and register to listener
 			if (!f.exists()){
 				createFile(path);
@@ -65,7 +66,7 @@ public class XmlConnection {
 				
 		}
 		else{
-			path = Messages.getPathLocalTemp() + XMLConstruct.getPathShareXML(); 
+			path = Messages.getPathLocalTemp() + XMLConstruct.getNameShareXML(); 
 			File f = new File(path);
 			if (!f.exists())
 				createFile(path);
@@ -75,12 +76,22 @@ public class XmlConnection {
 	private void decryptFile(String key) {
 		IFileSystemCom fileSystem = new FileSystemCom();
 		ShareFolder shareFolder = new ShareFolder(Integer.parseInt(Messages.ShareFolder0name), Messages.getPathDropBox(), key);
-		CRUDCryptedFileInfo fileInfoList  = fileSystem.decryptFile(shareFolder, true);
+		if(fileSystem.decryptFile(shareFolder, true)){
+			//TODO Successfull
+		};
 		File file = new File(path);	
-		for(EncryptedFileDob dob : fileInfoList.getEncryptedFileListSuccess()){
+		//Integer id, String name, Date date, String path, GhostFolderDob parent, String type, Long size, Integer containerId)
+		EncryptedFileDob dob = new EncryptedFileDob(
+				Integer.parseInt(XMLConstruct.getIdXMLFiles()), 
+				file.getName(), 
+				new Date(System.currentTimeMillis()), 
+				file.getPath(), 
+				null, 
+				file.getName(), 
+				file.length(), 
+				Integer.parseInt(XMLConstruct.getIdXMLContainer()));
 			FileHandler fileHanlder = new FileHandler();
 			fileHanlder.setFileListener(file, dob);
-		}
 	}
 
 	private void deleteFile(String path2) {

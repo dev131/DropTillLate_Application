@@ -46,7 +46,7 @@ public interface IFileSystemCom {
 	 * @param destinationShareFolder
 	 * @return FileInfoList
 	 */
-	public CRUDCryptedFileInfo encryptFile(ShareFolder destinationShareFolder, boolean local);
+	public boolean encryptFile(ShareFolder destinationShareFolder, boolean local);
 
 	/**
 	 * Decrypte local/share XML files
@@ -54,7 +54,7 @@ public interface IFileSystemCom {
 	 * @param local
 	 * @return FileInfoList
 	 */
-	public CRUDCryptedFileInfo decryptFile(ShareFolder sourceShareFolder, boolean local);
+	public boolean decryptFile(ShareFolder sourceShareFolder, boolean local);
 	
 	
 	
