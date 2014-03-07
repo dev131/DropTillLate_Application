@@ -49,7 +49,6 @@ public class UpdateXMLImporter {
 					sqlDate, 
 					nodelist.item(i).getAttributes().getNamedItem(XMLConstruct.getAttPath()).getNodeValue(), 
 					null, 
-					nodelist.item(i).getAttributes().getNamedItem(XMLConstruct.getAttType()).getNodeValue(),  
 					size, 
 					Integer.parseInt(nodelist.item(i).getAttributes().getNamedItem(XMLConstruct.getAttContainerId()).getNodeValue()));
 			files.add(fileDob);

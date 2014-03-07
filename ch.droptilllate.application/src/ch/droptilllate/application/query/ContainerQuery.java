@@ -6,13 +6,17 @@ import java.util.List;
 
 
 
+
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import ch.droptilllate.application.com.XmlConnection;
 import ch.droptilllate.application.dnb.EncryptedContainer;
 import ch.droptilllate.application.info.CRUDContainerInfo;
+import ch.droptilllate.application.views.Messages;
 import ch.droptilllate.application.views.XMLConstruct;
 
 public class ContainerQuery {
@@ -30,10 +34,10 @@ public class ContainerQuery {
 	public void newContainer(EncryptedContainer container) {
 		
 		if (container.getId() == null) {
-			int id = (int) (Math.random() * 10000 + 1);
+			int id = (int) (Math.random() * Messages.getIdSize() + 1);
 			// Check if it exist
 			while (checkExist(id)) {
-				id = (int) (Math.random() * 10000 + 1);
+				id = (int) (Math.random() * Messages.getIdSize() + 1);
 			}
 			//TODO if now container ID -> Alert! it have to be one
 			container.setId(id);

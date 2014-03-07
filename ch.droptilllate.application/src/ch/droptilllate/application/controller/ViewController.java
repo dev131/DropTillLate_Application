@@ -349,7 +349,6 @@ public class ViewController {
 					new Date(System.currentTimeMillis()), 
 					droppedElement.getPath(), 
 					parent, 
-					droppedElement.getName(), 
 					droppedElement.length(), 
 					null);					
 			// Insert new Node in DB
@@ -436,9 +435,11 @@ public class ViewController {
 		    String selectedDir = dirDialog.open();	
 			String destinationPath = null;
 			File source = null;
+			String sharefolderName = "";
 			try {
 				FileHandler fileHandler = new FileHandler();	
 				source = new File(selectedDir);
+				sharefolderName = source.getName();
 				destinationPath = Messages.getPathDropBox() + source.getName();
 				File destination = new File(destinationPath);					
 				fileHandler.copyDirectory(source, destination);
@@ -467,7 +468,7 @@ public class ViewController {
 		    //Insert ShareFolder
 		    ShareFolderDao shareFolderDao = new ShareFolderDao();
 		    KeyManager keyManager = new KeyManager();
-		    String key =keyManager.generatePassword(password, foldername);
+		    String key =keyManager.generatePassword(password, sharefolderName);
 		    ShareFolder sharefolder = new ShareFolder(Integer.parseInt(source.getName()), Messages.getPathDropBox(), key);
 		    shareFolderDao.newElement(sharefolder, null);
 		    //Insert GhostFolder

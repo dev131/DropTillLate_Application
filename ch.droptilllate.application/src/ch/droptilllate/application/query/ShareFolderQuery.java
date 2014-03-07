@@ -34,10 +34,10 @@ public class ShareFolderQuery {
 	public ShareFolder newShareFolder(ShareFolder sharefolder) {
 		Document document = conn.getXML();
 		if (sharefolder.getID() == null) {
-			int id = (int) (Math.random() * 10000 + 1);
+			int id = (int) (Math.random() * Messages.getIdSize() + 1);
 			// Check if it exist
 			while (checkExist(id)) {
-				id = (int) (Math.random() * 10000 + 1);
+				id = (int) (Math.random() * Messages.getIdSize() + 1);
 			}
 			sharefolder.setID(id);
 		}	

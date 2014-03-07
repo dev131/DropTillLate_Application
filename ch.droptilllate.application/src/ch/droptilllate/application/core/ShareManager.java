@@ -117,7 +117,7 @@ public class ShareManager {
 		ShareFolder sharedFolder = new ShareFolder(null,
 				Messages.getPathDropBox(), null);
 		sharedFolder = (ShareFolder) shareDao.newElement(sharedFolder, null);
-		key = km.generatePassword(password, sharedFolder.getPath());
+		key = km.generatePassword(password, sharedFolder.getID().toString());
 		sharedFolder.setKey(key);
 		shareDao.updateElement(sharedFolder, null);
 		// Move Files

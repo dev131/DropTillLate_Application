@@ -30,13 +30,21 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import ch.droptilllate.application.dao.ContainerDao;
+import ch.droptilllate.application.dao.EncryptedFileDao;
+import ch.droptilllate.application.dao.ShareFolderDao;
+import ch.droptilllate.application.dao.ShareRelationDao;
+import ch.droptilllate.application.dnb.EncryptedContainer;
 import ch.droptilllate.application.dnb.ShareFolder;
+import ch.droptilllate.application.dnb.ShareRelation;
 import ch.droptilllate.application.handlers.FileHandler;
 import ch.droptilllate.application.info.CRUDCryptedFileInfo;
 import ch.droptilllate.application.listener.FileChangeListener;
 import ch.droptilllate.application.model.EncryptedFileDob;
+import ch.droptilllate.application.model.StructureXmlDob;
 import ch.droptilllate.application.views.Messages;
 import ch.droptilllate.application.views.XMLConstruct;
+import ch.droptilllate.filesystem.commons.Constants;
 
 public class XmlConnection {
 
@@ -50,18 +58,23 @@ public class XmlConnection {
 		if(local){
 			path = Messages.getPathLocalTemp() + XMLConstruct.getNameLocalXML();
 			//TODO tillate expression
-			File f = new File(Messages.getPathLocalTemp() + XMLConstruct.getIdXMLContainer()+ ".tilllate");
+			File f = new File(Messages.getPathDropBox()+Messages.getShareFolder0name()+Messages.getSlash()
+					+ XMLConstruct.getIdXMLContainer()+ "."+ Constants.CONTAINER_EXTENTION);
 			//IF exist create new register to listener ELSE decrypt and register to listener
 			if (!f.exists()){
 				createFile(path);
 				encryptFile(key);
 				deleteFile(path);
-				decryptFile(key);
+				decryptFile(key, true);
+				insertDBEntry(key);
+				
 			}
 			else{
 				File f1 = new File(path);
 				//If not decrypted
-				if(!f1.exists())decryptFile(key);
+				if(!f1.exists()){
+					decryptFile(key, true);
+				}
 			}
 				
 		}
@@ -73,25 +86,48 @@ public class XmlConnection {
 		}
 	}
 
-	private void decryptFile(String key) {
+	private void insertDBEntry(String key) {
+		StructureXmlDob sxml = new StructureXmlDob(Messages.getPathDropBox() + Messages.getShareFolder0name(), key, true, false);
+		EncryptedFileDob filedob = sxml.getEncryptedFileDob();
+		ShareFolder shareFolder= sxml.getShareFolder();
+		ShareRelation shareRelation= sxml.getShareRelation();
+		EncryptedContainer encryptedContainer = sxml.getEncryptedContainer();
+		EncryptedFileDao fDao = new EncryptedFileDao();
+		ShareFolderDao sfDao = new ShareFolderDao();
+		ShareRelationDao srDao = new ShareRelationDao();
+		ContainerDao cDao = new ContainerDao();
+		fDao.newElement(filedob, null);
+		sfDao.newElement(shareFolder, null);
+		srDao.newElement(shareRelation, null);
+		cDao.newElement(encryptedContainer, null);
+		
+		
+		
+		
+	}
+
+	private boolean decryptFile(String key, boolean local) {
+		boolean status = false;
 		IFileSystemCom fileSystem = new FileSystemCom();
 		ShareFolder shareFolder = new ShareFolder(Integer.parseInt(Messages.ShareFolder0name), Messages.getPathDropBox(), key);
 		if(fileSystem.decryptFile(shareFolder, true)){
 			//TODO Successfull
+			status = true;
 		};
+		StructureXmlDob sxml;
 		File file = new File(path);	
+		if(!local){
+			sxml = new StructureXmlDob(Messages.getPathDropBox() + Messages.getShareFolder0name(), key, false, false);
+		}
+		else{
+			sxml = new StructureXmlDob(Messages.getPathDropBox() + Messages.getShareFolder0name(), key, true, false);			
+		}		
+		EncryptedFileDob dob = sxml.getEncryptedFileDob();
 		//Integer id, String name, Date date, String path, GhostFolderDob parent, String type, Long size, Integer containerId)
-		EncryptedFileDob dob = new EncryptedFileDob(
-				Integer.parseInt(XMLConstruct.getIdXMLFiles()), 
-				file.getName(), 
-				new Date(System.currentTimeMillis()), 
-				file.getPath(), 
-				null, 
-				file.getName(), 
-				file.length(), 
-				Integer.parseInt(XMLConstruct.getIdXMLContainer()));
-			FileHandler fileHanlder = new FileHandler();
-			fileHanlder.setFileListener(file, dob);
+			FileHandler fileHandler = new FileHandler();
+			fileHandler.setFileListener(file, dob);
+		
+		return status;
 	}
 
 	private void deleteFile(String path2) {
@@ -169,7 +205,7 @@ public class XmlConnection {
 
 	}
 
-	public Document getXML() {
+	public Document getXML() { 
 		factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);
 		builder = null;

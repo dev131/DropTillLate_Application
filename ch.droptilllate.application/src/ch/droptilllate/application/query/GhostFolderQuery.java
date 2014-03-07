@@ -15,6 +15,7 @@ import org.w3c.dom.NodeList;
 import ch.droptilllate.application.com.XmlConnection;
 import ch.droptilllate.application.info.CRUDGhostFolderInfo;
 import ch.droptilllate.application.model.GhostFolderDob;
+import ch.droptilllate.application.views.Messages;
 import ch.droptilllate.application.views.XMLConstruct;
 
 public class GhostFolderQuery {
@@ -33,10 +34,10 @@ public class GhostFolderQuery {
 	public GhostFolderDob newFolder(GhostFolderDob folderDob) {
 		// TODO id generate
 		if(folderDob.getId() == null){
-			int id = (int) (Math.random() * 10000 + 1);
+			int id = (int) (Math.random() * Messages.getIdSize() + 1);
 			// Check if it exist
 			while (checkExist(id)) {
-				id = (int) (Math.random() * 10000 + 1);
+				id = (int) (Math.random() * Messages.getIdSize() + 1);
 			}
 			folderDob.setId(id);
 		}		

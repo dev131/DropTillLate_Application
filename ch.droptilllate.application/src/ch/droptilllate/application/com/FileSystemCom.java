@@ -17,6 +17,7 @@ import ch.droptilllate.application.dnb.EncryptedContainer;
 import ch.droptilllate.application.dnb.ShareFolder;
 import ch.droptilllate.application.info.CRUDCryptedFileInfo;
 import ch.droptilllate.application.model.EncryptedFileDob;
+import ch.droptilllate.application.model.StructureXmlDob;
 import ch.droptilllate.application.views.Messages;
 import ch.droptilllate.application.views.Status;
 import ch.droptilllate.application.views.XMLConstruct;
@@ -195,61 +196,37 @@ public class FileSystemCom implements IFileSystemCom {
 		FileInfoEncrypt fileInfo = null;
 		//create ghost file
 		EncryptedFileDob fileDob;
+		StructureXmlDob sxml;
 		if(!local){
-			fileDob = buildXMLDob(Messages.getPathLocalTemp() + XMLConstruct.getNameShareXML(), 
-					Integer.parseInt(XMLConstruct.getIdXMLContainer()), 
-					Integer.parseInt(XMLConstruct.getIdXMLFiles()));	
+			 sxml = new StructureXmlDob(Messages.getPathLocalTemp() , destinationShareFolder.getKey(), false, true);
+			
 		}
 		else{
-			fileDob = buildXMLDob(Messages.getPathLocalTemp() + XMLConstruct.getNameLocalXML(), 
-					Integer.parseInt(XMLConstruct.getIdXMLContainer()), 
-					Integer.parseInt(XMLConstruct.getIdXMLFiles()));
+			sxml = new StructureXmlDob(Messages.getPathLocalTemp() , destinationShareFolder.getKey(), true, true);
 		}
+		fileDob = sxml.getEncryptedFileDob();
 		//Check if it exist
 		checkFileExisting(fileDob);
 		//TODO encrypt file !!!!!
-		fileInfo = new FileInfoEncrypt(fileDob.getId(), fileDob.getTempPlainPath(), destinationShareFolder.getPath(), fileDob.getContainerId()); 
+		fileInfo = new FileInfoEncrypt(fileDob.getId(), fileDob.getTempPlainPath(), destinationShareFolder.getPath() + destinationShareFolder.getID(), fileDob.getContainerId()); 
 		IFileSystem ifile = new FileSystemHandler();
 		fileInfo = ifile.storeFileStructure(fileInfo, destinationShareFolder.getKey());
 		if(fileInfo.getError() == FileError.NONE) return true;
 		return false;
-	}
-	
-	/**
-	 * Create Dob for share/localXML
-	 * @param filePath
-	 * @param containerId
-	 * @param fileId
-	 * @return EncryptedFileDob
-	 */
-	private EncryptedFileDob buildXMLDob(String filePath, Integer containerId, Integer fileId){
-		File file = new File(filePath);
-		EncryptedFileDob fileDob = new EncryptedFileDob(fileId, 
-				file.getName(), 
-				new Date(System.currentTimeMillis()), 
-				file.getPath(), 
-				null, 
-				FilenameUtils.getExtension(file.getAbsolutePath()), 
-				file.length(), 
-				containerId);					
-		return fileDob;	
 	}
 
 	@Override
 	public boolean decryptFile(ShareFolder sourceShareFolder,boolean local) {
 		FileInfoDecrypt fileInfo = null;
 		EncryptedFileDob fileDob;
+		StructureXmlDob sxml;
 		if(!local){
-			fileDob = buildXMLDob(sourceShareFolder.getPath(), 
-					Integer.parseInt(XMLConstruct.getIdXMLContainer()), 
-					Integer.parseInt(XMLConstruct.getIdXMLFiles()));	
+			sxml = new StructureXmlDob(sourceShareFolder.getPath()+ sourceShareFolder.getID(), sourceShareFolder.getKey(), false, false);
 		}
 		else{
-			fileDob = buildXMLDob(sourceShareFolder.getPath(), 
-					Integer.parseInt(XMLConstruct.getIdXMLContainer()), 
-					Integer.parseInt(XMLConstruct.getIdXMLFiles()));
-		}
-		
+			sxml = new StructureXmlDob(sourceShareFolder.getPath()+ sourceShareFolder.getID(), sourceShareFolder.getKey(), true, false);			
+		}		
+		fileDob = sxml.getEncryptedFileDob();
 			//Check If File Exist
 			checkFileExisting(fileDob);
 			fileInfo = new FileInfoDecrypt(fileDob.getId(), fileDob

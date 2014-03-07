@@ -23,6 +23,7 @@ public class Messages extends NLS {
 	public static String PathLocalTemp;
 	public static String ShareFolder0name;
 	public static String OwnerMail;
+	public static String Slash;
 	
 	public static String ImportDialog;
 	
@@ -85,7 +86,14 @@ public class Messages extends NLS {
 	public static String getShareFolder0name() {
 		return ShareFolder0name;
 	}
+
+	public static String getSlash() {
+		return Slash;
+	}
 	
+	public static Integer getIdSize(){
+		return 100000;
+	}
 
 	public static String getTableColumnTitle(TableIdentifier identifier) {
 		String title = null;

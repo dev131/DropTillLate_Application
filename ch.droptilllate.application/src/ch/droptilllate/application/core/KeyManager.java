@@ -8,6 +8,7 @@ import ch.droptilllate.application.dao.ShareFolderDao;
 import ch.droptilllate.application.dnb.ShareFolder;
 import ch.droptilllate.application.views.Messages;
 import ch.droptilllate.application.views.XMLConstruct;
+import ch.droptilllate.filesystem.commons.Constants;
 
 public class KeyManager {
 
@@ -44,7 +45,7 @@ public class KeyManager {
 		Boolean exist = false;
 		KeysGenerator kg = new KeysGenerator();
 		ShareFolderDao dao = new ShareFolderDao();
-		ShareFolder folder = (ShareFolder) dao.getElementByID(shareID, null);
+		ShareFolder folder = (ShareFolder) dao.getElementByID(shareID, kg.getKey(password, salt));
 		if(folder != null){
 			if(folder.getKey().equals(kg.getKey(password, salt)))exist= true;	
 		}	
@@ -67,7 +68,7 @@ public class KeyManager {
 	 * @return
 	 */
 	public boolean checkIfStructureFileExist() {
-		File file = new File(Messages.getPathDropBox() + XMLConstruct.getNameLocalXML());
+		File file = new File(Messages.getPathDropBox() + Messages.getShareFolder0name()+Messages.getSlash()+ XMLConstruct.getIdXMLContainer()+"."+ Constants.CONTAINER_EXTENTION);
 		if(file.exists()){
 			return true;
 		}

@@ -41,18 +41,17 @@ public interface IFileSystemCom {
 	public CRUDCryptedFileInfo moveFiles(List<EncryptedFileDob> fileList, ShareFolder sharedFolder);
 	/**
 	 *  Encrypt local/share File in specified Container ID
-	 * @param dob
-	 *  * @param local
-	 * @param destinationShareFolder
-	 * @return FileInfoList
+	 * @param local
+	 * @param destinationShareFolder path = Dropbox/Sharefolder1
+	 * @return true if ok
 	 */
 	public boolean encryptFile(ShareFolder destinationShareFolder, boolean local);
 
 	/**
 	 * Decrypte local/share XML files
-	 * @param sourceShareFolder
+	 * @param sourceShareFolder path = Dropbox/Sharefolder1
 	 * @param local
-	 * @return FileInfoList
+	 * @return true if ok
 	 */
 	public boolean decryptFile(ShareFolder sourceShareFolder, boolean local);
 	

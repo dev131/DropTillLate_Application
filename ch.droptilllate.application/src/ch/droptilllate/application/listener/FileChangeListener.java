@@ -10,6 +10,7 @@ import org.apache.commons.vfs2.FileListener;
 import ch.droptilllate.application.com.FileSystemCom;
 import ch.droptilllate.application.com.IFileSystemCom;
 import ch.droptilllate.application.model.EncryptedFileDob;
+import ch.droptilllate.application.views.XMLConstruct;
 
 public class FileChangeListener implements FileListener {
 	private List<EncryptedFileDob> dob;
@@ -24,6 +25,9 @@ public class FileChangeListener implements FileListener {
 		// TODO Auto-generated method stub
 		System.out.println("fileChanged");
 		IFileSystemCom file = new FileSystemCom();
+//		if(dob.get(0).getId() == Integer.parseInt(XMLConstruct.getIdXMLFiles())){
+//			file.encryptFile(destinationShareFolder, local)
+//		}
 		file.encryptFile(dob, null);
 
 	}

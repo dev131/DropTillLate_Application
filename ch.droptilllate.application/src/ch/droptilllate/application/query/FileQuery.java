@@ -16,6 +16,7 @@ import ch.droptilllate.application.com.XmlConnection;
 import ch.droptilllate.application.info.CRUDCryptedFileInfo;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
+import ch.droptilllate.application.views.Messages;
 import ch.droptilllate.application.views.XMLConstruct;
 
 public class FileQuery {
@@ -33,11 +34,12 @@ public class FileQuery {
 	 */
 	public EncryptedFileDob newFile(EncryptedFileDob encryptedFileDob) {
 		//TODO Id generate
+		String parentID = "";
 		if (encryptedFileDob.getId() == null) {
-			int id = (int) (Math.random() * 10000 + 1);
+			int id = (int) (Math.random() * Messages.getIdSize() + 1);
 			// Check if it exist
 			while (checkExist(id)) {
-				id = (int) (Math.random() * 10000 + 1);
+				id = (int) (Math.random() * Messages.getIdSize() + 1);
 			}
 			encryptedFileDob.setId(id);
 		}
@@ -47,14 +49,20 @@ public class FileQuery {
 		Element file = document.createElement(XMLConstruct.getChildElementFile());
 		// Generate xml entry with ID
 		file.setAttribute(XMLConstruct.getAttId(), Integer.toString(encryptedFileDob.getId()));
-		int parentID = encryptedFileDob.getParent().getId();
+		if(encryptedFileDob.getParent() != null){
+		parentID = Integer.toString(encryptedFileDob.getParent().getId());
+		}
+		String containerID ="0";
+		if(encryptedFileDob.getContainerId() != null){
+			containerID = encryptedFileDob.getContainerId().toString();
+		}
 		file.setAttribute(XMLConstruct.getAttFileName(), encryptedFileDob.getName());
 		file.setAttribute(XMLConstruct.getAttDate(), encryptedFileDob.getDate().toString());
 		file.setAttribute(XMLConstruct.getAttSize(), encryptedFileDob.getSize().toString());
 		file.setAttribute(XMLConstruct.getAttType(), encryptedFileDob.getType());
 		file.setAttribute(XMLConstruct.getAttPath(), encryptedFileDob.getPath());
-		file.setAttribute(XMLConstruct.getAttParentId(), Integer.toString(parentID));
-		file.setAttribute(XMLConstruct.getAttContainerId(), "0");
+		file.setAttribute(XMLConstruct.getAttParentId(), parentID);
+		file.setAttribute(XMLConstruct.getAttContainerId(), containerID);
 		node.appendChild(file);
 		conn.writeToXML();
 		return encryptedFileDob;
@@ -108,8 +116,7 @@ public class FileQuery {
 					nodes.item(i).getAttributes().getNamedItem(XMLConstruct.getAttFileName()).getNodeValue(), 
 					sqlDate, 
 					nodes.item(i).getAttributes().getNamedItem(XMLConstruct.getAttPath()).getNodeValue(), 
-					folder, 
-					nodes.item(i).getAttributes().getNamedItem(XMLConstruct.getAttType()).getNodeValue(),  
+					folder,   
 					size, 
 					Integer.parseInt(nodes.item(i).getAttributes().getNamedItem(XMLConstruct.getAttContainerId()).getNodeValue()));
 			files.add(fileDob);
@@ -185,7 +192,6 @@ public class FileQuery {
 				sqlDate, 
 				nodes.item(0).getAttributes().getNamedItem(XMLConstruct.getAttPath()).getNodeValue(), 
 				null, 
-				nodes.item(0).getAttributes().getNamedItem(XMLConstruct.getAttType()).getNodeValue(),  
 				Long.parseLong(nodes.item(0).getAttributes().getNamedItem(XMLConstruct.getAttSize()).getNodeValue()),
 				Integer.parseInt(nodes.item(0).getAttributes().getNamedItem(XMLConstruct.getAttContainerId()).getNodeValue()));
 		System.out.println("Everything replaced.");
@@ -274,7 +280,6 @@ public class FileQuery {
 					sqlDate, 
 					nodes.item(i).getAttributes().getNamedItem(XMLConstruct.getAttPath()).getNodeValue(), 
 					null, 
-					nodes.item(i).getAttributes().getNamedItem(XMLConstruct.getAttType()).getNodeValue(),  
 					size, 
 					Integer.parseInt(nodes.item(i).getAttributes().getNamedItem(XMLConstruct.getAttContainerId()).getNodeValue()));
 			files.add(fileDob);

@@ -18,7 +18,7 @@ import ch.droptilllate.application.model.EncryptedFileDob;
 
 public class FileHandler {
 	
-	public void FileHanlder(){}
+	public FileHandler(){}
 	
 	public void copyFile(File source, File dest) throws IOException {
 		

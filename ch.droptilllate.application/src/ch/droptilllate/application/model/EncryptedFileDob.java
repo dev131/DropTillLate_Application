@@ -20,12 +20,11 @@ public class EncryptedFileDob extends DroppedElement {
 	 * @param date
 	 * @param path
 	 * @param parent
-	 * @param type
 	 * @param size
 	 * @param containerId
 	 */
 	public EncryptedFileDob(Integer id, String name, Date date, String path,
-			GhostFolderDob parent, String type, Long size, Integer containerId) {
+			GhostFolderDob parent, Long size, Integer containerId) {
 		super(id, name, date, path.replace("\\", "/"), parent);
 		this.type = defineFileType(name);
 		this.size = size;

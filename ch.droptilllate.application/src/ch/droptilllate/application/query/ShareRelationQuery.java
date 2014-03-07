@@ -20,11 +20,6 @@ public class ShareRelationQuery {
 
 	public ShareRelationQuery(String key) {
 		conn = new XmlConnection(true, key);	
-		List<ShareRelation> shareRelationList = getShareRelations(Integer.parseInt(Messages.getShareFolder0name()));
-		if(shareRelationList.isEmpty()){
-			ShareRelation shareRelation = new ShareRelation(Integer.parseInt(Messages.getShareFolder0name()), Messages.getOwnerMail());
-			newShareRelation(shareRelation);
-		}	
 	}
 
 	/**
@@ -35,15 +30,8 @@ public class ShareRelationQuery {
 	 */
 	public ShareRelation newShareRelation(ShareRelation shareRelation) {
 		document = conn.getXML();
-		Node node = document.getFirstChild();
-		NodeList nodelist = node.getChildNodes();
-		//GetNodeList by name
-		for(int i=0; i<nodelist.getLength(); i++){
-			  Node childNode = nodelist.item(i);
-			  if (childNode.getNodeName() == XMLConstruct.getRootElementShareRelation()) {
-			     node = nodelist.item(i);
-			  }
-			}		
+		NodeList nodelist = document.getElementsByTagName(XMLConstruct.getRootElementShareRelation());
+		Node node = nodelist.item(0);
 		Element folder = document.createElement(XMLConstruct.getChildElementShareRelation());
 		folder.setAttribute(XMLConstruct.getAttShareFolderId(),
 				Integer.toString(shareRelation.getSharefolderId()));
