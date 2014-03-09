@@ -48,4 +48,11 @@ public class ShareRelationDao extends AbstractXmlDatabase {
 		return shareRelationQuery.checkDatabase((List<ShareRelation>) obj);
 	}
 
+	@Override
+	public Object getElementAll(String key) {
+		if (shareRelationQuery == null)
+			shareRelationQuery = new ShareRelationQuery(key);		
+		return shareRelationQuery.getAll();
+	}
+
 }

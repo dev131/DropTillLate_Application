@@ -54,4 +54,10 @@ public class ShareFolderDao extends AbstractXmlDatabase {
 			sharefolderQuery = new ShareFolderQuery(key);		
 		return sharefolderQuery.checkDatabase((List<ShareFolder>) obj);
 	}
+
+	@Override
+	public Object getElementAll(String key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

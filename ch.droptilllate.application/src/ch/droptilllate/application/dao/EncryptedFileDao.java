@@ -73,4 +73,10 @@ public class EncryptedFileDao extends AbstractXmlDatabase {
 		return filequery.getFileByContainerId(containerid);
 	}
 
+	@Override
+	public Object getElementAll(String key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -131,4 +131,18 @@ public class ShareRelationQuery {
 
 	}
 
+	public List<ShareRelation> getAll() {
+		document = conn.getXML();
+		NodeList nodelist = document.getElementsByTagName(XMLConstruct.ChildElementShareRelation);
+		List<ShareRelation> shareList = new ArrayList<ShareRelation>();
+		for (int idx = 0; idx < nodelist.getLength(); idx++) {
+			ShareRelation tmp = new ShareRelation(
+					Integer.parseInt(nodelist.item(idx).getAttributes().getNamedItem(XMLConstruct.AttShareFolderId).getNodeValue()),
+					nodelist.item(idx).getAttributes().getNamedItem(XMLConstruct.AttMail).getNodeValue()
+					);
+			shareList.add(tmp);
+		}
+		return shareList;
+	}
+
 }

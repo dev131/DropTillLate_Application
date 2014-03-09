@@ -1,6 +1,7 @@
 package ch.droptilllate.application.dao;
 
 import java.util.List;
+
 import ch.droptilllate.application.com.AbstractXmlDatabase;
 import ch.droptilllate.application.dnb.EncryptedContainer;
 import ch.droptilllate.application.query.ContainerQuery;
@@ -49,6 +50,12 @@ public class ContainerDao extends AbstractXmlDatabase {
 		if (containerQuery == null)
 			containerQuery = new ContainerQuery(key);		
 		return containerQuery.getContainerBySharedFolderId(id);
+	}
+
+	@Override
+	public Object getElementAll(String key) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

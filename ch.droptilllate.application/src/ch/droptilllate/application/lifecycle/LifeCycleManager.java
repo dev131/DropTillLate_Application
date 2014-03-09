@@ -1,6 +1,8 @@
 package ch.droptilllate.application.lifecycle;
 
 
+import java.util.ArrayList;
+
 import org.eclipse.e4.ui.workbench.lifecycle.PostContextCreate;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.jface.window.Window;
@@ -11,6 +13,7 @@ import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 
 import ch.droptilllate.application.views.PasswordDialog;
+import ch.droptilllate.application.views.ShareDialog;
 
 
 // for a extended example see
@@ -19,13 +22,14 @@ public class LifeCycleManager {
   @PostContextCreate
   void postContextCreate(IApplicationContext appContext, Display display) {
     final Shell shell = new Shell(SWT.TOOL | SWT.NO_TRIM);
+
     PasswordDialog dialog = new PasswordDialog(shell);
 
     // close the static splash screen
     appContext.applicationRunning();
     // position the shell
     setLocation(display, shell);
-
+    
     if (dialog.open() != Window.OK) {
       // close the application
       System.exit(-1);

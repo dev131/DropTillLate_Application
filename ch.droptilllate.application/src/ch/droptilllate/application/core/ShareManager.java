@@ -29,7 +29,7 @@ public class ShareManager {
 	 * 
 	 * @param fileList
 	 * @param password
-	 * @param email 
+	 * @param emaillist 
 	 */
 	public void newShareRelation(List<EncryptedFileDob> fileList,
 			String password, List<String> emailList) {

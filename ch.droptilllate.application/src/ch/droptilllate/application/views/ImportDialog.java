@@ -45,7 +45,7 @@ public class ImportDialog extends TitleAreaDialog {
 		label.setBounds(10, 12, 55, 14);
 		
 		passwordText = new Text(container, SWT.BORDER);
-		passwordText.setBounds(87, 10, 363, 19);
+		passwordText.setBounds(87, 10, 333, 19);
 		
 		Label label_1 = new Label(container, SWT.NONE);
 		label_1.setVisible(true);
@@ -54,7 +54,7 @@ public class ImportDialog extends TitleAreaDialog {
 		
 		foldernameText = new Text(container, SWT.BORDER);
 		foldernameText.setVisible(true);
-		foldernameText.setBounds(87, 58, 363, 19);
+		foldernameText.setBounds(87, 58, 333, 19);
 
 		return area;
 	}

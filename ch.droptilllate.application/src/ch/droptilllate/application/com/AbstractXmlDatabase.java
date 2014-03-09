@@ -19,6 +19,12 @@ public abstract class AbstractXmlDatabase {
 	 * @param key if file already decrypted = null
 	 */
 	public abstract Object getElementByID(int id, String key);
+	
+	/**
+	 * Get All element
+	 */
+	public abstract Object getElementAll(String key);
+
 
 	/**
 	 * Update Element Data

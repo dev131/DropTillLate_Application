@@ -55,7 +55,7 @@ import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.provider.DropTillLateContentProvider;
 import ch.droptilllate.application.provider.DropTillLateLabelProvider;
 import ch.droptilllate.application.views.ImportDialog;
-import ch.droptilllate.application.views.ShareDiaolog;
+import ch.droptilllate.application.views.ShareDialog;
 import ch.droptilllate.application.views.Status;
 import ch.droptilllate.application.views.TableIdentifier;
 
@@ -68,7 +68,7 @@ public class ViewController {
 	private List<GhostFolderDob> folderList;
 	private static ViewController instance = null;
 	private List<EncryptedFileDob> actualDropFiles;
-	private ShareDiaolog sharedialog;
+	private ShareDialog sharedialog;
 	private ImportDialog importdialog;
 	private Shell shell;
 
@@ -382,12 +382,12 @@ public class ViewController {
 		fileList = new ArrayList<EncryptedFileDob>();
 		List<String> mailList = new ArrayList<String>();
 		String password = null;
-		sharedialog = new ShareDiaolog(shell);
+		sharedialog = new ShareDialog(shell);
 		sharedialog.create();
 		if (sharedialog.open() == Window.OK) {
 			password = sharedialog.getPassword();
 		//TODO MailList
-			mailList.add(sharedialog.getEmail());
+			mailList = sharedialog.getEmailList();
 		}
 		if(password == null || mailList.isEmpty()){
 			MessageDialog.openError(shell, "Error", "Error occured no password or email");
