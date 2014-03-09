@@ -94,7 +94,7 @@ public class PasswordDialog extends Dialog {
 			    String dropboxPath = dialog.open();
 			    if(dropboxPath != null)
 					try {
-						Configuration.setPropertieDropBoxPath(dropboxPath + Messages.getSlash());
+						Configuration.setPropertieDropBoxPath(dropboxPath);
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

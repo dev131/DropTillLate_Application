@@ -56,7 +56,7 @@ public class Configuration {
 				}
 			}
 		}
-		return path;
+		return path + Messages.getSlash();
 	  }
 
 
@@ -85,6 +85,6 @@ public class Configuration {
 				}
 			}
 		}
-		return path;
+		return path+ Messages.getSlash();
 	}
 }
