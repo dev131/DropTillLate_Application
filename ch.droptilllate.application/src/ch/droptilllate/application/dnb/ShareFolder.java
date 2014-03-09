@@ -1,11 +1,12 @@
 package ch.droptilllate.application.dnb;
 
+import ch.droptilllate.application.properties.Messages;
+
 public class ShareFolder {
 
 
 	private Integer id;
 	private String key;
-	private String path;
 	
 	/**
 	 * ShareFolder
@@ -13,10 +14,9 @@ public class ShareFolder {
 	 * @param path
 	 * @param key
 	 */
-	public ShareFolder(Integer id, String path, String key){
+	public ShareFolder(Integer id, String key){
 		this.id= id;
 		this.key= key;
-		this.path = path;
 	}
 	
 	public Integer getID(){
@@ -34,15 +34,5 @@ public class ShareFolder {
 	public void setKey(String key){
 		this.key = key;
 	}
-	/**
-	 * Path = User/Dropbox/Droptilllate/
-	 * @return User/Dropbox/Droptilllate/
-	 */
-	public String getPath(){
-		return path;
-	}
 	
-	public void setPath(String path){
-		this.path = path;
-	}
 }

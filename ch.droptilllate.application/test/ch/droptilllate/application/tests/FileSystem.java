@@ -22,34 +22,34 @@ public class FileSystem {
 
 	@Test
 	public void test() {
-		IFileSystemCom ifileSystem = new FileSystemCom();
-		int id;
-		String name;
-		String type;
-		long size;
-		String path;
-		int containerID;
-		File file = new File(
-				"/Users/marcobetschart/Documents/BDA_project/TestFolder/text.xml");
-		try {
-			RandomAccessFile raf = new RandomAccessFile(file, "rw");
-			raf.setLength(30);
-			raf.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		id = 1;
-		name = "text.xml";
-		type = "xml";
-		size = file.getTotalSpace();
-		java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime()
-				.getTime());
-		path = file.getAbsolutePath();
-		containerID = 0;
+//		IFileSystemCom ifileSystem = new FileSystemCom();
+//		int id;
+//		String name;
+//		String type;
+//		long size;
+//		String path;
+//		int containerID;
+//		File file = new File(
+//				"/Users/marcobetschart/Documents/BDA_project/TestFolder/text.xml");
+//		try {
+//			RandomAccessFile raf = new RandomAccessFile(file, "rw");
+//			raf.setLength(30);
+//			raf.close();
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		id = 1;
+//		name = "text.xml";
+//		type = "xml";
+//		size = file.getTotalSpace();
+//		java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime()
+//				.getTime());
+//		path = file.getAbsolutePath();
+//		containerID = 0;
 		// EncryptedFileDob(int id, String name, String type, long size,Date
 		// date, String path, int containerID)
 		// List<EncryptedFileDob> droppedFiles, String containerPath

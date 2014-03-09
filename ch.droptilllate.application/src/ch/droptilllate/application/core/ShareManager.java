@@ -17,7 +17,7 @@ import ch.droptilllate.application.dnb.ShareFolder;
 import ch.droptilllate.application.dnb.ShareRelation;
 import ch.droptilllate.application.info.CRUDCryptedFileInfo;
 import ch.droptilllate.application.model.EncryptedFileDob;
-import ch.droptilllate.application.views.Messages;
+import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.views.Status;
 
 
@@ -50,8 +50,7 @@ public class ShareManager {
 			if (!checkIfMoreFilesAvailable(hashSet_shareFolderList.iterator()
 					.next(), fileList)) {
 				// NotAllFiles from this folder, there are some left
-				if (hashmap.containsKey(Integer.parseInt(Messages
-						.getShareFolder0name()))) {
+				if (hashmap.containsKey(Messages.getIdSize())) {
 					createNewSharedFolder(fileList, password);
 					alertMembers(hashSet_shareFolderList);
 				} else {
@@ -59,8 +58,7 @@ public class ShareManager {
 					alertMembers(hashSet_shareFolderList);
 				}
 			} else {
-				if (hashmap.containsKey(Integer.parseInt(Messages
-						.getShareFolder0name()))) {
+				if (hashmap.containsKey(Messages.getIdSize())) {
 					// All Files from SharedFolder 0
 					createNewSharedFolder(fileList, password);
 					alertMembers(hashSet_shareFolderList);
@@ -94,7 +92,7 @@ public class ShareManager {
 	    
 	private void insertShareRelation(ShareFolder shareFolder) {
 		ShareRelationDao dao = new ShareRelationDao();
-		ShareRelation sharerelation = new ShareRelation(shareFolder.getID(), Messages.getOwnerMail());
+		ShareRelation sharerelation = new ShareRelation(shareFolder.getID(), Messages.OwnerMail);
 		dao.newElement(sharerelation, null);
 		for(String mail : emailList){
 			sharerelation = new ShareRelation(shareFolder.getID(), mail);
@@ -114,14 +112,13 @@ public class ShareManager {
 		String key = null;		
 		// Create and insert newShareFolder in DB and create Id
 		ShareFolderDao shareDao = new ShareFolderDao();
-		ShareFolder sharedFolder = new ShareFolder(null,
-				Messages.getPathDropBox(), null);
+		ShareFolder sharedFolder = new ShareFolder(null, null);
 		sharedFolder = (ShareFolder) shareDao.newElement(sharedFolder, null);
 		key = km.generatePassword(password, sharedFolder.getID().toString());
 		sharedFolder.setKey(key);
 		shareDao.updateElement(sharedFolder, null);
 		// Move Files
-		IFileSystemCom iFile = new FileSystemCom();
+		IFileSystemCom iFile = FileSystemCom.getInstance();	
 		CRUDCryptedFileInfo result = iFile.moveFiles(fileList, sharedFolder);
 		// Handle Error
 		for (EncryptedFileDob fileDob : result.getEncryptedFileListError()) {
@@ -166,7 +163,7 @@ public class ShareManager {
 	gen.createFileUpdateXML(dobfileList);
 	gen.creatShareRelationUpdateXML(shareRelationList);
 	//Encrypt XMLs
-	IFileSystemCom com = new FileSystemCom();
+	IFileSystemCom com = FileSystemCom.getInstance();	
 	//TODO use right encryptFile with right sharedFolder
 	if(com.encryptFile(sharedFolder, false)){
 		//TODO if true -> successfull

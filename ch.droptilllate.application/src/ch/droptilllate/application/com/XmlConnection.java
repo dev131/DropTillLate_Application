@@ -42,9 +42,10 @@ import ch.droptilllate.application.info.CRUDCryptedFileInfo;
 import ch.droptilllate.application.listener.FileChangeListener;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.StructureXmlDob;
-import ch.droptilllate.application.views.Messages;
-import ch.droptilllate.application.views.XMLConstruct;
-import ch.droptilllate.filesystem.commons.Constants;
+import ch.droptilllate.application.properties.Configuration;
+import ch.droptilllate.application.properties.Messages;
+import ch.droptilllate.application.properties.XMLConstruct;
+import ch.droptilllate.filesystem.preferences.Constants;
 
 public class XmlConnection {
 
@@ -56,10 +57,10 @@ public class XmlConnection {
 	
 	public XmlConnection(Boolean local, String key) {
 		if(local){
-			path = Messages.getPathLocalTemp() + XMLConstruct.getNameLocalXML();
+			path = Configuration.getPropertieTempPath() + XMLConstruct.NameLocalXML;
 			//TODO tillate expression
-			File f = new File(Messages.getPathDropBox()+Messages.getShareFolder0name()+Messages.getSlash()
-					+ XMLConstruct.getIdXMLContainer()+ "."+ Constants.CONTAINER_EXTENTION);
+			File f = new File(Configuration.getPropertieDropBoxPath()+Messages.getIdSize()+Messages.Slash
+					+ XMLConstruct.IdXMLContainer+ "."+ Constants.CONTAINER_EXTENTION);
 			//IF exist create new register to listener ELSE decrypt and register to listener
 			if (!f.exists()){
 				createFile(path);
@@ -79,7 +80,7 @@ public class XmlConnection {
 				
 		}
 		else{
-			path = Messages.getPathLocalTemp() + XMLConstruct.getNameShareXML(); 
+			path = Configuration.getPropertieTempPath() + XMLConstruct.NameShareXML; 
 			File f = new File(path);
 			if (!f.exists())
 				createFile(path);
@@ -87,9 +88,9 @@ public class XmlConnection {
 	}
 
 	private void insertDBEntry(String key) {
-		StructureXmlDob sxml = new StructureXmlDob(Messages.getPathDropBox() + Messages.getShareFolder0name(), key, true, false);
+		ShareFolder shareFolder = new ShareFolder(Messages.getIdSize(), key);
+		StructureXmlDob sxml = new StructureXmlDob(shareFolder, true);
 		EncryptedFileDob filedob = sxml.getEncryptedFileDob();
-		ShareFolder shareFolder= sxml.getShareFolder();
 		ShareRelation shareRelation= sxml.getShareRelation();
 		EncryptedContainer encryptedContainer = sxml.getEncryptedContainer();
 		EncryptedFileDao fDao = new EncryptedFileDao();
@@ -100,16 +101,13 @@ public class XmlConnection {
 		sfDao.newElement(shareFolder, null);
 		srDao.newElement(shareRelation, null);
 		cDao.newElement(encryptedContainer, null);
-		
-		
-		
-		
+	
 	}
 
 	private boolean decryptFile(String key, boolean local) {
 		boolean status = false;
-		IFileSystemCom fileSystem = new FileSystemCom();
-		ShareFolder shareFolder = new ShareFolder(Integer.parseInt(Messages.ShareFolder0name), Messages.getPathDropBox(), key);
+		IFileSystemCom fileSystem = FileSystemCom.getInstance();	
+		ShareFolder shareFolder = new ShareFolder(Messages.getIdSize(), key);
 		if(fileSystem.decryptFile(shareFolder, true)){
 			//TODO Successfull
 			status = true;
@@ -117,10 +115,10 @@ public class XmlConnection {
 		StructureXmlDob sxml;
 		File file = new File(path);	
 		if(!local){
-			sxml = new StructureXmlDob(Messages.getPathDropBox() + Messages.getShareFolder0name(), key, false, false);
+			sxml = new StructureXmlDob(shareFolder, true);
 		}
 		else{
-			sxml = new StructureXmlDob(Messages.getPathDropBox() + Messages.getShareFolder0name(), key, true, false);			
+			sxml = new StructureXmlDob(shareFolder, false);			
 		}		
 		EncryptedFileDob dob = sxml.getEncryptedFileDob();
 		//Integer id, String name, Date date, String path, GhostFolderDob parent, String type, Long size, Integer containerId)
@@ -150,8 +148,8 @@ public class XmlConnection {
 
 	private void encryptFile(String key) {
 		// TODO Auto-generated method stub
-		IFileSystemCom fileSystem = new FileSystemCom();
-		ShareFolder shareFolder = new ShareFolder(Integer.parseInt(Messages.ShareFolder0name), Messages.getPathDropBox(), key);
+		IFileSystemCom fileSystem = FileSystemCom.getInstance();	
+		ShareFolder shareFolder = new ShareFolder(Messages.getIdSize(), key);
 		fileSystem.encryptFile(shareFolder, true);
 	}
 
@@ -169,22 +167,22 @@ public class XmlConnection {
 					.newDocumentBuilder();
 			Document document = documentBuilder.newDocument();
 			//CreateRoot Element
-			Element collection = document.createElement(XMLConstruct.getRootElement());
+			Element collection = document.createElement(XMLConstruct.RootElement);
 			document.appendChild(collection);
 			//Create SubContainerElement
-			Element containers = document.createElement(XMLConstruct.getRootElementContainer());
+			Element containers = document.createElement(XMLConstruct.RootElementContainer);
 			collection.appendChild(containers);
 			//Create SubFileElement
-			Element files = document.createElement(XMLConstruct.getRootElementFile());
+			Element files = document.createElement(XMLConstruct.RootElementFile);
 			collection.appendChild(files);
 			//Create SubFolderElement
-			Element folders = document.createElement(XMLConstruct.getRootElementGhostFolder());
+			Element folders = document.createElement(XMLConstruct.RootElementGhostFolder);
 			collection.appendChild(folders);
 			//Create SubShareRelationElement
-			Element shareRelations = document.createElement(XMLConstruct.getRootElementShareRelation());
+			Element shareRelations = document.createElement(XMLConstruct.RootElementShareRelation);
 			collection.appendChild(shareRelations);
 			//Create SubShareFolderElement
-			Element shareFolders = document.createElement(XMLConstruct.getRootElementShareFolder());
+			Element shareFolders = document.createElement(XMLConstruct.RootElementShareFolder);
 			collection.appendChild(shareFolders);
 			
 			TransformerFactory transformerFactory = TransformerFactory

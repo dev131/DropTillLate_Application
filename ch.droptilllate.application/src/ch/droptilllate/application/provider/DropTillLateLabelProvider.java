@@ -16,8 +16,8 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
+import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.views.EncryptedView;
-import ch.droptilllate.application.views.Messages;
 import ch.droptilllate.application.views.TableIdentifier;
 
 public class DropTillLateLabelProvider implements ITableLabelProvider {
@@ -65,7 +65,7 @@ public class DropTillLateLabelProvider implements ITableLabelProvider {
 		else if (element instanceof GhostFolderDob) {
 			switch (identifier) {
 			case DATE:
-				text = sdf.format(((GhostFolderDob) element).getDate());
+				text = "";
 				break;
 			case NAME:
 				text = ((GhostFolderDob) element).getName();

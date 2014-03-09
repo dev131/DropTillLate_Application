@@ -6,9 +6,10 @@ import java.io.File;
 import ch.droptilllate.application.com.AbstractXmlDatabase;
 import ch.droptilllate.application.dao.ShareFolderDao;
 import ch.droptilllate.application.dnb.ShareFolder;
-import ch.droptilllate.application.views.Messages;
-import ch.droptilllate.application.views.XMLConstruct;
-import ch.droptilllate.filesystem.commons.Constants;
+import ch.droptilllate.application.properties.Configuration;
+import ch.droptilllate.application.properties.Messages;
+import ch.droptilllate.application.properties.XMLConstruct;
+import ch.droptilllate.filesystem.preferences.Constants;
 
 public class KeyManager {
 
@@ -20,7 +21,7 @@ public class KeyManager {
 		KeysGenerator kg = new KeysGenerator();
 		ShareFolderDao dao = new ShareFolderDao();
 		String key  = kg.getKey(password, salt);
-		ShareFolder	folder = new ShareFolder(Integer.parseInt(Messages.getShareFolder0name()), Messages.getPathDropBox(),key );
+		ShareFolder	folder = new ShareFolder(Messages.getIdSize(),key );
 		dao.newElement(folder, key);
 	}
 	
@@ -30,7 +31,7 @@ public class KeyManager {
 	 */
 	public boolean checkMasterPasswordExisting(){
 		ShareFolderDao dao = new ShareFolderDao();
-		ShareFolder folder = (ShareFolder) dao.getElementByID(Integer.parseInt(Messages.getShareFolder0name()), null);
+		ShareFolder folder = (ShareFolder) dao.getElementByID(Messages.getIdSize(), null);
 		if(folder == null ){
 			return false;
 		}
@@ -68,7 +69,7 @@ public class KeyManager {
 	 * @return
 	 */
 	public boolean checkIfStructureFileExist() {
-		File file = new File(Messages.getPathDropBox() + Messages.getShareFolder0name()+Messages.getSlash()+ XMLConstruct.getIdXMLContainer()+"."+ Constants.CONTAINER_EXTENTION);
+		File file = new File(Configuration.getPropertieDropBoxPath() + Messages.getIdSize()+ Messages.getSlash()+ XMLConstruct.IdXMLContainer+"."+ Constants.CONTAINER_EXTENTION);
 		if(file.exists()){
 			return true;
 		}

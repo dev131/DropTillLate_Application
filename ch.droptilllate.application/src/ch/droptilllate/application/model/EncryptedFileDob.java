@@ -3,8 +3,7 @@ package ch.droptilllate.application.model;
 import java.sql.Date;
 
 import ch.droptilllate.application.dnb.DroppedElement;
-import ch.droptilllate.application.views.Messages;
-import ch.droptilllate.filesystem.commons.Constants;
+import ch.droptilllate.application.properties.Messages;
 
 public class EncryptedFileDob extends DroppedElement {
 
@@ -12,7 +11,8 @@ public class EncryptedFileDob extends DroppedElement {
 	private String type;
 	private Long size;
 	private Integer containerId;
-
+	private String fullPlainpath;
+	private Date date;
 	/**
 	 * EncryptedFileDob Contructor
 	 * @param id
@@ -23,12 +23,14 @@ public class EncryptedFileDob extends DroppedElement {
 	 * @param size
 	 * @param containerId
 	 */
-	public EncryptedFileDob(Integer id, String name, Date date, String path,
+	public EncryptedFileDob(Integer id, String name, Date date, String fullPlainpath,
 			GhostFolderDob parent, Long size, Integer containerId) {
-		super(id, name, date, path.replace("\\", "/"), parent);
+		super(id, name, parent);
 		this.type = defineFileType(name);
 		this.size = size;
 		this.containerId = containerId;
+		this.fullPlainpath = fullPlainpath;
+		this.date = date;
 		
 	}
 
@@ -55,7 +57,23 @@ public class EncryptedFileDob extends DroppedElement {
 	public void setContainerId(Integer containerId) {
 		this.containerId = containerId;
 	}
+	
+	public String getPath() {
+		return fullPlainpath;
+	}
 
+	public void setPath(String path) {
+		this.fullPlainpath = path;
+	}
+	
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+	
 	// =========================================================================
 
 	public String defineFileType(String name) {
@@ -64,48 +82,6 @@ public class EncryptedFileDob extends DroppedElement {
 			ext = this.name.substring(this.name.lastIndexOf(".") + 1,
 					this.name.length());
 		}
-
 		return ext.toLowerCase();
 	}
-		
-	/**
-	 * Get File Path from Filesystem if it is the first Drop
-	 * @return String /User/testuser/documents/example.txt
-	 */
-	public String getFileSystemPath(){
-		return super.getPath();
-	}
-	/**
-	 * Get ShareFolder Path
-	 * @return String Dropbox/DropTillLate/sharedFolder0
-	 */
-	public String getShareRelationPath(){
-		return super.getPath();
-	}
-	/**
-	 * Get Container Path
-	 * @return String Dropbox/DropTillLate/sharedFolder0/22222.tilllate
-	 */
-	public String getContainerPath(){
-		return super.getPath() + this.containerId  + "." + Constants.CONTAINER_EXTENTION;
-	}
-	/**
-	 * Get Full Container Path in EncryptedContainer
-	 * @return String Dropbox/DropTillLate/sharedFolder0/22222.tilllate/1111.xml
-	 */
-	public String getFullPlainPath(){
-		return super.getPath() + this.containerId  + "." + Constants.CONTAINER_EXTENTION +"/"+ super.getId() +"."+ this.getType();
-	}
-	
-	/**
-	 * Get Container Path
-	 * @return String Dropbox/DropTillLate/TempFolder/1111.xml
-	 */
-	public String getTempPlainPath(){
-		return Messages.getPathLocalTemp() + super.getId() +"."+ this.getType();
-	}
-	
-	
-
-
 }

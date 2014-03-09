@@ -8,6 +8,7 @@ import java.util.List;
 
 
 
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -16,8 +17,8 @@ import org.w3c.dom.NodeList;
 import ch.droptilllate.application.com.XmlConnection;
 import ch.droptilllate.application.dnb.EncryptedContainer;
 import ch.droptilllate.application.info.CRUDContainerInfo;
-import ch.droptilllate.application.views.Messages;
-import ch.droptilllate.application.views.XMLConstruct;
+import ch.droptilllate.application.properties.Messages;
+import ch.droptilllate.application.properties.XMLConstruct;
 
 public class ContainerQuery {
 	private XmlConnection conn;
@@ -43,19 +44,19 @@ public class ContainerQuery {
 			container.setId(id);
 		}
 		Document document = conn.getXML();
-		NodeList nodelist = document.getElementsByTagName(XMLConstruct.getRootElementContainer());
+		NodeList nodelist = document.getElementsByTagName(XMLConstruct.RootElementContainer);
 		Node node = nodelist.item(0);
 		//GetNodeList by name
 		for(int i=0; i<nodelist.getLength(); i++){
 			  Node childNode = nodelist.item(i);
-			  if (childNode.getNodeName() == XMLConstruct.getRootElementContainer()) {
+			  if (childNode.getNodeName() == XMLConstruct.RootElementContainer) {
 			     node = nodelist.item(i);
 			  }
 			}
-		Element element = document.createElement(XMLConstruct.getChildElementContainer());
-		element.setAttribute(XMLConstruct.getAttId(), Integer.toString(container.getId()));
-		element.setIdAttribute(XMLConstruct.getAttId(), true);
-		element.setAttribute(XMLConstruct.getAttShareFolderId(),
+		Element element = document.createElement(XMLConstruct.ChildElementContainer);
+		element.setAttribute(XMLConstruct.AttId, Integer.toString(container.getId()));
+		element.setIdAttribute(XMLConstruct.AttId, true);
+		element.setAttribute(XMLConstruct.AttShareFolderId,
 				Integer.toString(container.getShareFolderId()));
 		node.appendChild(element);
 		conn.writeToXML();
@@ -64,7 +65,7 @@ public class ContainerQuery {
 		conn.getXML();
 		boolean result = false;
 		// cast the result to a DOM NodeList
-		NodeList nodes = conn.executeQuery(XMLConstruct.getContainerExpression()+ "[@"+XMLConstruct.getAttId()+"='"
+		NodeList nodes = conn.executeQuery(XMLConstruct.getContainerExpression()+ "[@"+XMLConstruct.AttId+"='"
 				+ containerId + "']");
 		if (nodes.getLength() > 0)
 			result = true;
@@ -74,12 +75,12 @@ public class ContainerQuery {
 	public EncryptedContainer getContainerByID(int id) {
 		conn.getXML();
 		// cast the result to a DOM NodeList
-		NodeList nodes = conn.executeQuery(XMLConstruct.getContainerExpression()+ "[@"+XMLConstruct.getAttId()+"='" + id
+		NodeList nodes = conn.executeQuery(XMLConstruct.getContainerExpression()+ "[@"+XMLConstruct.AttId+"='" + id
 				+ "']");
 		EncryptedContainer container = null;
 		if (nodes.getLength() > 0) {
 			container = new EncryptedContainer(id, Integer.parseInt(nodes.item(0)
-					.getAttributes().getNamedItem(XMLConstruct.getAttShareFolderId())
+					.getAttributes().getNamedItem(XMLConstruct.AttShareFolderId)
 					.getNodeValue()));
 		}
 		return container;
@@ -94,12 +95,12 @@ public class ContainerQuery {
 	public boolean updateContainer(EncryptedContainer container) {
 		conn.getXML();
 		// cast the result to a DOM NodeList
-		NodeList nodes = conn.executeQuery(XMLConstruct.getContainerExpression() + "[@"+XMLConstruct.getAttId()+"='"
+		NodeList nodes = conn.executeQuery(XMLConstruct.getContainerExpression() + "[@"+XMLConstruct.AttId+"='"
 				+ container.getId() + "']");
 		for (int idx = 0; idx < nodes.getLength(); idx++) {
 			nodes.item(idx)
 					.getAttributes()
-					.getNamedItem(XMLConstruct.getAttShareFolderId())
+					.getNamedItem(XMLConstruct.AttShareFolderId)
 					.setNodeValue(
 							Integer.toString(container.getShareFolderId()));
 		}
@@ -118,7 +119,7 @@ public class ContainerQuery {
 	public boolean deleteContainer(List<EncryptedContainer> container) {
 		Document document = conn.getXML();
 		for(EncryptedContainer container1 : container){
-		NodeList nodes = conn.executeQuery(XMLConstruct.getContainerExpression() + "[@"+XMLConstruct.getAttId()+"='"
+		NodeList nodes = conn.executeQuery(XMLConstruct.getContainerExpression() + "[@"+XMLConstruct.AttId+"='"
 				+ container1.getId() + "']");
 		for (int idx = 0; idx < nodes.getLength(); idx++) {
 			nodes.item(idx).getParentNode().removeChild(nodes.item(idx));
@@ -134,7 +135,7 @@ public class ContainerQuery {
 		List<EncryptedContainer> encryptedContainerListError = new ArrayList<EncryptedContainer>();
 		Iterator<EncryptedContainer> ContainerInfoListErrorIterator = containerList.iterator();
 		while (ContainerInfoListErrorIterator.hasNext()) {
-			NodeList nodes = conn.executeQuery(XMLConstruct.getContainerExpression()+ "[@"+XMLConstruct.getAttId()+"='"
+			NodeList nodes = conn.executeQuery(XMLConstruct.getContainerExpression()+ "[@"+XMLConstruct.AttId+"='"
 					+ ContainerInfoListErrorIterator.next().getId() + "']");
 			if (nodes.getLength() > 0) {
 				encryptedContainerListSuccess.add(ContainerInfoListErrorIterator.next());
@@ -151,13 +152,13 @@ public class ContainerQuery {
 	public Object getContainerBySharedFolderId(Integer id) {
 		conn.getXML();
 		// cast the result to a DOM NodeList
-		NodeList nodes = conn.executeQuery(XMLConstruct.getContainerExpression()+ "[@"+XMLConstruct.getAttShareFolderId()+"='" + id
+		NodeList nodes = conn.executeQuery(XMLConstruct.getContainerExpression()+ "[@"+XMLConstruct.AttShareFolderId+"='" + id
 				+ "']");
 		ArrayList<EncryptedContainer> containerList = new ArrayList<EncryptedContainer>();
 		for (int idx = 0; idx < nodes.getLength(); idx++) {
 			EncryptedContainer container = new EncryptedContainer(
-					Integer.parseInt(nodes.item(idx).getAttributes().getNamedItem(XMLConstruct.getAttId()).getNodeValue()),
-					Integer.parseInt(nodes.item(idx).getAttributes().getNamedItem(XMLConstruct.getAttShareFolderId()).getNodeValue())
+					Integer.parseInt(nodes.item(idx).getAttributes().getNamedItem(XMLConstruct.AttId).getNodeValue()),
+					Integer.parseInt(nodes.item(idx).getAttributes().getNamedItem(XMLConstruct.AttShareFolderId).getNodeValue())
 					);
 			containerList.add(container);
 		}

@@ -6,8 +6,8 @@ import java.sql.Date;
 import ch.droptilllate.application.dnb.EncryptedContainer;
 import ch.droptilllate.application.dnb.ShareFolder;
 import ch.droptilllate.application.dnb.ShareRelation;
-import ch.droptilllate.application.views.Messages;
-import ch.droptilllate.application.views.XMLConstruct;
+import ch.droptilllate.application.properties.Messages;
+import ch.droptilllate.application.properties.XMLConstruct;
 
 public class StructureXmlDob {
 	
@@ -24,53 +24,30 @@ public class StructureXmlDob {
 	 * @param path
 	 * @param key
 	 * @param local (if set id and name from local xml)
-	 * @param encrypt (if set example path = TempFolder/10000.xml if not path = path)
 	 */
-	public StructureXmlDob(String path, String key, boolean local, boolean encrypt){
-		if(encrypt){
+	public StructureXmlDob(ShareFolder sharefolder, boolean local){
 			if(local){
-				fileName = XMLConstruct.getNameLocalXML();
-				this.path = path + fileName;
-				fileId = Integer.parseInt(XMLConstruct.getIdLocalXMLFiles());
+				fileName = XMLConstruct.NameLocalXML;
+				fileId = Integer.parseInt(XMLConstruct.IdLocalXMLFiles);
 			}
 			else{
-				fileName = XMLConstruct.getNameShareXML();
-				this.path = path + fileName;
-				fileId = Integer.parseInt(XMLConstruct.getIdShareXMLFiles());
+				fileName = XMLConstruct.NameShareXML;
+				fileId = Integer.parseInt(XMLConstruct.IdShareXMLFiles);
 			}
-		}
-		else{
-			if(local){
-				this.path = path;
-				fileName = XMLConstruct.getNameLocalXML();
-				fileId = Integer.parseInt(XMLConstruct.getIdLocalXMLFiles());
-			}
-			else{
-				this.path = path;
-				fileName = XMLConstruct.getNameShareXML();
-				fileId = Integer.parseInt(XMLConstruct.getIdShareXMLFiles());
-			}
-		}
 		encryptedFileDob = new EncryptedFileDob(fileId, 
 				fileName, 
 				new Date(System.currentTimeMillis()), 
-				this.path, 
+				null, 
 				null,  
 				0l, 
-				Integer.parseInt(XMLConstruct.getIdXMLContainer()));
-		
-		shareFolder = new ShareFolder(Integer.parseInt(Messages.getShareFolder0name()), Messages.getPathDropBox(), key);
-		shareRelation = new ShareRelation(Integer.parseInt(Messages.getShareFolder0name()), Messages.getOwnerMail());
-		encryptedContainer = new EncryptedContainer(Integer.parseInt(XMLConstruct.getIdXMLContainer()), Integer.parseInt(Messages.getShareFolder0name()));
+				Integer.parseInt(XMLConstruct.IdXMLContainer));
+		shareRelation = new ShareRelation(Messages.getIdSize(), Messages.OwnerMail);
+		encryptedContainer = new EncryptedContainer(Integer.parseInt(XMLConstruct.IdXMLContainer), Messages.getIdSize());
 		
 	}
 
 	public EncryptedFileDob getEncryptedFileDob() {
 		return encryptedFileDob;
-	}
-
-	public ShareFolder getShareFolder() {
-		return shareFolder;
 	}
 
 	public ShareRelation getShareRelation() {

@@ -19,6 +19,18 @@
                name="lifeCycleURI"
                value="bundleclass://ch.droptilllate.application/ch.droptilllate.application.lifecycle.LifeCycleManager">
          </property>
+         <property
+               name="aboutImage"
+               value="logos/Logo128.png">
+         </property>
+         <property
+               name="aboutText"
+               value="Copyright by Marco Betschart &amp; Réne Amrhein">
+         </property>
+         <property
+               name="windowImages"
+               value="logos/Logo16.png,logos/Logo32.png,logos/Logo48.png,logos/Logo64.png,logos/Logo128.png">
+         </property>
       </product>
    </extension>
 

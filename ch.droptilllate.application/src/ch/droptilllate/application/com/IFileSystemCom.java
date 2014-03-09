@@ -17,14 +17,14 @@ public interface IFileSystemCom {
 	 * shareFolderPath == null -> existingFile
 	 * @return List<FileInfo>
 	 */
-	public CRUDCryptedFileInfo encryptFile(List<EncryptedFileDob> droppedFiles, String sharedFolderPath);
+	public CRUDCryptedFileInfo encryptFile(List<EncryptedFileDob> droppedFiles, ShareFolder sharefolder);
 	/**
 	 * Update Files List<FileInfo>
 	 * @param filehandling_result  List<FileInfo>
 	 * @param sharefolderPath example Dropbox/DroptillLate/Sharefolder1
 	 * @return List<FileInfo>
 	 */
-	public CRUDCryptedFileInfo decryptFile(List<EncryptedFileDob> droppedFiles, String containerPath);
+	public CRUDCryptedFileInfo decryptFile(List<EncryptedFileDob> droppedFiles);
 	/**
 	 * Delte File
 	 * @param fileList

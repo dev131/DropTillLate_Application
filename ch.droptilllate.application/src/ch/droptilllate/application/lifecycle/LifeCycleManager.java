@@ -10,6 +10,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 
+import ch.droptilllate.application.views.PasswordDialog;
+
 
 // for a extended example see
 // https://bugs.eclipse.org/382224

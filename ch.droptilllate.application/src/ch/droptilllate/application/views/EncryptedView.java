@@ -38,6 +38,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
 import ch.droptilllate.application.controller.ViewController;
+import ch.droptilllate.application.properties.Configuration;
+import ch.droptilllate.application.properties.Messages;
 
 public class EncryptedView {
 
@@ -68,7 +70,7 @@ public class EncryptedView {
 			@Override
 			public void widgetDisposed(DisposeEvent e) {
 				// TODO Auto-generated method stub
-				File file = new File(Messages.getPathLocalTemp());
+				File file = new File(Configuration.getPropertieTempPath());
 				try {
 					FileUtils.cleanDirectory(file);
 				} catch (IOException e1) {

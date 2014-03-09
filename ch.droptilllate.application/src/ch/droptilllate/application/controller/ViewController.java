@@ -3,7 +3,6 @@ package ch.droptilllate.application.controller;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -51,10 +50,11 @@ import ch.droptilllate.application.info.CRUDCryptedFileInfo;
 import ch.droptilllate.application.listener.TreeDragSourceListener;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
+import ch.droptilllate.application.properties.Configuration;
+import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.provider.DropTillLateContentProvider;
 import ch.droptilllate.application.provider.DropTillLateLabelProvider;
 import ch.droptilllate.application.views.InputView;
-import ch.droptilllate.application.views.Messages;
 import ch.droptilllate.application.views.Status;
 import ch.droptilllate.application.views.TableIdentifier;
 
@@ -135,7 +135,7 @@ public class ViewController {
 		//Integer id, String name, Date date, String path,GhostFolderDob parent) {
 		root = new GhostFolderDob(0, "Root-Folder", 
 				new Date(
-				System.currentTimeMillis()), "", null);
+				System.currentTimeMillis()), null);
 		getFolderContent(root);
 		return root;
 	}
@@ -196,7 +196,7 @@ public class ViewController {
 				fileList.add(fileToDelete);}
 		}
 		// Delete on Filesystem
-		IFileSystemCom com = new FileSystemCom();	
+		IFileSystemCom com = FileSystemCom.getInstance();	
 		// TODO Check successlist
 		CRUDCryptedFileInfo result = com.deleteFile(fileList);
 		for(EncryptedFileDob fileDob : result.getEncryptedFileListSuccess()){
@@ -256,12 +256,12 @@ public class ViewController {
 			}
 		}
 		// TODO check succesfull list
-		IFileSystemCom iFileSystem = new FileSystemCom();
-		CRUDCryptedFileInfo result = iFileSystem.decryptFile(fileList, Messages.getPathLocalTemp());
+		IFileSystemCom iFileSystem = FileSystemCom.getInstance();
+		CRUDCryptedFileInfo result = iFileSystem.decryptFile(fileList);
 		for(EncryptedFileDob fileDob : result.getEncryptedFileListSuccess()){
 			Status status = Status.getInstance();
 			status.setMessage(fileDob.getName() + " -> decryption worked");
-			File file = new File(Messages.PathLocalTemp + fileDob.getId() +"."+ fileDob.getType());	
+			File file = new File(Configuration.getPropertieTempPath() + fileDob.getId() +"."+ fileDob.getType());	
 			FileHandler fileHanlder = new FileHandler();
 			fileHanlder.setFileListener(file, fileDob);
 			try {
@@ -286,7 +286,7 @@ public class ViewController {
 	public void newFolder(String name) {
 		GhostFolderDao folderDao = new GhostFolderDao();
 		File newFile = new File(name);
-		GhostFolderDob dob = new GhostFolderDob(null, newFile.getName(), new Date(System.currentTimeMillis()), newFile.getPath(), root);
+		GhostFolderDob dob = new GhostFolderDob(null, newFile.getName(), new Date(System.currentTimeMillis()), root);
 		// insert in DB and Treeview
 		root.addFolder((GhostFolderDob) folderDao.newElement(dob, null));
 	}
@@ -307,13 +307,14 @@ public class ViewController {
 		}
 		
 		// TODO Insert in Filesystem and Error handling Results
-		IFileSystemCom fileSystem = new FileSystemCom();	
-		CRUDCryptedFileInfo result = fileSystem.encryptFile(actualDropFiles, Messages.getPathDropBox() + Messages.getShareFolder0name());
+		IFileSystemCom fileSystem = FileSystemCom.getInstance();
+		ShareFolder shareFolder = new ShareFolder(Messages.getIdSize(), null);		
+		CRUDCryptedFileInfo result = fileSystem.encryptFile(actualDropFiles, shareFolder);
 		//Update DB
 		EncryptedFileDao fileDB = new EncryptedFileDao();
 		for(EncryptedFileDob fileDob : result.getEncryptedFileListSuccess()){			
 			fileDB.updateElement(fileDob, null);
-			EncryptedContainer container = new EncryptedContainer(fileDob.getContainerId(),Integer.parseInt(Messages.getShareFolder0name()));
+			EncryptedContainer container = new EncryptedContainer(fileDob.getContainerId(),Messages.getIdSize());
 			ContainerDao containerDB = new ContainerDao();
 			containerDB.newElement(container, null);
 			Status status = Status.getInstance();
@@ -362,7 +363,6 @@ public class ViewController {
 			GhostFolderDob folderDob = new GhostFolderDob(null, 
 					droppedElement.getName(), 
 					new Date(System.currentTimeMillis()),
-					droppedElement.getPath(), 
 					parent);			
 			GhostFolderDao folderDB = new GhostFolderDao();
 			GhostFolderDob encryptedPersistedFolder = (GhostFolderDob) folderDB.newElement(folderDob, null);
@@ -383,7 +383,7 @@ public class ViewController {
 		fileList = new ArrayList<EncryptedFileDob>();
 		List<String> mailList = new ArrayList<String>();
 		String password = null;
-		dialog = new InputView(shell, Messages.getCreateSharePasswordDialog());
+		dialog = new InputView(shell, Messages.CreateSharePasswordDialog);
 		dialog.create();
 		if (dialog.open() == Window.OK) {
 			password = dialog.getPassword();
@@ -440,7 +440,7 @@ public class ViewController {
 				FileHandler fileHandler = new FileHandler();	
 				source = new File(selectedDir);
 				sharefolderName = source.getName();
-				destinationPath = Messages.getPathDropBox() + source.getName();
+				destinationPath = Configuration.getPropertieDropBoxPath() + source.getName();
 				File destination = new File(destinationPath);					
 				fileHandler.copyDirectory(source, destination);
 				if(!fileHandler.delete(source)) {
@@ -452,7 +452,7 @@ public class ViewController {
 			}			    
 		 
 		    //OpenDialog to get Password and foldername
-		    dialog = new InputView(shell, Messages.getImportDialog());
+		    dialog = new InputView(shell, Messages.ImportDialog);
 		    dialog.create();
 		    dialog.setFolderNameVisible();
 		    String password = null;
@@ -469,17 +469,17 @@ public class ViewController {
 		    ShareFolderDao shareFolderDao = new ShareFolderDao();
 		    KeyManager keyManager = new KeyManager();
 		    String key =keyManager.generatePassword(password, sharefolderName);
-		    ShareFolder sharefolder = new ShareFolder(Integer.parseInt(source.getName()), Messages.getPathDropBox(), key);
+		    ShareFolder sharefolder = new ShareFolder(Integer.parseInt(source.getName()), key);
 		    shareFolderDao.newElement(sharefolder, null);
 		    //Insert GhostFolder
 		    GhostFolderDob ghostFolderDob = new GhostFolderDob(null, foldername, 
 					new Date(
-					System.currentTimeMillis()), "", root);
+					System.currentTimeMillis()), root);
 		    GhostFolderDao ghostfolderDao = new GhostFolderDao();
 		    ghostFolderDob = (GhostFolderDob) ghostfolderDao.newElement(ghostFolderDob, null);
 		    
 			//Encrypt UploadFile
-			IFileSystemCom com = new FileSystemCom();
+			IFileSystemCom com = FileSystemCom.getInstance();	
 			com.decryptFile(sharefolder,false);
 			//UpdateFile Import
 			ShareManager shareManager = new ShareManager();
@@ -490,7 +490,6 @@ public class ViewController {
 		    EncryptedFileDao fileDao = new EncryptedFileDao();
 		    for(int i= 0; i<fileDobList.size(); i++){
 		    	fileDobList.get(i).setParent(ghostFolderDob);
-		    	fileDobList.get(i).setPath(Messages.getPathDropBox() + sharefolder.getID());
 		    	fileDao.newElement(fileDobList.get(i), null);
 		    }
 		    //Insert ShareRelations

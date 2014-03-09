@@ -14,7 +14,7 @@ import ch.droptilllate.application.dnb.EncryptedContainer;
 import ch.droptilllate.application.dnb.ShareRelation;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
-import ch.droptilllate.application.views.XMLConstruct;
+import ch.droptilllate.application.properties.XMLConstruct;
 
 public class UpdateXMLImporter {
 	private XmlConnection conn;
@@ -28,9 +28,9 @@ public class UpdateXMLImporter {
 		List<EncryptedFileDob> files = new ArrayList<EncryptedFileDob>();	
 		//String xpath= "/collection/file";
 
-		NodeList nodelist = document.getElementsByTagName(XMLConstruct.getChildElementFile());
+		NodeList nodelist = document.getElementsByTagName(XMLConstruct.ChildElementFile);
 		for (int i = 0; i < nodelist.getLength(); i++) {
-			String date1 = nodelist.item(i).getAttributes().getNamedItem(XMLConstruct.getAttDate())
+			String date1 = nodelist.item(i).getAttributes().getNamedItem(XMLConstruct.AttDate)
 					.getNodeValue().toString();
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			Date parsed = null;
@@ -41,16 +41,16 @@ public class UpdateXMLImporter {
 			}
 			java.sql.Date sqlDate = new java.sql.Date(parsed.getTime());
 			long size = Long.parseLong(nodelist.item(i).getAttributes()
-					.getNamedItem(XMLConstruct.getAttSize()).getNodeValue());
+					.getNamedItem(XMLConstruct.AttSize).getNodeValue());
 			//Integer id, String name, Date date, String path, GhostFolderDob parent, String type, Long size, Integer containerId
 			EncryptedFileDob fileDob = new EncryptedFileDob(
-					Integer.parseInt(nodelist.item(i).getAttributes().getNamedItem(XMLConstruct.getAttId()).getNodeValue()), 
-					nodelist.item(i).getAttributes().getNamedItem(XMLConstruct.getAttFileName()).getNodeValue(), 
+					Integer.parseInt(nodelist.item(i).getAttributes().getNamedItem(XMLConstruct.AttId).getNodeValue()), 
+					nodelist.item(i).getAttributes().getNamedItem(XMLConstruct.AttFileName).getNodeValue(), 
 					sqlDate, 
-					nodelist.item(i).getAttributes().getNamedItem(XMLConstruct.getAttPath()).getNodeValue(), 
+					nodelist.item(i).getAttributes().getNamedItem(XMLConstruct.AttPath).getNodeValue(), 
 					null, 
 					size, 
-					Integer.parseInt(nodelist.item(i).getAttributes().getNamedItem(XMLConstruct.getAttContainerId()).getNodeValue()));
+					Integer.parseInt(nodelist.item(i).getAttributes().getNamedItem(XMLConstruct.AttContainerId).getNodeValue()));
 			files.add(fileDob);
 		}
 		return files;
@@ -58,10 +58,10 @@ public class UpdateXMLImporter {
 	
 	public List<GhostFolderDob> getFolderUpdateXML(){
 		List<GhostFolderDob> folders = new ArrayList<GhostFolderDob>();
-		NodeList nodelist = document.getElementsByTagName(XMLConstruct.getChildElementGhostFolder());
+		NodeList nodelist = document.getElementsByTagName(XMLConstruct.ChildElementGhostFolder);
 		// cast the result to a DOM NodeList
 		for (int i = 0; i < nodelist.getLength(); i++) {
-			String date1 = nodelist.item(i).getAttributes().getNamedItem(XMLConstruct.getAttDate())
+			String date1 = nodelist.item(i).getAttributes().getNamedItem(XMLConstruct.AttDate)
 					.getNodeValue().toString();
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			Date parsed = null;
@@ -73,10 +73,9 @@ public class UpdateXMLImporter {
 			java.sql.Date sqlDate = new java.sql.Date(parsed.getTime());
 			//Integer id, String name, Date date, String path, GhostFolderDob parent
 			GhostFolderDob dob = new GhostFolderDob(
-					Integer.parseInt(nodelist.item(i).getAttributes().getNamedItem(XMLConstruct.getAttId()).getNodeValue()),
-					nodelist.item(i).getAttributes().getNamedItem(XMLConstruct.getAttFolderName()).getNodeValue(), 
+					Integer.parseInt(nodelist.item(i).getAttributes().getNamedItem(XMLConstruct.AttId).getNodeValue()),
+					nodelist.item(i).getAttributes().getNamedItem(XMLConstruct.AttFolderName).getNodeValue(), 
 					sqlDate, 
-					nodelist.item(i).getAttributes().getNamedItem(XMLConstruct.getAttPath()).getNodeValue(),
 					null);			
 			folders.add(dob);
 		}
@@ -84,13 +83,13 @@ public class UpdateXMLImporter {
 	}
 	
 	public List<EncryptedContainer> getContainerUpdateXML(){
-		NodeList nodelist = document.getElementsByTagName(XMLConstruct.getChildElementContainer());
+		NodeList nodelist = document.getElementsByTagName(XMLConstruct.ChildElementContainer);
 		// cast the result to a DOM NodeList
 		List<EncryptedContainer> containerList = new ArrayList<EncryptedContainer>();
 		for (int idx = 0; idx < nodelist.getLength(); idx++) {
 			EncryptedContainer container = new EncryptedContainer(
-					Integer.parseInt(nodelist.item(idx).getAttributes().getNamedItem(XMLConstruct.getAttId()).getNodeValue()),
-					Integer.parseInt(nodelist.item(idx).getAttributes().getNamedItem(XMLConstruct.getAttShareFolderId()).getNodeValue())
+					Integer.parseInt(nodelist.item(idx).getAttributes().getNamedItem(XMLConstruct.AttId).getNodeValue()),
+					Integer.parseInt(nodelist.item(idx).getAttributes().getNamedItem(XMLConstruct.AttShareFolderId).getNodeValue())
 					);
 			containerList.add(container);
 		}
@@ -98,12 +97,12 @@ public class UpdateXMLImporter {
 	}
 	
 	public List<ShareRelation> getShareRelationUpdateXML(){
-		NodeList nodelist = document.getElementsByTagName(XMLConstruct.getChildElementShareRelation());
+		NodeList nodelist = document.getElementsByTagName(XMLConstruct.ChildElementShareRelation);
 		List<ShareRelation> shareList = new ArrayList<ShareRelation>();
 		for (int idx = 0; idx < nodelist.getLength(); idx++) {
 			ShareRelation tmp = new ShareRelation(
-					Integer.parseInt(nodelist.item(idx).getAttributes().getNamedItem(XMLConstruct.getAttShareFolderId()).getNodeValue()),
-					nodelist.item(idx).getAttributes().getNamedItem(XMLConstruct.getAttMail()).getNodeValue()
+					Integer.parseInt(nodelist.item(idx).getAttributes().getNamedItem(XMLConstruct.AttShareFolderId).getNodeValue()),
+					nodelist.item(idx).getAttributes().getNamedItem(XMLConstruct.AttMail).getNodeValue()
 					);
 			shareList.add(tmp);
 		}

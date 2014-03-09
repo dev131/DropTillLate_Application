@@ -18,12 +18,11 @@ public class GhostFolderDob extends DroppedElement{
 	 * @param id
 	 * @param name
 	 * @param date
-	 * @param path
 	 * @param parent
 	 */
-	public GhostFolderDob(Integer id, String name, Date date, String path,
+	public GhostFolderDob(Integer id, String name, Date date,
 			GhostFolderDob parent) {
-		super(id, name, date, path.replace("\\", "/"), parent);
+		super(id, name, parent);
 		this.folders = new ArrayList<GhostFolderDob>();
 		this.files = new ArrayList<EncryptedFileDob>();
 	}	

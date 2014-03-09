@@ -3,6 +3,12 @@
 
 <product name="ch.droptilllate.application" uid="DroptTillLate" id="ch.droptilllate.application.product" application="org.eclipse.e4.ui.workbench.swt.E4Application" version="0.4.0" useFeatures="false" includeLaunchers="true">
 
+   <aboutInfo>
+      <image path="/ch.droptilllate.application/logos/Logo128.png"/>
+      <text>
+         Copyright by Marco Betschart &amp; Réne Amrhein
+      </text>
+   </aboutInfo>
 
    <configIni use="default">
    </configIni>
@@ -12,10 +18,11 @@
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
    </launcherArgs>
 
-   <windowImages/>
+   <windowImages i16="/ch.droptilllate.application/logos/Logo16.png" i32="/ch.droptilllate.application/logos/Logo32.png" i48="/ch.droptilllate.application/logos/Logo48.png" i64="/ch.droptilllate.application/logos/Logo64.png" i128="/ch.droptilllate.application/logos/Logo128.png"/>
 
 
    <launcher name="DropTillLate">
+      <macosx icon="/ch.droptilllate.application/logos/Logo.icns"/>
       <solaris/>
       <win useIco="false">
          <bmp/>
@@ -24,11 +31,13 @@
 
 
    <vm>
+      <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7</macos>
    </vm>
 
 
    <plugins>
       <plugin id="ch.droptilllate.application"/>
+      <plugin id="ch.droptilllate.filesystem"/>
       <plugin id="com.ibm.icu"/>
       <plugin id="javax.annotation"/>
       <plugin id="javax.inject"/>
@@ -45,6 +54,7 @@
       <plugin id="org.eclipse.core.databinding.property"/>
       <plugin id="org.eclipse.core.expressions"/>
       <plugin id="org.eclipse.core.filesystem"/>
+      <plugin id="org.eclipse.core.filesystem.macosx" fragment="true"/>
       <plugin id="org.eclipse.core.jobs"/>
       <plugin id="org.eclipse.core.resources"/>
       <plugin id="org.eclipse.core.runtime"/>
@@ -86,6 +96,8 @@
       <plugin id="org.eclipse.osgi.services"/>
       <plugin id="org.eclipse.swt"/>
       <plugin id="org.eclipse.swt.cocoa.macosx.x86_64" fragment="true"/>
+      <plugin id="org.hamcrest.core"/>
+      <plugin id="org.junit"/>
       <plugin id="org.w3c.css.sac"/>
       <plugin id="org.w3c.dom.events"/>
       <plugin id="org.w3c.dom.smil"/>

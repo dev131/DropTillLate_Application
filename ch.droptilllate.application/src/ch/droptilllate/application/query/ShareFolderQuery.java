@@ -14,8 +14,8 @@ import ch.droptilllate.application.dnb.ShareFolder;
 import ch.droptilllate.application.info.CRUDCryptedFileInfo;
 import ch.droptilllate.application.info.CRUDShareFolderInfo;
 import ch.droptilllate.application.model.EncryptedFileDob;
-import ch.droptilllate.application.views.Messages;
-import ch.droptilllate.application.views.XMLConstruct;
+import ch.droptilllate.application.properties.Messages;
+import ch.droptilllate.application.properties.XMLConstruct;
 
 public class ShareFolderQuery {
 	private XmlConnection conn;;
@@ -42,13 +42,11 @@ public class ShareFolderQuery {
 			sharefolder.setID(id);
 		}	
 		Node node = document.getFirstChild();
-		NodeList nodelist = document.getElementsByTagName(XMLConstruct.getRootElementShareFolder());
+		NodeList nodelist = document.getElementsByTagName(XMLConstruct.RootElementShareFolder);
 		node = nodelist.item(0);
-		Element folder = document.createElement(XMLConstruct.getChildElementShareFolder());
-		folder.setAttribute(XMLConstruct.getAttId(), Integer.toString(sharefolder.getID()));
-		folder.setIdAttribute(XMLConstruct.getAttId(), true);
-		folder.setAttribute(XMLConstruct.getAttKey(), sharefolder.getKey());
-		folder.setAttribute(XMLConstruct.getAttPath(), sharefolder.getPath());
+		Element folder = document.createElement(XMLConstruct.ChildElementShareFolder);
+		folder.setAttribute(XMLConstruct.AttId, Integer.toString(sharefolder.getID()));
+		folder.setAttribute(XMLConstruct.AttKey, sharefolder.getKey());
 		node.appendChild(folder);
 		conn.writeToXML();
 		return sharefolder;
@@ -57,7 +55,7 @@ public class ShareFolderQuery {
 	private boolean checkExist(int sharefolderID) {
 		boolean result = false;
 		// cast the result to a DOM NodeList
-		NodeList nodes = conn.executeQuery(XMLConstruct.getShareFolderExpression()+ "[@"+XMLConstruct.getAttId()+"='"
+		NodeList nodes = conn.executeQuery(XMLConstruct.getShareFolderExpression()+ "[@"+XMLConstruct.AttId+"='"
 				+ sharefolderID + "']");
 		if (nodes.getLength() > 0)
 			result = true;
@@ -66,14 +64,12 @@ public class ShareFolderQuery {
 
 	public ShareFolder getShareFolder(int sharefolderID) {
 		conn.getXML();
-		NodeList nodes = conn.executeQuery(XMLConstruct.getShareFolderExpression()+ "[@"+XMLConstruct.getAttId()+"='"
+		NodeList nodes = conn.executeQuery(XMLConstruct.getShareFolderExpression()+ "[@"+XMLConstruct.AttId+"='"
 				+ sharefolderID + "']");
 		ShareFolder sharefolder = null;
 		if (nodes.getLength() > 0) {
-			sharefolder = new ShareFolder(sharefolderID, nodes.item(0)
-					.getAttributes().getNamedItem(XMLConstruct.getAttPath()).getNodeValue()
-					.toString(), nodes.item(0).getAttributes()
-					.getNamedItem(XMLConstruct.getAttKey()).getNodeValue().toString());
+			sharefolder = new ShareFolder(sharefolderID, nodes.item(0).getAttributes()
+					.getNamedItem(XMLConstruct.AttKey).getNodeValue().toString());
 		}
 		return sharefolder;
 	}
@@ -87,10 +83,10 @@ public class ShareFolderQuery {
 	public boolean updateShareFolder(ShareFolder sharefolder) {
 		conn.getXML();
 		// cast the result to a DOM NodeList
-		NodeList nodes = conn.executeQuery(XMLConstruct.getShareFolderExpression()+ "[@"+XMLConstruct.getAttId()+"='"
+		NodeList nodes = conn.executeQuery(XMLConstruct.getShareFolderExpression()+ "[@"+XMLConstruct.AttId+"='"
 				+ sharefolder.getID() + "']");
 		for (int idx = 0; idx < nodes.getLength(); idx++) {
-			nodes.item(idx).getAttributes().getNamedItem(XMLConstruct.getAttKey())
+			nodes.item(idx).getAttributes().getNamedItem(XMLConstruct.AttKey)
 					.setNodeValue(sharefolder.getKey());
 		}
 		System.out.println("Everything updated.");
@@ -108,7 +104,7 @@ public class ShareFolderQuery {
 	public boolean deleteShareFolder(List<ShareFolder> sharefolder) {
 		conn.getXML();
 		for(ShareFolder shareFolder : sharefolder){
-		NodeList nodes = conn.executeQuery(XMLConstruct.getShareFolderExpression()+ "[@"+XMLConstruct.getAttId()+"='"
+		NodeList nodes = conn.executeQuery(XMLConstruct.getShareFolderExpression()+ "[@"+XMLConstruct.AttId+"='"
 				+ shareFolder.getID() + "']");
 		for (int idx = 0; idx < nodes.getLength(); idx++) {
 			nodes.item(idx).getParentNode().removeChild(nodes.item(idx));
@@ -125,7 +121,7 @@ public class ShareFolderQuery {
 		Iterator<ShareFolder> shareFolderInfoListIterator = shareFolderList
 				.iterator();
 		while (shareFolderInfoListIterator.hasNext()) {
-			NodeList nodes = conn.executeQuery(XMLConstruct.getShareFolderExpression()+ "[@"+XMLConstruct.getAttId()+"='"
+			NodeList nodes = conn.executeQuery(XMLConstruct.getShareFolderExpression()+ "[@"+XMLConstruct.AttId+"='"
 					+ shareFolderInfoListIterator.next().getID() + "']");
 			if (nodes.getLength() > 0) {
 				shareFolderSuccessList.add(shareFolderInfoListIterator.next());

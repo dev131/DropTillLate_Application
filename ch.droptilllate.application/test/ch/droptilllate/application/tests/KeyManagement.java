@@ -22,10 +22,10 @@ public class KeyManagement {
 //		ContainerQuery containerQuery = new ContainerQuery();
 //		ShareFolderQuery sharefolderQuery = new ShareFolderQuery();
 		// Create
-		for (int i = 0; i < anzahl; i++) {
-			EncryptedContainer container = new EncryptedContainer(i, i);
-			ShareFolder sharefolder = new ShareFolder(i, "testpath",
-					"a88aasdf8dsf8asdf:" + i);
+//		for (int i = 0; i < anzahl; i++) {
+//			EncryptedContainer container = new EncryptedContainer(i, i);
+//			ShareFolder sharefolder = new ShareFolder(i, "testpath",
+//					"a88aasdf8dsf8asdf:" + i);
 //			cDao.newElement(container);
 //			sDao.newElement(sharefolder);
 //		}
@@ -46,7 +46,5 @@ public class KeyManagement {
 //			sDao.deleteElement(sharefolder);
 //			cDao.deleteElement(container);
 		}
-
-	}
 
 }
