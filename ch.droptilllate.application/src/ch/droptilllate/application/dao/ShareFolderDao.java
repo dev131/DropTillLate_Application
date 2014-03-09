@@ -8,13 +8,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import ch.droptilllate.application.com.AbstractXmlDatabase;
 import ch.droptilllate.application.dnb.ShareFolder;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.query.FileQuery;
 import ch.droptilllate.application.query.GhostFolderQuery;
 import ch.droptilllate.application.query.ShareFolderQuery;
+import ch.droptilllate.application.xml.AbstractXmlDatabase;
 
 public class ShareFolderDao extends AbstractXmlDatabase {
 	private ShareFolderQuery sharefolderQuery;

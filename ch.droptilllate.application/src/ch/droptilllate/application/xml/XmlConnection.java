@@ -1,4 +1,4 @@
-package ch.droptilllate.application.com;
+package ch.droptilllate.application.xml;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +30,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import ch.droptilllate.application.com.FileSystemCom;
 import ch.droptilllate.application.dao.ContainerDao;
 import ch.droptilllate.application.dao.EncryptedFileDao;
 import ch.droptilllate.application.dao.ShareFolderDao;
@@ -46,6 +47,7 @@ import ch.droptilllate.application.model.StructureXmlDob;
 import ch.droptilllate.application.properties.Configuration;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.properties.XMLConstruct;
+import ch.droptilllate.couldprovider.api.IFileSystemCom;
 import ch.droptilllate.filesystem.preferences.Constants;
 
 public class XmlConnection {

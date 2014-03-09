@@ -1,4 +1,4 @@
-package ch.droptilllate.application.core;
+package ch.droptilllate.application.share;
 
 
 import java.util.ArrayList;
@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 
 import ch.droptilllate.application.com.FileSystemCom;
-import ch.droptilllate.application.com.IFileSystemCom;
 import ch.droptilllate.application.dao.ContainerDao;
 import ch.droptilllate.application.dao.EncryptedFileDao;
 import ch.droptilllate.application.dao.ShareFolderDao;
@@ -19,6 +18,9 @@ import ch.droptilllate.application.info.CRUDCryptedFileInfo;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.views.Status;
+import ch.droptilllate.application.xml.UpdateXMLGenerator;
+import ch.droptilllate.application.xml.UpdateXMLImporter;
+import ch.droptilllate.couldprovider.api.IFileSystemCom;
 
 
 public class ShareManager {
@@ -31,9 +33,10 @@ public class ShareManager {
 	 * @param password
 	 * @param emaillist 
 	 */
-	public void newShareRelation(List<EncryptedFileDob> fileList,
+	public ShareFolder newShareRelation(List<EncryptedFileDob> fileList,
 			String password, List<String> emailList) {
 		this.emailList = emailList;
+		ShareFolder shareFolder = new ShareFolder(null, null);;
 		// create HashSet with all ShareFolderId
 		HashSet<Integer> hashSet_shareFolderList = getShareFolderList(fileList);
 		// FILL Hashmap with key = sharedfolderID and filelist as value
@@ -42,7 +45,7 @@ public class ShareManager {
 		// Check if entries available
 		// TODO cancel sharing
 		if (hashmap.isEmpty())
-			return;
+			return shareFolder;
 
 		// Check if All Files from one ShareFolder
 		if (hashmap.size() == 1) {
@@ -51,28 +54,29 @@ public class ShareManager {
 					.next(), fileList)) {
 				// NotAllFiles from this folder, there are some left
 				if (hashmap.containsKey(Messages.getIdSize())) {
-					createNewSharedFolder(fileList, password);
+					shareFolder = createNewSharedFolder(fileList, password);
 					alertMembers(hashSet_shareFolderList);
 				} else {
-					createNewSharedFolder(fileList, password);
+					shareFolder = createNewSharedFolder(fileList, password);
 					alertMembers(hashSet_shareFolderList);
 				}
 			} else {
 				if (hashmap.containsKey(Messages.getIdSize())) {
 					// All Files from SharedFolder 0
-					createNewSharedFolder(fileList, password);
+					shareFolder = createNewSharedFolder(fileList, password);
 					alertMembers(hashSet_shareFolderList);
 				} else {
 					// All Files from SharedFolder x not 0
-					useExistingSharedFolder(fileList, password);
+					shareFolder = useExistingSharedFolder(fileList, password);
 					alertMembers(hashSet_shareFolderList);
 				}
 			}
 		} else {
 			// From more then one ShareFolder
-			createNewSharedFolder(fileList, password);
+			shareFolder = createNewSharedFolder(fileList, password);
 			alertMembers(hashSet_shareFolderList);
 		}
+		return shareFolder;
 	}
 
 	public  List<EncryptedFileDob> getUpdateFiles(String key){
@@ -100,13 +104,29 @@ public class ShareManager {
 		}	
 	}
 
-	private void useExistingSharedFolder(List<EncryptedFileDob> fileList,
+	private ShareFolder useExistingSharedFolder(List<EncryptedFileDob> fileList,
 			String password) {
-		
-		
+		ShareFolder shareFolder = new ShareFolder(null, null);
+		HashSet<Integer> hashFile = new HashSet<Integer>();
+		for(EncryptedFileDob fileDob : fileList){
+			hashFile.add(fileDob.getContainerId());
+		}
+		ContainerDao dao = new ContainerDao();
+		EncryptedContainer container = null;
+		for(Integer id : hashFile){
+		 container = (EncryptedContainer) dao.getElementByID(id, null);			
+		}		
+		KeyManager km = new KeyManager();
+		String key = null;		
+		// Create and insert newShareFolder in DB and create Id
+		ShareFolder sharedFolder = new ShareFolder(container.getShareFolderId(), null);
+		key = km.generatePassword(password, sharedFolder.getID().toString());
+		sharedFolder.setKey(key);	
+		shareFolder.setID(container.getShareFolderId());
+		return shareFolder;
 	}
 
-	private void createNewSharedFolder(
+	private ShareFolder createNewSharedFolder(
 			List<EncryptedFileDob> fileList, String password) {
 		KeyManager km = new KeyManager();
 		String key = null;		
@@ -143,6 +163,7 @@ public class ShareManager {
 		insertShareRelation(sharedFolder);
 		
 		createUpdateFiles(sharedFolder);
+		return sharedFolder;
 	}
 	
 	private void createUpdateFiles(ShareFolder sharedFolder) {

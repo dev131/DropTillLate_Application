@@ -9,16 +9,17 @@ import java.util.List;
 
 
 
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import ch.droptilllate.application.com.XmlConnection;
 import ch.droptilllate.application.dnb.EncryptedContainer;
 import ch.droptilllate.application.info.CRUDContainerInfo;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.properties.XMLConstruct;
+import ch.droptilllate.application.xml.XmlConnection;
 
 public class ContainerQuery {
 	private XmlConnection conn;

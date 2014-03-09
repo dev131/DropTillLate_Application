@@ -1,4 +1,4 @@
-package ch.droptilllate.application.controller;
+package ch.droptilllate.application.listener;
 
 import java.util.List;
 
@@ -13,14 +13,14 @@ import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.widgets.TreeItem;
 
-import ch.droptilllate.application.com.AbstractXmlDatabase;
+import ch.droptilllate.application.controller.ViewController;
 import ch.droptilllate.application.dao.EncryptedFileDao;
 import ch.droptilllate.application.dao.GhostFolderDao;
 import ch.droptilllate.application.dnb.DroppedElement;
-import ch.droptilllate.application.listener.TreeDragSourceListener;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.views.Status;
+import ch.droptilllate.application.xml.AbstractXmlDatabase;
 
 public class TreeDropTargetAdapter extends DropTargetAdapter {
 	@Inject

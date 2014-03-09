@@ -1,4 +1,4 @@
-package ch.droptilllate.application.core;
+package ch.droptilllate.application.xml;
 
 import java.util.List;
 
@@ -7,7 +7,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import ch.droptilllate.application.com.XmlConnection;
 import ch.droptilllate.application.dnb.EncryptedContainer;
 import ch.droptilllate.application.dnb.ShareRelation;
 import ch.droptilllate.application.model.EncryptedFileDob;

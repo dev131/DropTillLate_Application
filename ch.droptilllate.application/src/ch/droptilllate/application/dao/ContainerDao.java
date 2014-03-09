@@ -2,9 +2,9 @@ package ch.droptilllate.application.dao;
 
 import java.util.List;
 
-import ch.droptilllate.application.com.AbstractXmlDatabase;
 import ch.droptilllate.application.dnb.EncryptedContainer;
 import ch.droptilllate.application.query.ContainerQuery;
+import ch.droptilllate.application.xml.AbstractXmlDatabase;
 
 
 public class ContainerDao extends AbstractXmlDatabase {

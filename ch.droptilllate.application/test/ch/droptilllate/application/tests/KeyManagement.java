@@ -2,13 +2,13 @@ package ch.droptilllate.application.tests;
 
 import org.junit.Test;
 
-import ch.droptilllate.application.com.AbstractXmlDatabase;
 import ch.droptilllate.application.dao.ContainerDao;
 import ch.droptilllate.application.dao.ShareFolderDao;
 import ch.droptilllate.application.dnb.EncryptedContainer;
 import ch.droptilllate.application.dnb.ShareFolder;
 import ch.droptilllate.application.query.ContainerQuery;
 import ch.droptilllate.application.query.ShareFolderQuery;
+import ch.droptilllate.application.xml.AbstractXmlDatabase;
 
 public class KeyManagement {
 

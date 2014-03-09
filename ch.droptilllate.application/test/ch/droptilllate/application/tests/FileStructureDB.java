@@ -15,11 +15,11 @@ import javax.xml.transform.TransformerException;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-import ch.droptilllate.application.com.AbstractXmlDatabase;
 import ch.droptilllate.application.dao.EncryptedFileDao;
 import ch.droptilllate.application.dao.GhostFolderDao;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
+import ch.droptilllate.application.xml.AbstractXmlDatabase;
 
 public class FileStructureDB {
 

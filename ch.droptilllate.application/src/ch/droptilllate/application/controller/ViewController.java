@@ -33,9 +33,6 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 
 import ch.droptilllate.application.com.FileSystemCom;
-import ch.droptilllate.application.com.IFileSystemCom;
-import ch.droptilllate.application.core.KeyManager;
-import ch.droptilllate.application.core.ShareManager;
 import ch.droptilllate.application.dao.ContainerDao;
 import ch.droptilllate.application.dao.EncryptedFileDao;
 import ch.droptilllate.application.dao.GhostFolderDao;
@@ -45,19 +42,25 @@ import ch.droptilllate.application.dnb.EncryptedContainer;
 import ch.droptilllate.application.dnb.DroppedElement;
 import ch.droptilllate.application.dnb.ShareFolder;
 import ch.droptilllate.application.dnb.ShareRelation;
+import ch.droptilllate.application.dropbox.Dropbox;
 import ch.droptilllate.application.handlers.FileHandler;
 import ch.droptilllate.application.info.CRUDCryptedFileInfo;
 import ch.droptilllate.application.listener.TreeDragSourceListener;
+import ch.droptilllate.application.listener.TreeDropTargetAdapter;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.properties.Configuration;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.provider.DropTillLateContentProvider;
 import ch.droptilllate.application.provider.DropTillLateLabelProvider;
+import ch.droptilllate.application.share.KeyManager;
+import ch.droptilllate.application.share.ShareManager;
 import ch.droptilllate.application.views.ImportDialog;
 import ch.droptilllate.application.views.ShareDialog;
 import ch.droptilllate.application.views.Status;
 import ch.droptilllate.application.views.TableIdentifier;
+import ch.droptilllate.couldprovider.api.IFileSystemCom;
+import ch.droptilllate.couldprovider.api.IShareFolder;
 
 public class ViewController {
 	private Tree tree;
@@ -412,7 +415,11 @@ public class ViewController {
 				}
 			}
 			ShareManager shareManager = new ShareManager();
-			shareManager.newShareRelation(fileList, password, mailList);			
+			ShareFolder shareFolder = shareManager.newShareRelation(fileList, password, mailList);
+			//TODO check if it worked
+			IShareFolder dropbox = new Dropbox();
+			dropbox.shareFolder(Configuration.getPropertieDropBoxPath(false), shareFolder.getID(), mailList);
+			
 		}	
 	}
 	

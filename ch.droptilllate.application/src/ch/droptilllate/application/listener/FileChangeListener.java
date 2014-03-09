@@ -8,9 +8,9 @@ import org.apache.commons.vfs2.FileChangeEvent;
 import org.apache.commons.vfs2.FileListener;
 
 import ch.droptilllate.application.com.FileSystemCom;
-import ch.droptilllate.application.com.IFileSystemCom;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.properties.XMLConstruct;
+import ch.droptilllate.couldprovider.api.IFileSystemCom;
 
 public class FileChangeListener implements FileListener {
 	private List<EncryptedFileDob> dob;

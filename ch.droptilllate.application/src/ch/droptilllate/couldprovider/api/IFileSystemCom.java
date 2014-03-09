@@ -1,4 +1,4 @@
-package ch.droptilllate.application.com;
+package ch.droptilllate.couldprovider.api;
 
 import java.util.List;
 

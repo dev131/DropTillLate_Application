@@ -1,4 +1,4 @@
-package ch.droptilllate.application.com;
+package ch.droptilllate.application.xml;
 
 import java.util.List;
 

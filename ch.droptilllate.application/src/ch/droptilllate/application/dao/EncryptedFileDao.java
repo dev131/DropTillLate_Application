@@ -3,11 +3,11 @@ package ch.droptilllate.application.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.droptilllate.application.com.AbstractXmlDatabase;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.query.ContainerQuery;
 import ch.droptilllate.application.query.FileQuery;
+import ch.droptilllate.application.xml.AbstractXmlDatabase;
 
 
 public class EncryptedFileDao extends AbstractXmlDatabase {

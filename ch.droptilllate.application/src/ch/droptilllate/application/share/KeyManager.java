@@ -1,15 +1,15 @@
-package ch.droptilllate.application.core;
+package ch.droptilllate.application.share;
 
 
 import java.io.File;
 
-import ch.droptilllate.application.com.AbstractXmlDatabase;
 import ch.droptilllate.application.dao.ShareFolderDao;
 import ch.droptilllate.application.dnb.ShareFolder;
 import ch.droptilllate.application.lifecycle.OSValidator;
 import ch.droptilllate.application.properties.Configuration;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.properties.XMLConstruct;
+import ch.droptilllate.application.xml.AbstractXmlDatabase;
 import ch.droptilllate.filesystem.preferences.Constants;
 
 public class KeyManager {

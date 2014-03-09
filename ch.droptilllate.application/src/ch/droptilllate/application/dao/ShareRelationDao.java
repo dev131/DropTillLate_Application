@@ -3,11 +3,11 @@ package ch.droptilllate.application.dao;
 import java.util.Iterator;
 import java.util.List;
 
-import ch.droptilllate.application.com.AbstractXmlDatabase;
 import ch.droptilllate.application.dnb.ShareFolder;
 import ch.droptilllate.application.dnb.ShareRelation;
 import ch.droptilllate.application.query.ShareFolderQuery;
 import ch.droptilllate.application.query.ShareRelationQuery;
+import ch.droptilllate.application.xml.AbstractXmlDatabase;
 
 public class ShareRelationDao extends AbstractXmlDatabase {
 

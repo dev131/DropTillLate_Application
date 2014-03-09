@@ -1,4 +1,4 @@
-package ch.droptilllate.application.core;
+package ch.droptilllate.application.share;
 
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;

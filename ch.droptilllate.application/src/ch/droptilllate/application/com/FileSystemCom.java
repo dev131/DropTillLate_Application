@@ -22,6 +22,7 @@ import ch.droptilllate.application.properties.Configuration;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.properties.XMLConstruct;
 import ch.droptilllate.application.views.Status;
+import ch.droptilllate.couldprovider.api.IFileSystemCom;
 import ch.droptilllate.filesystem.error.FileError;
 import ch.droptilllate.filesystem.info.*;
 import ch.droptilllate.filesystem.security.KeyRelation;
