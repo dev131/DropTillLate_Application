@@ -12,9 +12,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 
-public class FileNameDialog extends TitleAreaDialog {
+public class InputFolderDialog extends TitleAreaDialog {
 
-		  public FileNameDialog(Shell parentShell) {
+		  public InputFolderDialog(Shell parentShell) {
 		super(parentShell);
 		
 	}

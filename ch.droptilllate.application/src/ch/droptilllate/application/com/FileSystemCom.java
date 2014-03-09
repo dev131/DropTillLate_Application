@@ -52,7 +52,7 @@ public class FileSystemCom implements IFileSystemCom {
 	   }
 	// TODO Key transfer
 	@Override
-	public CRUDCryptedFileInfo encryptFile(List<EncryptedFileDob> droppedFiles, ShareFolder sharefolder) {
+	public synchronized CRUDCryptedFileInfo encryptFile(List<EncryptedFileDob> droppedFiles, ShareFolder sharefolder) {
 		FileHandlingSummary filehandling_result = null;
 		List<FileInfoEncrypt> fileInfoList = new ArrayList<FileInfoEncrypt>();		
 		HashSet<Integer> hashSet = new HashSet<Integer>();
@@ -100,7 +100,7 @@ public class FileSystemCom implements IFileSystemCom {
 
 	// TODO Key transfer
 	@Override
-	public CRUDCryptedFileInfo decryptFile(List<EncryptedFileDob> droppedFiles) {
+	public synchronized CRUDCryptedFileInfo decryptFile(List<EncryptedFileDob> droppedFiles) {
 		FileHandlingSummary filehandling_result = null;
 		List<FileInfoDecrypt> fileInfoList = new ArrayList<FileInfoDecrypt>();
 		HashSet<Integer> hashSet = new HashSet<Integer>();
@@ -124,7 +124,7 @@ public class FileSystemCom implements IFileSystemCom {
 	}
 
 	@Override
-	public CRUDCryptedFileInfo deleteFile(List<EncryptedFileDob> fileList) {
+	public synchronized CRUDCryptedFileInfo deleteFile(List<EncryptedFileDob> fileList) {
 		FileHandlingSummary filehandling_result = null;
 		List<FileInfo> fileInfoList = new ArrayList<FileInfo>();
 		HashSet<Integer> hashSet = new HashSet<Integer>();
@@ -147,7 +147,7 @@ public class FileSystemCom implements IFileSystemCom {
 	}
 
 	@Override
-	public CRUDCryptedFileInfo moveFiles(List<EncryptedFileDob> fileList,
+	public synchronized CRUDCryptedFileInfo moveFiles(List<EncryptedFileDob> fileList,
 			ShareFolder sharedFolder) {
 		// TODO Key transfer
 		List<FileInfoMove> fileInfoList = new ArrayList<FileInfoMove>();
@@ -175,7 +175,7 @@ public class FileSystemCom implements IFileSystemCom {
 
 
 	@Override
-	public boolean encryptFile(ShareFolder destinationShareFolder,  boolean local) {		
+	public synchronized boolean encryptFile(ShareFolder destinationShareFolder,  boolean local) {		
 		FileInfoEncrypt fileInfo = null;
 		//create ghost file
 		EncryptedFileDob fileDob;
@@ -195,7 +195,7 @@ public class FileSystemCom implements IFileSystemCom {
 	}
 
 	@Override
-	public boolean decryptFile(ShareFolder sourceShareFolder,boolean local) {
+	public synchronized boolean decryptFile(ShareFolder sourceShareFolder,boolean local) {
 		FileInfoDecrypt fileInfo = null;
 		EncryptedFileDob fileDob;
 		StructureXmlDob sxml;
@@ -220,7 +220,7 @@ public class FileSystemCom implements IFileSystemCom {
 	 * @param hashSet
 	 * @return KeyRelation(sharedID/key)
 	 */
-	private KeyRelation getKeyRelation(HashSet<Integer> hashSet) {
+	private synchronized KeyRelation getKeyRelation(HashSet<Integer> hashSet) {
 		// KeyRelation
 		KeyRelation relation = new KeyRelation();
 		if(hashSet.isEmpty()) relation = null;

@@ -1,0 +1,102 @@
+package ch.droptilllate.application.views;
+
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.wb.swt.ResourceManager;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+
+public class ImportDialog extends TitleAreaDialog {
+	private Text passwordText;
+	private Text foldernameText;
+	private String passwordString;
+	private String foldernameString;
+	/**
+	 * Create the dialog.
+	 * @param parentShell
+	 */
+	public ImportDialog(Shell parentShell) {
+		super(parentShell);
+	}
+
+	/**
+	 * Create contents of the dialog.
+	 * @param parent
+	 */
+	@Override
+	protected Control createDialogArea(Composite parent) {
+		setTitleImage(ResourceManager.getPluginImage("ch.droptilllate.application", "logos/Logo48.png"));
+		setTitle("DropTillLate");
+		Composite area = (Composite) super.createDialogArea(parent);
+		Composite container = new Composite(area, SWT.NONE);
+		container.setLayoutData(new GridData(GridData.FILL_BOTH));
+		
+		Label label = new Label(container, SWT.NONE);
+		label.setText("Password");
+		label.setBounds(10, 12, 55, 14);
+		
+		passwordText = new Text(container, SWT.BORDER);
+		passwordText.setBounds(87, 10, 363, 19);
+		
+		Label label_1 = new Label(container, SWT.NONE);
+		label_1.setVisible(true);
+		label_1.setText("Folder Name");
+		label_1.setBounds(10, 60, 72, 14);
+		
+		foldernameText = new Text(container, SWT.BORDER);
+		foldernameText.setVisible(true);
+		foldernameText.setBounds(87, 58, 363, 19);
+
+		return area;
+	}
+
+	/**
+	 * Return the initial size of the dialog.
+	 */
+	@Override
+	protected Point getInitialSize() {
+		return new Point(450, 300);
+	}
+	
+	 @Override
+	  protected void okPressed() {
+		 saveInput();
+		    if(passwordString == null || foldernameString == null){
+		    	//TODO error messages
+		    }
+		    else{
+			    super.okPressed();
+		    }
+	  }
+	 
+	  @Override
+	  protected boolean isResizable() {
+	    return true;
+	  }
+	  
+	  // save content of the Text fields because they get disposed
+	  // as soon as the Dialog closes
+	  private void saveInput() {
+		  passwordString = passwordText.getText();
+		  foldernameString = foldernameText.getText();
+	  }
+
+	public String getPasswordString() {
+		return passwordString;
+	}
+
+	public String getFoldernameString() {
+		return foldernameString;
+	}
+	  
+
+}

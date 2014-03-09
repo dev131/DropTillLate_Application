@@ -205,7 +205,6 @@ public class PasswordDialog extends Dialog {
     lblMissingPasswordOr.setText("Missing password or folder definition!");
     lblMissingPasswordOr.setToolTipText("");
     lblMissingPasswordOr.setVisible(false);
-    String k = Configuration.getPropertieDropBoxPath(true);
     KeyManager km = new KeyManager();
     if((Configuration.getPropertieDropBoxPath(true) == null)){
     	//If path not defined

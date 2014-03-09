@@ -54,7 +54,8 @@ import ch.droptilllate.application.properties.Configuration;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.provider.DropTillLateContentProvider;
 import ch.droptilllate.application.provider.DropTillLateLabelProvider;
-import ch.droptilllate.application.views.InputView;
+import ch.droptilllate.application.views.ImportDialog;
+import ch.droptilllate.application.views.ShareDiaolog;
 import ch.droptilllate.application.views.Status;
 import ch.droptilllate.application.views.TableIdentifier;
 
@@ -67,7 +68,8 @@ public class ViewController {
 	private List<GhostFolderDob> folderList;
 	private static ViewController instance = null;
 	private List<EncryptedFileDob> actualDropFiles;
-	private InputView dialog;
+	private ShareDiaolog sharedialog;
+	private ImportDialog importdialog;
 	private Shell shell;
 
 	public ViewController() {
@@ -380,11 +382,12 @@ public class ViewController {
 		fileList = new ArrayList<EncryptedFileDob>();
 		List<String> mailList = new ArrayList<String>();
 		String password = null;
-		dialog = new InputView(shell, Messages.CreateSharePasswordDialog);
-		dialog.create();
-		if (dialog.open() == Window.OK) {
-			password = dialog.getPassword();
-			mailList.add(dialog.getEmail());
+		sharedialog = new ShareDiaolog(shell);
+		sharedialog.create();
+		if (sharedialog.open() == Window.OK) {
+			password = sharedialog.getPassword();
+		//TODO MailList
+			mailList.add(sharedialog.getEmail());
 		}
 		if(password == null || mailList.isEmpty()){
 			MessageDialog.openError(shell, "Error", "Error occured no password or email");
@@ -448,14 +451,13 @@ public class ViewController {
 			}			    
 		 
 		    //OpenDialog to get Password and foldername
-		    dialog = new InputView(shell, Messages.ImportDialog);
-		    dialog.create();
-		    dialog.setFolderNameVisible();
+		    importdialog = new ImportDialog(shell);
+		    importdialog.create();
 		    String password = null;
 		    String foldername = null;
-		    if (dialog.open() == Window.OK) {
-			password = dialog.getPassword();
-			foldername = dialog.getFoldernameString();
+		    if (importdialog.open() == Window.OK) {
+			password = importdialog.getPasswordString();
+			foldername = importdialog.getFoldernameString();
 		    }
 		    if(password == null || foldername == null){
 		    MessageDialog.openError(shell, "Error", "Error occured no password or foldername");
