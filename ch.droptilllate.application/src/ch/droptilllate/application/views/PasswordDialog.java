@@ -118,7 +118,7 @@ public class PasswordDialog extends Dialog {
 		    String tempPath = dialog.open();
 		    if(tempPath != null)
 				try {
-					Configuration.setPropertieTempPath(tempPath+ Messages.getSlash());
+					Configuration.setPropertieTempPath(tempPath);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
