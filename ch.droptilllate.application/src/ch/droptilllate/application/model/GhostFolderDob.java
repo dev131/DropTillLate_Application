@@ -1,6 +1,5 @@
 package ch.droptilllate.application.model;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,10 +16,9 @@ public class GhostFolderDob extends DroppedElement{
 	 * GhostFolderDob Constructor
 	 * @param id
 	 * @param name
-	 * @param date
 	 * @param parent
 	 */
-	public GhostFolderDob(Integer id, String name, Date date,
+	public GhostFolderDob(Integer id, String name,
 			GhostFolderDob parent) {
 		super(id, name, parent);
 		this.folders = new ArrayList<GhostFolderDob>();

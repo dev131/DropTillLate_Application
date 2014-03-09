@@ -47,7 +47,7 @@ public class UpdateXMLImporter {
 					Integer.parseInt(nodelist.item(i).getAttributes().getNamedItem(XMLConstruct.AttId).getNodeValue()), 
 					nodelist.item(i).getAttributes().getNamedItem(XMLConstruct.AttFileName).getNodeValue(), 
 					sqlDate, 
-					nodelist.item(i).getAttributes().getNamedItem(XMLConstruct.AttPath).getNodeValue(), 
+					"", 
 					null, 
 					size, 
 					Integer.parseInt(nodelist.item(i).getAttributes().getNamedItem(XMLConstruct.AttContainerId).getNodeValue()));
@@ -61,21 +61,10 @@ public class UpdateXMLImporter {
 		NodeList nodelist = document.getElementsByTagName(XMLConstruct.ChildElementGhostFolder);
 		// cast the result to a DOM NodeList
 		for (int i = 0; i < nodelist.getLength(); i++) {
-			String date1 = nodelist.item(i).getAttributes().getNamedItem(XMLConstruct.AttDate)
-					.getNodeValue().toString();
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-			Date parsed = null;
-			try {
-				parsed = format.parse(date1);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-			java.sql.Date sqlDate = new java.sql.Date(parsed.getTime());
-			//Integer id, String name, Date date, String path, GhostFolderDob parent
+			//Integer id, String name, GhostFolderDob parent
 			GhostFolderDob dob = new GhostFolderDob(
 					Integer.parseInt(nodelist.item(i).getAttributes().getNamedItem(XMLConstruct.AttId).getNodeValue()),
 					nodelist.item(i).getAttributes().getNamedItem(XMLConstruct.AttFolderName).getNodeValue(), 
-					sqlDate, 
 					null);			
 			folders.add(dob);
 		}

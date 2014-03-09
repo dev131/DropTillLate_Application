@@ -33,7 +33,6 @@ public class UpdateXMLGenerator {
 		file.setAttribute(XMLConstruct.AttDate, encryptedFileDob.getDate().toString());
 		file.setAttribute(XMLConstruct.AttSize, encryptedFileDob.getSize().toString());
 		file.setAttribute(XMLConstruct.AttType, encryptedFileDob.getType());
-		file.setAttribute(XMLConstruct.AttPath, encryptedFileDob.getPath());
 		file.setAttribute(XMLConstruct.AttParentId, Integer.toString(parentID));
 		file.setAttribute(XMLConstruct.AttContainerId, Integer.toString(encryptedFileDob.getContainerId()));
 		node.appendChild(file);			

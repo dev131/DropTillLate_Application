@@ -16,7 +16,7 @@ public class Configuration {
 		configProperty.setProperty("dropboxpath", dropboxpath);
 		File file = new File("config.properties");
 		FileOutputStream fileOut = new FileOutputStream(file,true);
-		configProperty.store(fileOut, "Dropboxpath propertie");
+		configProperty.store(fileOut, "Dropboxpath property");
 	  }
 	
 	public static void setPropertieTempPath(String temppath) throws IOException {		 
@@ -25,7 +25,7 @@ public class Configuration {
 		configProperty.setProperty("temppath", temppath);
 		File file = new File("config.properties");
 		FileOutputStream fileOut = new FileOutputStream(file,true);
-		configProperty.store(fileOut, "Tempfolder propertie");
+		configProperty.store(fileOut, "Tempfolder property");
 	
 	  }
 

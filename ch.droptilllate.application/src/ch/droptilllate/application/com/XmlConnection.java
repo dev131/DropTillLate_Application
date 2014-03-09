@@ -115,10 +115,10 @@ public class XmlConnection {
 		StructureXmlDob sxml;
 		File file = new File(path);	
 		if(!local){
-			sxml = new StructureXmlDob(shareFolder, true);
+			sxml = new StructureXmlDob(shareFolder, false);
 		}
 		else{
-			sxml = new StructureXmlDob(shareFolder, false);			
+			sxml = new StructureXmlDob(shareFolder, true);			
 		}		
 		EncryptedFileDob dob = sxml.getEncryptedFileDob();
 		//Integer id, String name, Date date, String path, GhostFolderDob parent, String type, Long size, Integer containerId)

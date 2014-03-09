@@ -60,7 +60,6 @@ public class FileQuery {
 		file.setAttribute(XMLConstruct.AttDate, encryptedFileDob.getDate().toString());
 		file.setAttribute(XMLConstruct.AttSize, encryptedFileDob.getSize().toString());
 		file.setAttribute(XMLConstruct.AttType, encryptedFileDob.getType());
-		file.setAttribute(XMLConstruct.AttPath, encryptedFileDob.getPath());
 		file.setAttribute(XMLConstruct.AttParentId, parentID);
 		file.setAttribute(XMLConstruct.AttContainerId, containerID);
 		node.appendChild(file);
@@ -115,7 +114,7 @@ public class FileQuery {
 					Integer.parseInt(nodes.item(i).getAttributes().getNamedItem(XMLConstruct.AttId).getNodeValue()), 
 					nodes.item(i).getAttributes().getNamedItem(XMLConstruct.AttFileName).getNodeValue(), 
 					sqlDate, 
-					nodes.item(i).getAttributes().getNamedItem(XMLConstruct.AttPath).getNodeValue(), 
+					"", 
 					folder,   
 					size, 
 					Integer.parseInt(nodes.item(i).getAttributes().getNamedItem(XMLConstruct.AttContainerId).getNodeValue()));
@@ -147,9 +146,6 @@ public class FileQuery {
 			if (encryptedFile.getType() != null)
 				nodes.item(idx).getAttributes().getNamedItem(XMLConstruct.AttType)
 						.setNodeValue(encryptedFile.getType());
-			if (encryptedFile.getPath() != null)
-				nodes.item(idx).getAttributes().getNamedItem(XMLConstruct.AttPath)
-						.setNodeValue(encryptedFile.getPath());
 			if (encryptedFile.getContainerId() >= 0)
 				nodes.item(idx)
 						.getAttributes()
@@ -190,7 +186,7 @@ public class FileQuery {
 				Integer.parseInt(nodes.item(0).getAttributes().getNamedItem(XMLConstruct.AttId).getNodeValue()), 
 				nodes.item(0).getAttributes().getNamedItem(XMLConstruct.AttFileName).getNodeValue(), 
 				sqlDate, 
-				nodes.item(0).getAttributes().getNamedItem(XMLConstruct.AttPath).getNodeValue(), 
+				"", 
 				null, 
 				Long.parseLong(nodes.item(0).getAttributes().getNamedItem(XMLConstruct.AttSize).getNodeValue()),
 				Integer.parseInt(nodes.item(0).getAttributes().getNamedItem(XMLConstruct.AttContainerId).getNodeValue()));
@@ -278,7 +274,7 @@ public class FileQuery {
 					Integer.parseInt(nodes.item(i).getAttributes().getNamedItem(XMLConstruct.AttId).getNodeValue()), 
 					nodes.item(i).getAttributes().getNamedItem(XMLConstruct.AttFileName).getNodeValue(), 
 					sqlDate, 
-					nodes.item(i).getAttributes().getNamedItem(XMLConstruct.AttPath).getNodeValue(), 
+					"", 
 					null, 
 					size, 
 					Integer.parseInt(nodes.item(i).getAttributes().getNamedItem(XMLConstruct.AttContainerId).getNodeValue()));

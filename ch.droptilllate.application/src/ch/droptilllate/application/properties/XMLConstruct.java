@@ -22,7 +22,6 @@ public class XMLConstruct extends NLS {
 	public static String AttContainerId;
 	public static String AttDate;
 	public static String AttParentId;
-	public static String AttPath;
 	public static String AttSize;
 	public static String AttType;
 	public static String AttId;

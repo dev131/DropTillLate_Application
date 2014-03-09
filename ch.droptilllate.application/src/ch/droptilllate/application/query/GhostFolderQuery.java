@@ -80,21 +80,10 @@ public class GhostFolderQuery {
 		NodeList nodes = conn.executeQuery(XMLConstruct.getGhostFolderExpression()+ "[@"+XMLConstruct.AttParentId+"='"
 				+ folder.getId() + "']");
 		for (int i = 0; i < nodes.getLength(); i++) {
-			String date1 = nodes.item(i).getAttributes().getNamedItem(XMLConstruct.AttDate)
-					.getNodeValue().toString();
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-			Date parsed = null;
-			try {
-				parsed = format.parse(date1);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-			java.sql.Date sqlDate = new java.sql.Date(parsed.getTime());
-			//Integer id, String name, Date date, String path, GhostFolderDob parent
+			//Integer id, String name, GhostFolderDob parent
 			GhostFolderDob dob = new GhostFolderDob(
 					Integer.parseInt(nodes.item(i).getAttributes().getNamedItem(XMLConstruct.AttId).getNodeValue()),
 					nodes.item(i).getAttributes().getNamedItem(XMLConstruct.AttFolderName).getNodeValue(), 
-					sqlDate, 
 					folder);			
 			folders.add(dob);
 		}

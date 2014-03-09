@@ -133,9 +133,7 @@ public class ViewController {
 	private GhostFolderDob getInitialInput() {
 		// Create RootDob
 		//Integer id, String name, Date date, String path,GhostFolderDob parent) {
-		root = new GhostFolderDob(0, "Root-Folder", 
-				new Date(
-				System.currentTimeMillis()), null);
+		root = new GhostFolderDob(0, "Root-Folder", null);
 		getFolderContent(root);
 		return root;
 	}
@@ -218,7 +216,7 @@ public class ViewController {
 		folderDb.deleteElement(folderList, null);
 		deleteTreeFiles(fileList);
 		deleteTreeFolders(folderList);
-		
+		  viewer.refresh();		
 	}
 
 	private void deleteTreeFolders(List<GhostFolderDob> folderList2) {
@@ -286,7 +284,7 @@ public class ViewController {
 	public void newFolder(String name) {
 		GhostFolderDao folderDao = new GhostFolderDao();
 		File newFile = new File(name);
-		GhostFolderDob dob = new GhostFolderDob(null, newFile.getName(), new Date(System.currentTimeMillis()), root);
+		GhostFolderDob dob = new GhostFolderDob(null, newFile.getName(), root);
 		// insert in DB and Treeview
 		root.addFolder((GhostFolderDob) folderDao.newElement(dob, null));
 	}
@@ -362,7 +360,6 @@ public class ViewController {
 			//Integer id, String name, Date date, String path, GhostFolderDob parent
 			GhostFolderDob folderDob = new GhostFolderDob(null, 
 					droppedElement.getName(), 
-					new Date(System.currentTimeMillis()),
 					parent);			
 			GhostFolderDao folderDB = new GhostFolderDao();
 			GhostFolderDob encryptedPersistedFolder = (GhostFolderDob) folderDB.newElement(folderDob, null);
@@ -436,16 +433,15 @@ public class ViewController {
 			String destinationPath = null;
 			File source = null;
 			String sharefolderName = "";
+			FileHandler fileHandler = null;
 			try {
-				FileHandler fileHandler = new FileHandler();	
+				 fileHandler = new FileHandler();	
 				source = new File(selectedDir);
 				sharefolderName = source.getName();
 				destinationPath = Configuration.getPropertieDropBoxPath() + source.getName();
 				File destination = new File(destinationPath);					
 				fileHandler.copyDirectory(source, destination);
-				if(!fileHandler.delete(source)) {
-					throw new IOException("Unable to delete original folder");
-				}
+			
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -465,22 +461,34 @@ public class ViewController {
 		    MessageDialog.openError(shell, "Error", "Error occured no password or foldername");
 		    }
 		    
-		    //Insert ShareFolder
+		    //Create ShareFolder
 		    ShareFolderDao shareFolderDao = new ShareFolderDao();
 		    KeyManager keyManager = new KeyManager();
 		    String key =keyManager.generatePassword(password, sharefolderName);
 		    ShareFolder sharefolder = new ShareFolder(Integer.parseInt(source.getName()), key);
-		    shareFolderDao.newElement(sharefolder, null);
-		    //Insert GhostFolder
-		    GhostFolderDob ghostFolderDob = new GhostFolderDob(null, foldername, 
-					new Date(
-					System.currentTimeMillis()), root);
-		    GhostFolderDao ghostfolderDao = new GhostFolderDao();
-		    ghostFolderDob = (GhostFolderDob) ghostfolderDao.newElement(ghostFolderDob, null);
-		    
+		   
+		    //Create GhostFolder
+		    GhostFolderDob ghostFolderDob = new GhostFolderDob(null, foldername, root);
+		    GhostFolderDao ghostfolderDao = new GhostFolderDao();		    
 			//Encrypt UploadFile
 			IFileSystemCom com = FileSystemCom.getInstance();	
-			com.decryptFile(sharefolder,false);
+			if(!com.decryptFile(sharefolder,false)){
+				Status status = Status.getInstance();
+				status.setMessage("Wrong Password");
+								
+			}else{	
+				//Delete if file decryption success
+				try {
+					if(!fileHandler.delete(source)) {
+						throw new IOException("Unable to delete original folder");
+						}
+				} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				}
+			//Insert DB
+			shareFolderDao.newElement(sharefolder, null);
+			ghostFolderDob = (GhostFolderDob) ghostfolderDao.newElement(ghostFolderDob, null);
 			//UpdateFile Import
 			ShareManager shareManager = new ShareManager();
 		    List<EncryptedFileDob> fileDobList = shareManager.getUpdateFiles(sharefolder.getKey());
@@ -506,6 +514,7 @@ public class ViewController {
 		    root.addFolder(ghostFolderDob);
 		    ghostFolderDob.addFiles(fileDobList);
 		    viewer.refresh();
+			}
 		    
 	}
 }

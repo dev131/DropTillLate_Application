@@ -94,7 +94,7 @@ public class PasswordDialog extends Dialog {
 			    String dropboxPath = dialog.open();
 			    if(dropboxPath != null)
 					try {
-						Configuration.setPropertieDropBoxPath(dropboxPath);
+						Configuration.setPropertieDropBoxPath(dropboxPath + Messages.getSlash());
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -102,7 +102,7 @@ public class PasswordDialog extends Dialog {
 		}
          });
         btnChooseDropboxFolder.setText("Choose Dropbox Folder ....");
-        btnChooseDropboxFolder.setVisible(true);
+        btnChooseDropboxFolder.setVisible(false);
     new Label(container, SWT.NONE);
     new Label(container, SWT.NONE);
     //Listener TempFolder
@@ -118,7 +118,7 @@ public class PasswordDialog extends Dialog {
 		    String tempPath = dialog.open();
 		    if(tempPath != null)
 				try {
-					Configuration.setPropertieTempPath(tempPath);
+					Configuration.setPropertieTempPath(tempPath+ Messages.getSlash());
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -126,7 +126,7 @@ public class PasswordDialog extends Dialog {
 	}
       });
       btnChooseTempFolder.setText("Choose Temp Folder ....");
-      btnChooseTempFolder.setVisible(true);
+      btnChooseTempFolder.setVisible(false);
     new Label(container, SWT.NONE);
     new Label(container, SWT.NONE);
     new Label(container, SWT.NONE);
@@ -209,13 +209,16 @@ public class PasswordDialog extends Dialog {
     KeyManager km = new KeyManager();
     String k = Configuration.getPropertieDropBoxPath();
     if((Configuration.getPropertieDropBoxPath() == null)){
-    	  if (!km.checkIfStructureFileExist()){
-    	    	lblLoginPassword.setText("Create Password");
-    	    	  btnChooseDropboxFolder.setVisible(true);
-    	    	  btnChooseTempFolder.setVisible(true);
-    	    	  newUser = true;
+    	//If path not defined
+    	btnChooseDropboxFolder.setVisible(true);
+  	  	btnChooseTempFolder.setVisible(true);
+  	  	}
+    if (!km.checkIfStructureFileExist()){
+    		  //FileStructure and Masterpassword missing
+    	    	lblLoginPassword.setText("Create Password");   	    	  
+    	    	newUser = true;
+    	      
     	    }
-    }
     return container;
   }
 
@@ -262,6 +265,7 @@ public class PasswordDialog extends Dialog {
 		lblMissingPasswordOr.setVisible(true);
 	}
 	else checkPassword();
+	super.okPressed();
   }
 
   private void createFolder() {  
