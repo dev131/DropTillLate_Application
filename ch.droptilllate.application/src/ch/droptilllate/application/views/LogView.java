@@ -33,7 +33,7 @@ public class LogView implements Observer{
 	}
 
 	@Override
-	public void update(Observable o, Object arg) {
+	public synchronized void update(Observable o, Object arg) {
 		message = (String) arg;
 		message = "\n" + message;
 		textBox.append(message);

@@ -30,10 +30,8 @@ public class OSValidator {
 	}
 	public static String getSlash(){
 		if (isWindows()) {
-			System.out.println("This is Windows");
 			Slash = "\\";
 		} else if (isMac()) {
-			System.out.println("This is Mac");
 			Slash="/";
 		} else if (isUnix()) {
 			System.out.println("This is Unix or Linux");
