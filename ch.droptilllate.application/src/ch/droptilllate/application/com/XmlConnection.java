@@ -39,6 +39,7 @@ import ch.droptilllate.application.dnb.ShareFolder;
 import ch.droptilllate.application.dnb.ShareRelation;
 import ch.droptilllate.application.handlers.FileHandler;
 import ch.droptilllate.application.info.CRUDCryptedFileInfo;
+import ch.droptilllate.application.lifecycle.OSValidator;
 import ch.droptilllate.application.listener.FileChangeListener;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.StructureXmlDob;
@@ -57,9 +58,9 @@ public class XmlConnection {
 	
 	public XmlConnection(Boolean local, String key) {
 		if(local){
-			path = Configuration.getPropertieTempPath() + XMLConstruct.NameLocalXML;
+			path = Configuration.getPropertieTempPath(true) + XMLConstruct.NameLocalXML;
 			//TODO tillate expression
-			File f = new File(Configuration.getPropertieDropBoxPath()+Messages.getIdSize()+Messages.Slash
+			File f = new File(Configuration.getPropertieDropBoxPath(true)+Messages.getIdSize()+ OSValidator.getSlash()
 					+ XMLConstruct.IdXMLContainer+ "."+ Constants.CONTAINER_EXTENTION);
 			//IF exist create new register to listener ELSE decrypt and register to listener
 			if (!f.exists()){
@@ -80,7 +81,7 @@ public class XmlConnection {
 				
 		}
 		else{
-			path = Configuration.getPropertieTempPath() + XMLConstruct.NameShareXML; 
+			path = Configuration.getPropertieTempPath(true) + XMLConstruct.NameShareXML; 
 			File f = new File(path);
 			if (!f.exists())
 				createFile(path);

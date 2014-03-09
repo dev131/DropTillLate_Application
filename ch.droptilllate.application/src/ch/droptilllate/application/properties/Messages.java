@@ -24,32 +24,14 @@ public class Messages extends NLS {
 	public static String SaltMasterPassword;
 	public static String CreateSharePasswordDialog;
 	public static String OwnerMail;
-	public static String Slash;
 	
 	public static String ImportDialog;
 	
 	static {
- 
-		if (OSValidator.isWindows()) {
-			Slash = "\\";
-		} else if (OSValidator.isMac()) {
-			Slash = "/";
-		} else if (OSValidator.isUnix()) {
-			System.out.println("This is Unix or Linux");
-		} else if (OSValidator.isSolaris()) {
-			System.out.println("This is Solaris");
-		} else {
-			System.out.println("Your OS is not support!!");
-		}
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 
 	}
-
-	public static String getSlash() {
-		return Slash;
-	}
-
 
 	public static Integer getIdSize(){
 		return 100000;

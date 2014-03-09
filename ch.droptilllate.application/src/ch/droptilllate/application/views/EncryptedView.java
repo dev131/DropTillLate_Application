@@ -70,7 +70,7 @@ public class EncryptedView {
 			@Override
 			public void widgetDisposed(DisposeEvent e) {
 				// TODO Auto-generated method stub
-				File file = new File(Configuration.getPropertieTempPath());
+				File file = new File(Configuration.getPropertieTempPath(true));
 				try {
 					FileUtils.cleanDirectory(file);
 				} catch (IOException e1) {

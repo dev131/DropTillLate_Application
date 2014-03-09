@@ -6,6 +6,7 @@ import java.io.File;
 import ch.droptilllate.application.com.AbstractXmlDatabase;
 import ch.droptilllate.application.dao.ShareFolderDao;
 import ch.droptilllate.application.dnb.ShareFolder;
+import ch.droptilllate.application.lifecycle.OSValidator;
 import ch.droptilllate.application.properties.Configuration;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.properties.XMLConstruct;
@@ -69,7 +70,7 @@ public class KeyManager {
 	 * @return
 	 */
 	public boolean checkIfStructureFileExist() {
-		File file = new File(Configuration.getPropertieDropBoxPath() + Messages.getIdSize()+ Messages.getSlash()+ XMLConstruct.IdXMLContainer+"."+ Constants.CONTAINER_EXTENTION);
+		File file = new File(Configuration.getPropertieDropBoxPath(true) + Messages.getIdSize()+ OSValidator.getSlash()+ XMLConstruct.IdXMLContainer+"."+ Constants.CONTAINER_EXTENTION);
 		if(file.exists()){
 			return true;
 		}

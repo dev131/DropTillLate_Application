@@ -41,7 +41,7 @@ public class FileSystemCom implements IFileSystemCom {
 	private IFileSystem ifile;
 	private FileSystemCom(){
 		//TODO change needed
-        ifile = new FileSystemHandler(Configuration.getPropertieDropBoxPath(), Configuration.getPropertieTempPath());
+        ifile = new FileSystemHandler(Configuration.getPropertieDropBoxPath(false), Configuration.getPropertieTempPath(false));
 	}
 	/* Static 'instance' method */
 	   public static FileSystemCom getInstance( ) {

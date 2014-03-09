@@ -9,6 +9,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
 
+import ch.droptilllate.application.lifecycle.OSValidator;
+
 public class Configuration {
 
 	public static void setPropertieDropBoxPath(String dropboxpath) throws IOException {		 
@@ -30,7 +32,7 @@ public class Configuration {
 	  }
 
 	
-	public static String getPropertieDropBoxPath() {
+	public static String getPropertieDropBoxPath(boolean withSlash) {
 		 
 		Properties prop = new Properties();
 		InputStream input = null;
@@ -56,11 +58,12 @@ public class Configuration {
 				}
 			}
 		}
-		return path + Messages.getSlash();
+		if(withSlash)return path+ OSValidator.getSlash();
+		return path;
 	  }
 
 
-	public static String getPropertieTempPath() {
+	public static String getPropertieTempPath(boolean withSlash) {
 		Properties prop = new Properties();
 		InputStream input = null;
 		String path = null;
@@ -85,6 +88,7 @@ public class Configuration {
 				}
 			}
 		}
-		return path+ Messages.getSlash();
+		if(withSlash)return path+ OSValidator.getSlash();
+		return path;
 	}
 }

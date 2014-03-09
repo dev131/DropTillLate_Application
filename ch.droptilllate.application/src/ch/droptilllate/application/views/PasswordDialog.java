@@ -205,10 +205,9 @@ public class PasswordDialog extends Dialog {
     lblMissingPasswordOr.setText("Missing password or folder definition!");
     lblMissingPasswordOr.setToolTipText("");
     lblMissingPasswordOr.setVisible(false);
- 
+    String k = Configuration.getPropertieDropBoxPath(true);
     KeyManager km = new KeyManager();
-    String k = Configuration.getPropertieDropBoxPath();
-    if((Configuration.getPropertieDropBoxPath() == null)){
+    if((Configuration.getPropertieDropBoxPath(true) == null)){
     	//If path not defined
     	btnChooseDropboxFolder.setVisible(true);
   	  	btnChooseTempFolder.setVisible(true);
@@ -254,8 +253,8 @@ public class PasswordDialog extends Dialog {
 	KeyManager km = new KeyManager();
 	if(newUser){
 		//Check if all properties are set
-		if((Configuration.getPropertieDropBoxPath() != null)&&
-				(Configuration.getPropertieTempPath() !=null)&&
+		if((Configuration.getPropertieDropBoxPath(true) != null)&&
+				(Configuration.getPropertieTempPath(true) !=null)&&
 				(password != null)){
 			//CreateFolder
 			createFolder();
@@ -269,7 +268,7 @@ public class PasswordDialog extends Dialog {
   }
 
   private void createFolder() {  
-	  File dir = new File(Configuration.getPropertieDropBoxPath()+Messages.getSlash()+Messages.getIdSize());
+	  File dir = new File(Configuration.getPropertieDropBoxPath(true)+Messages.getIdSize());
 	  dir.mkdir();	
 }
 
