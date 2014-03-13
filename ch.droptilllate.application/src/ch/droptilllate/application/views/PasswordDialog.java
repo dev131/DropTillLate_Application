@@ -64,7 +64,7 @@ public class PasswordDialog extends Dialog {
     
     CLabel lblNewLabel = new CLabel(container, SWT.NONE);
     lblNewLabel.setTopMargin(4);
-    lblNewLabel.setImage(ResourceManager.getPluginImage("ch.droptilllate.application", "logos/Logo64.png"));
+    lblNewLabel.setImage(ResourceManager.getPluginImage("ch.droptilllate.application", "icons/icon_32x32.png"));
     lblNewLabel.setText("\u00A9DropTillLate");
     new Label(container, SWT.NONE);
     new Label(container, SWT.NONE);

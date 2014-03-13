@@ -1,4 +1,4 @@
-package ch.droptilllate.application.dropbox;
+package ch.droptilllate.cloudprovider.dropbox;
 
 import java.util.List;
 

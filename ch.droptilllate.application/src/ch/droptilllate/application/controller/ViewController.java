@@ -42,7 +42,6 @@ import ch.droptilllate.application.dnb.EncryptedContainer;
 import ch.droptilllate.application.dnb.DroppedElement;
 import ch.droptilllate.application.dnb.ShareFolder;
 import ch.droptilllate.application.dnb.ShareRelation;
-import ch.droptilllate.application.dropbox.Dropbox;
 import ch.droptilllate.application.handlers.FileHandler;
 import ch.droptilllate.application.info.CRUDCryptedFileInfo;
 import ch.droptilllate.application.listener.TreeDragSourceListener;
@@ -59,6 +58,7 @@ import ch.droptilllate.application.views.ImportDialog;
 import ch.droptilllate.application.views.ShareDialog;
 import ch.droptilllate.application.views.Status;
 import ch.droptilllate.application.views.TableIdentifier;
+import ch.droptilllate.cloudprovider.dropbox.Dropbox;
 import ch.droptilllate.couldprovider.api.IFileSystemCom;
 import ch.droptilllate.couldprovider.api.IShareFolder;
 
@@ -198,6 +198,8 @@ public class ViewController {
 				fileToDelete = (EncryptedFileDob) element;
 				fileList.add(fileToDelete);}
 		}
+		//Insert subfolder/files
+		getEntriesInFolders();
 		// Delete on Filesystem
 		IFileSystemCom com = FileSystemCom.getInstance();	
 		// TODO Check successlist
@@ -222,6 +224,21 @@ public class ViewController {
 		deleteTreeFiles(fileList);
 		deleteTreeFolders(folderList);
 		  viewer.refresh();		
+	}
+
+	private void getEntriesInFolders() {
+		GhostFolderDao encryptedFolderDao = new GhostFolderDao();
+		EncryptedFileDao encryptedFileDao = new EncryptedFileDao();
+		List<EncryptedFileDob> tmpfilelist = new ArrayList<EncryptedFileDob>();
+		List<GhostFolderDob> tmpfolderlist = new ArrayList<GhostFolderDob>();
+		for(GhostFolderDob folder : folderList){
+			tmpfolderlist.addAll(encryptedFolderDao.getFoldersInFolder(folder, null));
+		}
+		for(GhostFolderDob folder : folderList){
+			tmpfilelist.addAll(encryptedFileDao.getFilesInFolder(folder, null));
+		}
+		folderList.addAll(tmpfolderlist);
+		fileList.addAll(tmpfilelist);		
 	}
 
 	private void deleteTreeFolders(List<GhostFolderDob> folderList2) {

@@ -206,7 +206,7 @@ public class XmlConnection {
 
 	}
 
-	public Document getXML() { 
+	public synchronized Document getXML() { 
 		factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);
 		builder = null;
@@ -225,7 +225,7 @@ public class XmlConnection {
 
 	}
 
-	public void writeToXML() {
+	public synchronized void writeToXML() {
 		TransformerFactory transformerFactory = TransformerFactory
 				.newInstance();
 		try {
@@ -242,7 +242,7 @@ public class XmlConnection {
 
 	}
 
-	public NodeList executeQuery(String query) {
+	public synchronized NodeList executeQuery(String query) {
 		NodeList nodes = null;
 		XPathExpression expr = null;
 		// create an XPathFactory

@@ -34,7 +34,7 @@ public class ImportDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		setTitleImage(ResourceManager.getPluginImage("ch.droptilllate.application", "logos/Logo48.png"));
+		setTitleImage(ResourceManager.getPluginImage("ch.droptilllate.application", "icons/icon_32x32.png"));
 		setTitle("DropTillLate");
 		Composite area = (Composite) super.createDialogArea(parent);
 		Composite container = new Composite(area, SWT.NONE);

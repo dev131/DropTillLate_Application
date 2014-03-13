@@ -21,7 +21,7 @@
          </property>
          <property
                name="aboutImage"
-               value="logos/Logo128.png">
+               value="icons/Logo1_128.png">
          </property>
          <property
                name="aboutText"
@@ -29,7 +29,7 @@
          </property>
          <property
                name="windowImages"
-               value="logos/Logo16.png,logos/Logo32.png,logos/Logo48.png,logos/Logo64.png,logos/Logo128.png">
+               value="icons/Logo1_16.png,icons/Logo1_32.png,icons/Logo1_48.png,icons/Logo1_64.png,icons/Logo1_128.png">
          </property>
       </product>
    </extension>

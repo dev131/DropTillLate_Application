@@ -52,8 +52,7 @@ public class EncryptedView {
 	MApplication application;
 	
 	@PostConstruct
-	public void createPartControl(Composite parent, EMenuService menuService, Shell shell)
-			throws ClassNotFoundException, SQLException {
+	public void createPartControl(Composite parent, EMenuService menuService, Shell shell) {
 		// Treeviewer
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		menuService.registerContextMenu(viewer.getControl(),
