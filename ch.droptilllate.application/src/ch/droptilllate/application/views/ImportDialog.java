@@ -1,7 +1,12 @@
 package ch.droptilllate.application.views;
 
+import java.net.URL;
+
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -14,6 +19,8 @@ import org.eclipse.wb.swt.ResourceManager;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
 public class ImportDialog extends TitleAreaDialog {
 	private Text passwordText;
@@ -34,7 +41,10 @@ public class ImportDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		setTitleImage(ResourceManager.getPluginImage("ch.droptilllate.application", "icons/icon_32x32.png"));
+		Bundle bundle = FrameworkUtil.getBundle(EncryptedView.class);
+	 	URL url = FileLocator.find(bundle, new Path("icons/icon_32x32.png"), null);
+	 	ImageDescriptor image = ImageDescriptor.createFromURL(url);
+		setTitleImage(image.createImage());
 		setTitle("DropTillLate");
 		Composite area = (Composite) super.createDialogArea(parent);
 		Composite container = new Composite(area, SWT.NONE);

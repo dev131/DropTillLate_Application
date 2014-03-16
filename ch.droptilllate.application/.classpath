@@ -29,5 +29,6 @@
 	<classpathentry kind="lib" path="lib/xmldb-api.jar"/>
 	<classpathentry kind="lib" path="lib/xqjapi.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="lib/selenium-java-2.40.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

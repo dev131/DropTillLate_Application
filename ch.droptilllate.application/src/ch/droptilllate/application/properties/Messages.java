@@ -1,7 +1,9 @@
 package ch.droptilllate.application.properties;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Properties;
 
 import org.eclipse.osgi.util.NLS;
@@ -35,6 +37,10 @@ public class Messages extends NLS {
 
 	public static Integer getIdSize(){
 		return 100000;
+	}
+	public static String getDropboxName(){
+		File file = new File(Configuration.getPropertieDropBoxPath(false));
+		return file.getName();
 	}
 
 

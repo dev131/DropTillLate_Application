@@ -50,6 +50,7 @@ import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.properties.Configuration;
 import ch.droptilllate.application.properties.Messages;
+import ch.droptilllate.application.properties.XMLConstruct;
 import ch.droptilllate.application.provider.DropTillLateContentProvider;
 import ch.droptilllate.application.provider.DropTillLateLabelProvider;
 import ch.droptilllate.application.share.KeyManager;
@@ -58,7 +59,7 @@ import ch.droptilllate.application.views.ImportDialog;
 import ch.droptilllate.application.views.ShareDialog;
 import ch.droptilllate.application.views.Status;
 import ch.droptilllate.application.views.TableIdentifier;
-import ch.droptilllate.cloudprovider.dropbox.Dropbox;
+import ch.droptilllate.cloudprovider.dropbox.DropboxFolderSharer;
 import ch.droptilllate.couldprovider.api.IFileSystemCom;
 import ch.droptilllate.couldprovider.api.IShareFolder;
 
@@ -111,8 +112,7 @@ public class ViewController {
 		viewer.setInput(root);
 		viewer.expandToLevel(1);
 		// Register Drag&Drop Listener
-		registerDragDrop();
-	
+		registerDragDrop();	
 	}
 
 	/**
@@ -202,7 +202,7 @@ public class ViewController {
 		getEntriesInFolders();
 		// Delete on Filesystem
 		IFileSystemCom com = FileSystemCom.getInstance();	
-		// TODO Check successlist
+		// Check successlist
 		CRUDCryptedFileInfo result = com.deleteFile(fileList);
 		for(EncryptedFileDob fileDob : result.getEncryptedFileListSuccess()){
 			Status status = Status.getInstance();
@@ -275,7 +275,7 @@ public class ViewController {
 				}
 			}
 		}
-		// TODO check succesfull list
+		// check succesfull list
 		IFileSystemCom iFileSystem = FileSystemCom.getInstance();
 		CRUDCryptedFileInfo result = iFileSystem.decryptFile(fileList);
 		for(EncryptedFileDob fileDob : result.getEncryptedFileListSuccess()){
@@ -288,7 +288,6 @@ public class ViewController {
 				Desktop.getDesktop().edit(file);
 			
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -326,7 +325,7 @@ public class ViewController {
 			dropTreeElements(new File(currentDroppedElement), dragOverFolder);
 		}
 		
-		// TODO Insert in Filesystem and Error handling Results
+		//  Insert in Filesystem and Error handling Results
 		IFileSystemCom fileSystem = FileSystemCom.getInstance();
 		ShareFolder shareFolder = new ShareFolder(Messages.getIdSize(), null);		
 		CRUDCryptedFileInfo result = fileSystem.encryptFile(actualDropFiles, shareFolder);
@@ -343,11 +342,10 @@ public class ViewController {
 		for(EncryptedFileDob fileDob: result.getEncryptedFileListError()){
 			Status status = Status.getInstance();
 			status.setMessage(fileDob.getName() + " -> encryption not worked");
-			//TODO update tree
 		}
 		//Delete Error Files on DB
 		fileDB.deleteElement(result.getEncryptedFileListError(), null);
-			//TODO maybe dropped element Delete
+			//TODO maybe delete dropped element Delete
 			// droppedElement.delete();
 			// droppedFile.setPath(Messages.getLocalPathDropbox());
 	}
@@ -360,8 +358,6 @@ public class ViewController {
 	private void dropTreeElements(File droppedElement, GhostFolderDob parent) {				
 		if (!droppedElement.isDirectory()) {
 			if (droppedElement.getName().contains(".DS_Store")) {
-				// TODO Message
-				// log.info(".ds_store File ignored!");
 				return;
 			}
 			//Integer id, String name, Date date, String path, GhostFolderDob parent, String type, Long size, Integer containerId
@@ -406,14 +402,13 @@ public class ViewController {
 		sharedialog.create();
 		if (sharedialog.open() == Window.OK) {
 			password = sharedialog.getPassword();
-		//TODO MailList
+		// MailList
 			mailList = sharedialog.getEmailList();
 		}
 		if(password == null || mailList.isEmpty()){
 			MessageDialog.openError(shell, "Error", "Error occured no password or email");
 		}
 		else{
-			// TODO Statusline
 			List<EncryptedFileDob> fileList = new ArrayList<EncryptedFileDob>();
 			// List inserts and prepare for delete
 			TreeItem[] treeItems = tree.getSelection();
@@ -434,9 +429,19 @@ public class ViewController {
 			ShareManager shareManager = new ShareManager();
 			ShareFolder shareFolder = shareManager.newShareRelation(fileList, password, mailList);
 			//TODO check if it worked
-			IShareFolder dropbox = new Dropbox();
+			IShareFolder dropbox = new DropboxFolderSharer();
 			dropbox.shareFolder(Configuration.getPropertieDropBoxPath(false), shareFolder.getID(), mailList);
-			
+			FileHandler fileHandler = new FileHandler();
+			File source = new File(Configuration.getPropertieTempPath(true) + XMLConstruct.NameShareXML);
+			File dest = new File("/Users/marcobetschart/Documents/BDA_project/TempFolder/"+ XMLConstruct.NameShareXML);
+			try {
+				//TODO Just for Tests
+				fileHandler.copyFile(source, dest);
+				fileHandler.delete(source);
+				//fileHandler.delete(file);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}	
 	}
 	
@@ -470,7 +475,6 @@ public class ViewController {
 				fileHandler.copyDirectory(source, destination);
 			
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}			    
 		 
@@ -509,7 +513,6 @@ public class ViewController {
 						throw new IOException("Unable to delete original folder");
 						}
 				} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				}
 			//Insert DB

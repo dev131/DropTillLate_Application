@@ -1,9 +1,13 @@
 package ch.droptilllate.application.views;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -22,6 +26,8 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
 import ch.droptilllate.application.dao.ShareRelationDao;
 import ch.droptilllate.application.dnb.ShareRelation;
@@ -52,7 +58,11 @@ public class ShareDialog extends TitleAreaDialog {
 
 	  @Override
 	  protected Control createDialogArea(Composite parent) {
-	  	setTitleImage(ResourceManager.getPluginImage("ch.droptilllate.application", "logos/Logo48.png"));
+			Bundle bundle = FrameworkUtil.getBundle(EncryptedView.class);
+		 	URL url = FileLocator.find(bundle, new Path("icons/icon_32x32.png"), null);
+		 	ImageDescriptor image = ImageDescriptor.createFromURL(url);
+		
+	  	setTitleImage(image.createImage());
 	    Composite area = (Composite) super.createDialogArea(parent);
 	    Composite container = new Composite(area, SWT.NONE);
 	    container.setLayoutData(new GridData(GridData.FILL_BOTH));

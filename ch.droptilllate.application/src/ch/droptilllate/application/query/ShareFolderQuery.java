@@ -40,7 +40,12 @@ public class ShareFolderQuery {
 				id = (int) (Math.random() * Messages.getIdSize() + 1);
 			}
 			sharefolder.setID(id);
-		}	
+		}
+		else{
+			if(checkExist(sharefolder.getID())){
+				return sharefolder;
+			}
+		}
 		Node node = document.getFirstChild();
 		NodeList nodelist = document.getElementsByTagName(XMLConstruct.RootElementShareFolder);
 		node = nodelist.item(0);

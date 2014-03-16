@@ -32,7 +32,7 @@ public class GhostFolderQuery {
 	 * @return
 	 */
 	public GhostFolderDob newFolder(GhostFolderDob folderDob) {
-		// TODO id generate
+		// id generate
 		if(folderDob.getId() == null){
 			int id = (int) (Math.random() * Messages.getIdSize() + 1);
 			// Check if it exist

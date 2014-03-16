@@ -41,7 +41,6 @@ public class FileSystemCom implements IFileSystemCom {
 	private static FileSystemCom instance = null;
 	private IFileSystem ifile;
 	private FileSystemCom(){
-		//TODO change needed
         ifile = new FileSystemHandler(Configuration.getPropertieDropBoxPath(false), Configuration.getPropertieTempPath(false));
 	}
 	/* Static 'instance' method */
@@ -51,7 +50,7 @@ public class FileSystemCom implements IFileSystemCom {
 		      }
 		      return instance;
 	   }
-	// TODO Key transfer
+	   
 	@Override
 	public synchronized CRUDCryptedFileInfo encryptFile(List<EncryptedFileDob> droppedFiles, ShareFolder sharefolder) {
 		FileHandlingSummary filehandling_result = null;
@@ -79,7 +78,6 @@ public class FileSystemCom implements IFileSystemCom {
 		}
 		ShareFolderDao shareDao = new ShareFolderDao();
 		// MasterShareFolder
-		// TODO ShareRelation
 		KeyRelation relation = getKeyRelation(hashSet);	
 		//if the File is not in a SharedFolder/First Drop,/Put it in master-folder local
 		if (relation == null) {
@@ -99,7 +97,6 @@ public class FileSystemCom implements IFileSystemCom {
 		return result;
 	}
 
-	// TODO Key transfer
 	@Override
 	public synchronized CRUDCryptedFileInfo decryptFile(List<EncryptedFileDob> droppedFiles) {
 		FileHandlingSummary filehandling_result = null;
@@ -150,7 +147,6 @@ public class FileSystemCom implements IFileSystemCom {
 	@Override
 	public synchronized CRUDCryptedFileInfo moveFiles(List<EncryptedFileDob> fileList,
 			ShareFolder sharedFolder) {
-		// TODO Key transfer
 		List<FileInfoMove> fileInfoList = new ArrayList<FileInfoMove>();
 		FileHandlingSummary filehandling_result = null;
 		HashSet<Integer> hashSet = new HashSet<Integer>();
@@ -188,7 +184,7 @@ public class FileSystemCom implements IFileSystemCom {
 			sxml = new StructureXmlDob(destinationShareFolder, true);
 		}
 		fileDob = sxml.getEncryptedFileDob();
-		//TODO encrypt file !!!!!
+		// encrypt file !!!!!
 		fileInfo = new FileInfoEncrypt(fileDob.getId(), destinationShareFolder.getID(), fileDob.getContainerId(), fileDob.getType());
 		fileInfo = ifile.storeFileStructure(fileInfo, destinationShareFolder.getKey());
 		if(fileInfo.getError() == FileError.NONE ) return true;

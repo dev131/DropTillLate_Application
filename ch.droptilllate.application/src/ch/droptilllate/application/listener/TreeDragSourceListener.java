@@ -38,8 +38,6 @@ public class TreeDragSourceListener implements DragSourceListener {
 
 	@Override
 	public void dragSetData(DragSourceEvent event) {
-		// TODO dragFile
-		event.data = "sc";
 		for (TreeItem currentDragSourceItem : dragSourceItems) {
 			TreeDragSourceListener.draggedDroppedElements
 					.add((DroppedElement) currentDragSourceItem.getData());

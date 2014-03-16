@@ -4,7 +4,7 @@
 <product name="ch.droptilllate.application" uid="DroptTillLate" id="ch.droptilllate.application.product" application="org.eclipse.e4.ui.workbench.swt.E4Application" version="0.4.0" useFeatures="false" includeLaunchers="true">
 
    <aboutInfo>
-      <image path="/ch.droptilllate.application/icons/Logo1_128.png"/>
+      <image path="/icons/icon_128x128.png"/>
       <text>
          Copyright by Marco Betschart &amp; Réne Amrhein
       </text>
@@ -18,7 +18,7 @@
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
    </launcherArgs>
 
-   <windowImages i16="/ch.droptilllate.application/icons/Logo1_16.png" i32="/ch.droptilllate.application/icons/Logo1_32.png" i48="/ch.droptilllate.application/icons/Logo1_48.png" i64="/ch.droptilllate.application/icons/Logo1_64.png" i128="/ch.droptilllate.application/icons/Logo1_128.png"/>
+   <windowImages i16="/icons/icon_16x16.png" i32="/icons/icon_32x32.png" i48="/icons/icon_32x32.png" i64="/icons/icon_32x32.png" i128="/icons/icon_128x128.png"/>
 
 
    <launcher name="DropTillLate">
@@ -31,7 +31,7 @@
 
 
    <vm>
-      <macos include="true">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7</macos>
+      <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7</macos>
    </vm>
 
 

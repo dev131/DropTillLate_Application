@@ -61,7 +61,7 @@ public class XmlConnection {
 	public XmlConnection(Boolean local, String key) {
 		if(local){
 			path = Configuration.getPropertieTempPath(true) + XMLConstruct.NameLocalXML;
-			//TODO tillate expression
+
 			File f = new File(Configuration.getPropertieDropBoxPath(true)+Messages.getIdSize()+ OSValidator.getSlash()
 					+ XMLConstruct.IdXMLContainer+ "."+ Constants.CONTAINER_EXTENTION);
 			//IF exist create new register to listener ELSE decrypt and register to listener

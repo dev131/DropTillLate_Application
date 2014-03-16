@@ -9,8 +9,11 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Properties;
 
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
@@ -35,6 +38,8 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.wb.swt.ResourceManager;
 import org.eclipse.swt.custom.CLabel;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
 public class PasswordDialog extends Dialog {
   private String password = "";
@@ -64,7 +69,12 @@ public class PasswordDialog extends Dialog {
     
     CLabel lblNewLabel = new CLabel(container, SWT.NONE);
     lblNewLabel.setTopMargin(4);
-    lblNewLabel.setImage(ResourceManager.getPluginImage("ch.droptilllate.application", "icons/icon_32x32.png"));
+ // assume that the current class is called View.java
+ 	Bundle bundle = FrameworkUtil.getBundle(EncryptedView.class);
+ 	URL url = FileLocator.find(bundle, new Path("icons/icon_32x32.png"), null);
+ 	ImageDescriptor image = ImageDescriptor.createFromURL(url);
+   // lblNewLabel.setImage(ResourceManager.getPluginImage("ch.droptilllate.application", "icons/icon_32x32.png"));
+    lblNewLabel.setImage(image.createImage());
     lblNewLabel.setText("\u00A9DropTillLate");
     new Label(container, SWT.NONE);
     new Label(container, SWT.NONE);

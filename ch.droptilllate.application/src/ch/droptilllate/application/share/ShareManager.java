@@ -54,9 +54,11 @@ public class ShareManager {
 					.next(), fileList)) {
 				// NotAllFiles from this folder, there are some left
 				if (hashmap.containsKey(Messages.getIdSize())) {
+					//SharedFolder0
 					shareFolder = createNewSharedFolder(fileList, password);
 					alertMembers(hashSet_shareFolderList);
 				} else {
+					//NotSharedFolder0
 					shareFolder = createNewSharedFolder(fileList, password);
 					alertMembers(hashSet_shareFolderList);
 				}
@@ -225,7 +227,7 @@ public class ShareManager {
 		for (EncryptedFileDob dob : fileList) {
 			tempList2.add(dob.getId());
 		}
-		if (tempList1.containsAll(tempList2))
+		if (tempList1.size() == tempList2.size())
 			return true;
 
 		return false;

@@ -33,7 +33,7 @@ public class ContainerQuery {
 	 * @param encryptedFolder
 	 * @return
 	 */
-	public void newContainer(EncryptedContainer container) {
+	public void newContainer(EncryptedContainer container) {		
 		
 		if (container.getId() == null) {
 			int id = (int) (Math.random() * Messages.getIdSize() + 1);
@@ -41,8 +41,13 @@ public class ContainerQuery {
 			while (checkExist(id)) {
 				id = (int) (Math.random() * Messages.getIdSize() + 1);
 			}
-			//TODO if now container ID -> Alert! it have to be one
+			// if now container ID -> Alert! it have to be one
 			container.setId(id);
+		}
+		else{
+			if(getContainerByID(container.getId())!= null){
+				return;
+			};
 		}
 		Document document = conn.getXML();
 		NodeList nodelist = document.getElementsByTagName(XMLConstruct.RootElementContainer);

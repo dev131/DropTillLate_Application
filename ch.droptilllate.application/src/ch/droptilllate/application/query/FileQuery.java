@@ -33,7 +33,7 @@ public class FileQuery {
 	 * @return
 	 */
 	public EncryptedFileDob newFile(EncryptedFileDob encryptedFileDob) {
-		//TODO Id generate
+		// Id generate
 		String parentID = "";
 		if (encryptedFileDob.getId() == null) {
 			int id = (int) (Math.random() * Messages.getIdSize() + 1);
