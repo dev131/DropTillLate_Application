@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ILabelProviderListener;
-
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.core.runtime.Path;
 import org.osgi.framework.Bundle;
@@ -95,10 +94,10 @@ public class DropTillLateLabelProvider implements ITableLabelProvider {
 			} else if (element instanceof EncryptedFileDob) {
 				fileType = ((EncryptedFileDob) element).getType();
 				// fileType = fileType.substring(0, fileType.lastIndexOf("-"));
-
-				try {
-					return getImage("file-" + fileType + ".png");
-				} catch (Exception e) {
+				Image image = getImage("file-" + fileType + ".png");
+				if(image != null) {
+					return image;
+				} else {
 					if (((EncryptedFileDob) element).getType().contains("html"))
 						return getImage("file-htm.png");
 
@@ -163,7 +162,9 @@ public class DropTillLateLabelProvider implements ITableLabelProvider {
 	public Image getImage(String file) {
 		// assume that the current class is called View.java
 		Bundle bundle = FrameworkUtil.getBundle(EncryptedView.class);
-		URL url = FileLocator.find(bundle, new Path("icons/" + file), null);
+		URL url;		
+		url = FileLocator.find(bundle, new Path("icons/" + file), null);
+		if(url == null){return null;}
 		ImageDescriptor image = ImageDescriptor.createFromURL(url);
 		return image.createImage();
 	}
