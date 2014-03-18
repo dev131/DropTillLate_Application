@@ -1,8 +1,8 @@
 package ch.droptilllate.application.converter;
 
-import java.sql.Date;
+
 import java.util.ArrayList;
-import java.util.Iterator;
+
 import java.util.List;
 
 import ch.droptilllate.application.info.CRUDCryptedFileInfo;

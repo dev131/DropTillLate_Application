@@ -36,7 +36,7 @@ public class ShareManager {
 	public ShareFolder newShareRelation(List<EncryptedFileDob> fileList,
 			String password, List<String> emailList) {
 		this.emailList = emailList;
-		ShareFolder shareFolder = new ShareFolder(null, null);;
+		ShareFolder shareFolder = new ShareFolder(null, null);
 		// create HashSet with all ShareFolderId
 		HashSet<Integer> hashSet_shareFolderList = getShareFolderList(fileList);
 		// FILL Hashmap with key = sharedfolderID and filelist as value
@@ -216,12 +216,12 @@ public class ShareManager {
 		ContainerDao dao = new ContainerDao();
 		EncryptedFileDao daof = new EncryptedFileDao();
 		List<EncryptedContainer> containerlist = new ArrayList<EncryptedContainer>();
-		containerlist = (List<EncryptedContainer>) ((ContainerDao) dao)
+		containerlist = (List<EncryptedContainer>) (dao)
 				.getContainerBySharedFolderId(shareFolderId, null);
 		List<Integer> tempList1 = new ArrayList<Integer>();
 		List<Integer> tempList2 = new ArrayList<Integer>();
 		for (EncryptedContainer container : containerlist) {
-			tempList1 = (List<Integer>) ((EncryptedFileDao) daof).getFileIdsByContainerId(container
+			tempList1 = (List<Integer>) (daof).getFileIdsByContainerId(container
 					.getId(), null);
 		}
 		for (EncryptedFileDob dob : fileList) {

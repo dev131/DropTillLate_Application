@@ -18,14 +18,14 @@ public class UpdateXMLGenerator {
 	private Document document;
 	public UpdateXMLGenerator(String key){
 		this.conn = new XmlConnection(false, key);	
-		document = conn.getXML();
+		this.document = this.conn.getXML();
 	}
 	
 	public void createFileUpdateXML(List<EncryptedFileDob> dobList){
-		NodeList nodelist = document.getElementsByTagName(XMLConstruct.RootElementFile);
+		NodeList nodelist = this.document.getElementsByTagName(XMLConstruct.RootElementFile);
 		Node node = nodelist.item(0);
 		for(EncryptedFileDob encryptedFileDob : dobList){
-		Element file = document.createElement(XMLConstruct.ChildElementFile);
+		Element file = this.document.createElement(XMLConstruct.ChildElementFile);
 		file.setAttribute(XMLConstruct.AttId, Integer.toString(encryptedFileDob.getId()));
 		int parentID = 0;
 		file.setAttribute(XMLConstruct.AttFileName, encryptedFileDob.getName());
@@ -36,49 +36,49 @@ public class UpdateXMLGenerator {
 		file.setAttribute(XMLConstruct.AttContainerId, Integer.toString(encryptedFileDob.getContainerId()));
 		node.appendChild(file);			
 	}
-		conn.writeToXML();	
+		this.conn.writeToXML();	
 	}
 	
 	public void createGhostFolderUpdateXML(List<GhostFolderDob> dobList){
-		NodeList nodelist = document.getElementsByTagName(XMLConstruct.RootElementGhostFolder);
+		NodeList nodelist = this.document.getElementsByTagName(XMLConstruct.RootElementGhostFolder);
 		Node node = nodelist.item(0);
 		// TODO Generate ID and Check if it exist
 		for(GhostFolderDob folderDob : dobList){
-			Element folder = document.createElement(XMLConstruct.ChildElementGhostFolder);
+			Element folder = this.document.createElement(XMLConstruct.ChildElementGhostFolder);
 			folder.setAttribute(XMLConstruct.AttId, Integer.toString(folderDob.getId()));
 			int parentID = folderDob.getParent().getId();
 			folder.setAttribute(XMLConstruct.AttFileName, folderDob.getName());
 			folder.setAttribute(XMLConstruct.AttParentId, Integer.toString(parentID));
 			node.appendChild(folder);
 		}		
-		conn.writeToXML();
+		this.conn.writeToXML();
 	}
 	
 	public void createContainerUpdateXML(List<EncryptedContainer> shareList){
-		NodeList nodelist = document.getElementsByTagName(XMLConstruct.RootElementContainer);
+		NodeList nodelist = this.document.getElementsByTagName(XMLConstruct.RootElementContainer);
 		Node node = nodelist.item(0);
 		for(EncryptedContainer container : shareList){
-			Element element = document.createElement(XMLConstruct.ChildElementContainer);
+			Element element = this.document.createElement(XMLConstruct.ChildElementContainer);
 			element.setAttribute(XMLConstruct.AttId, Integer.toString(container.getId()));
 			element.setAttribute(XMLConstruct.AttShareFolderId,
 					Integer.toString(container.getShareFolderId()));
 			node.appendChild(element);
 		}		
-		conn.writeToXML();
+		this.conn.writeToXML();
 	}
 	
 	public void creatShareRelationUpdateXML(List<ShareRelation> shareList){
-		NodeList nodelist = document.getElementsByTagName(XMLConstruct.RootElementShareRelation);
+		NodeList nodelist = this.document.getElementsByTagName(XMLConstruct.RootElementShareRelation);
 		Node node = nodelist.item(0);
 		for(ShareRelation shareRelation : shareList){
-			Element folder = document.createElement(XMLConstruct.ChildElementShareRelation);
+			Element folder = this.document.createElement(XMLConstruct.ChildElementShareRelation);
 			folder.setAttribute(XMLConstruct.AttShareFolderId,
 					Integer.toString(shareRelation.getSharefolderId()));
 			folder.setIdAttribute(XMLConstruct.AttShareFolderId, true);
 			folder.setAttribute(XMLConstruct.AttMail, shareRelation.getMail());
 			node.appendChild(folder);
 		}	
-		conn.writeToXML();
+		this.conn.writeToXML();
 
 	}
 }

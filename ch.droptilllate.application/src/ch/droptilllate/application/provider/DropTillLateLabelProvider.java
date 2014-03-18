@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.jface.viewers.LabelProvider;
+
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.core.runtime.Path;
 import org.osgi.framework.Bundle;
@@ -32,7 +32,7 @@ public class DropTillLateLabelProvider implements ITableLabelProvider {
 		if (element instanceof EncryptedFileDob) {
 			switch (identifier) {
 			case DATE:
-				text = sdf.format(((EncryptedFileDob) element).getDate());
+				text = this.sdf.format(((EncryptedFileDob) element).getDate());
 				break;
 			case NAME:
 				text = ((EncryptedFileDob) element).getName().lastIndexOf(".") <= 0 ? ((EncryptedFileDob) element)

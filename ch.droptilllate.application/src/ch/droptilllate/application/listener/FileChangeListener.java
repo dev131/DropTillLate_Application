@@ -1,6 +1,6 @@
 package ch.droptilllate.application.listener;
 
-import java.io.File;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +9,7 @@ import org.apache.commons.vfs2.FileListener;
 
 import ch.droptilllate.application.com.FileSystemCom;
 import ch.droptilllate.application.model.EncryptedFileDob;
-import ch.droptilllate.application.properties.XMLConstruct;
+
 import ch.droptilllate.couldprovider.api.IFileSystemCom;
 
 public class FileChangeListener implements FileListener {
@@ -28,7 +28,7 @@ public class FileChangeListener implements FileListener {
 //		if(dob.get(0).getId() == Integer.parseInt(XMLConstruct.getIdXMLFiles())){
 //			file.encryptFile(destinationShareFolder, local)
 //		}
-		file.encryptFile(dob, null);
+		file.encryptFile(this.dob, null);
 
 	}
 

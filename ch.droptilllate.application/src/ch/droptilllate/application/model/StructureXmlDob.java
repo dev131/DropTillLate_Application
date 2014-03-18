@@ -27,35 +27,35 @@ public class StructureXmlDob {
 	 */
 	public StructureXmlDob(ShareFolder sharefolder, boolean local){
 			if(local){
-				fileName = XMLConstruct.NameLocalXML;
-				fileId = Integer.parseInt(XMLConstruct.IdLocalXMLFiles);
+				this.fileName = XMLConstruct.NameLocalXML;
+				this.fileId = Integer.parseInt(XMLConstruct.IdLocalXMLFiles);
 			}
 			else{
-				fileName = XMLConstruct.NameShareXML;
-				fileId = Integer.parseInt(XMLConstruct.IdShareXMLFiles);
+				this.fileName = XMLConstruct.NameShareXML;
+				this.fileId = Integer.parseInt(XMLConstruct.IdShareXMLFiles);
 			}
-		encryptedFileDob = new EncryptedFileDob(fileId, 
-				fileName, 
+		this.encryptedFileDob = new EncryptedFileDob(this.fileId, 
+				this.fileName, 
 				new Date(System.currentTimeMillis()), 
 				null, 
 				null,  
-				0l, 
+				0L, 
 				Integer.parseInt(XMLConstruct.IdXMLContainer));
-		shareRelation = new ShareRelation(Messages.getIdSize(), Messages.OwnerMail);
-		encryptedContainer = new EncryptedContainer(Integer.parseInt(XMLConstruct.IdXMLContainer), Messages.getIdSize());
+		this.shareRelation = new ShareRelation(Messages.getIdSize(), Messages.OwnerMail);
+		this.encryptedContainer = new EncryptedContainer(Integer.parseInt(XMLConstruct.IdXMLContainer), Messages.getIdSize());
 		
 	}
 
 	public EncryptedFileDob getEncryptedFileDob() {
-		return encryptedFileDob;
+		return this.encryptedFileDob;
 	}
 
 	public ShareRelation getShareRelation() {
-		return shareRelation;
+		return this.shareRelation;
 	}
 
 	public EncryptedContainer getEncryptedContainer() {
-		return encryptedContainer;
+		return this.encryptedContainer;
 	}
 
 

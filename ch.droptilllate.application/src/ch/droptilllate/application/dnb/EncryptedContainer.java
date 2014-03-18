@@ -16,7 +16,7 @@ public class EncryptedContainer {
 	}
 	
 	public Integer getId(){
-		return id;
+		return this.id;
 	}
 	
 	public void setId(Integer id){
@@ -24,7 +24,7 @@ public class EncryptedContainer {
 	}
 	
 	public Integer getShareFolderId(){
-		return shareFolderId;
+		return this.shareFolderId;
 	}
 	
 	public void setContainerID(Integer shareFolderId){

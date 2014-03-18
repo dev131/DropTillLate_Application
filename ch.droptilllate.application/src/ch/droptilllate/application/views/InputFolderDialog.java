@@ -1,6 +1,6 @@
 package ch.droptilllate.application.views;
 
-import org.eclipse.jface.dialogs.IMessageProvider;
+
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -53,8 +53,8 @@ public class InputFolderDialog extends TitleAreaDialog {
 		    GridData dataLastName = new GridData();
 		    dataLastName.grabExcessHorizontalSpace = true;
 		    dataLastName.horizontalAlignment = GridData.FILL;
-		    FolderNameText = new Text(container, SWT.BORDER);
-		    FolderNameText.setLayoutData(dataLastName);
+		    this.FolderNameText = new Text(container, SWT.BORDER);
+		    this.FolderNameText.setLayoutData(dataLastName);
 		  }
 
 
@@ -67,7 +67,7 @@ public class InputFolderDialog extends TitleAreaDialog {
 		  // save content of the Text fields because they get disposed
 		  // as soon as the Dialog closes
 		  private void saveInput() {
-			  FolderName = FolderNameText.getText();
+			  this.FolderName = this.FolderNameText.getText();
 
 		  }
 
@@ -78,7 +78,7 @@ public class InputFolderDialog extends TitleAreaDialog {
 		  }
 
 		  public String getLastName() {
-		    return FolderName;
+		    return this.FolderName;
 		  }
 		} 
 

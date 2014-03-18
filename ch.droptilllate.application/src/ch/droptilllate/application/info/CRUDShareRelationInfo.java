@@ -6,20 +6,20 @@ import ch.droptilllate.application.dnb.ShareRelation;
 
 public class CRUDShareRelationInfo {
 
-	private List<ShareRelation> ShareRelationListError;
-	private List<ShareRelation> ShareRelationListSuccess;
+	private List<ShareRelation> shareRelationListError;
+	private List<ShareRelation> shareRelationListSuccess;
 	public List<ShareRelation> getShareRelationListError() {
-		return ShareRelationListError;
+		return this.shareRelationListError;
 	}
 	public void setShareRelationListError(List<ShareRelation> shareRelationListError) {
-		ShareRelationListError = shareRelationListError;
+		this.shareRelationListError = shareRelationListError;
 	}
 	public List<ShareRelation> getShareRelationListSuccess() {
-		return ShareRelationListSuccess;
+		return this.shareRelationListSuccess;
 	}
 	public void setShareRelationListSuccess(
 			List<ShareRelation> shareRelationListSuccess) {
-		ShareRelationListSuccess = shareRelationListSuccess;
+		this.shareRelationListSuccess = shareRelationListSuccess;
 	}
 	
 	

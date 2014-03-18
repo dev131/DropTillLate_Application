@@ -1,14 +1,14 @@
 package ch.droptilllate.application.properties;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Properties;
+
+
+
+
 
 import org.eclipse.osgi.util.NLS;
 
-import ch.droptilllate.application.lifecycle.OSValidator;
+
 import ch.droptilllate.application.views.TableIdentifier;
 
 public class Messages extends NLS {

@@ -4,10 +4,10 @@ public class DeltaEvent {
 	protected Object actedUpon;
 	
 	public DeltaEvent(Object receiver) {
-		actedUpon = receiver;
+		this.actedUpon = receiver;
 	}
 	
 	public Object receiver() {
-		return actedUpon;
+		return this.actedUpon;
 	}
 }

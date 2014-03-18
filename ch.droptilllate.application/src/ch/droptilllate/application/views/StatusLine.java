@@ -16,9 +16,9 @@ public class StatusLine {
 		// TODO evt. Statusline
 		// statusLine.setMessage("gagag");
 		String message = "Welcome to DropTillLate";
-		textBox = new Text(parent, SWT.WRAP | SWT.BORDER);
-		textBox.setTextLimit(100);
-		textBox.setText(message);
+		this.textBox = new Text(parent, SWT.WRAP | SWT.BORDER);
+		this.textBox.setTextLimit(100);
+		this.textBox.setText(message);
 	
 	}
 

@@ -5,7 +5,7 @@ import java.util.List;
 
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
-import ch.droptilllate.application.query.ContainerQuery;
+
 import ch.droptilllate.application.query.FileQuery;
 import ch.droptilllate.application.xml.AbstractXmlDatabase;
 
@@ -15,55 +15,55 @@ public class EncryptedFileDao extends AbstractXmlDatabase {
 	private FileQuery filequery;
 
 	public List<EncryptedFileDob> getFilesInFolder(GhostFolderDob folder, String key)
-	{
-		if (filequery == null)
-			filequery = new FileQuery(key);
+	{ 
+		if (this.filequery == null)
+			this.filequery = new FileQuery(key);
 		List<EncryptedFileDob> files = new ArrayList<EncryptedFileDob>();
-		files = filequery.getFiles(folder);
+		files = this.filequery.getFiles(folder);
 		return files;
 	}
 
 	@Override
 	public Object newElement(Object obj, String key) {
-		if (filequery == null)
-			filequery = new FileQuery(key);
+		if (this.filequery == null)
+			this.filequery = new FileQuery(key);
 
-		return filequery.newFile((EncryptedFileDob) obj);
+		return this.filequery.newFile((EncryptedFileDob) obj);
 	}
 
 	@Override
 	public Object getElementByID(int id, String key) {
 		EncryptedFileDob encryptedFileDob = null;
-		if(filequery == null)
-				filequery = new FileQuery(key);		
-		 encryptedFileDob = filequery.getFile(id);
+		if(this.filequery == null)
+				this.filequery = new FileQuery(key);		
+		 encryptedFileDob = this.filequery.getFile(id);
 		return encryptedFileDob;
 	}
 
 	@Override
 	public void updateElement(Object obj, String key) {
-		if(filequery == null)
-			filequery = new FileQuery(key);	
-		filequery.updateFile((EncryptedFileDob) obj);
+		if(this.filequery == null)
+			this.filequery = new FileQuery(key);	
+		this.filequery.updateFile((EncryptedFileDob) obj);
 	}
 
 	@Override
 	public void deleteElement(Object obj, String key) {
-		if (filequery == null)
-			filequery = new FileQuery(key);
-			filequery.deleteFile((List<EncryptedFileDob>) obj);
+		if (this.filequery == null)
+			this.filequery = new FileQuery(key);
+			this.filequery.deleteFile((List<EncryptedFileDob>) obj);
 }
 
 	@Override
 	public Object checkDatabase(Object obj, String key) {
-		if (filequery == null)
-			filequery = new FileQuery(key);		
-		return filequery.checkDatabase((List<EncryptedFileDob>) obj);
+		if (this.filequery == null)
+			this.filequery = new FileQuery(key);		
+		return this.filequery.checkDatabase((List<EncryptedFileDob>) obj);
 	}
 	
 	public Object getFileIdsByContainerId(Integer id, String key){
-		if (filequery == null)
-			filequery = new FileQuery(key);	
+		if (this.filequery == null)
+			this.filequery = new FileQuery(key);	
 		return filequery.getFileIdsByContainerId(id);
 	}
 	

@@ -9,7 +9,6 @@ import ch.droptilllate.application.lifecycle.OSValidator;
 import ch.droptilllate.application.properties.Configuration;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.properties.XMLConstruct;
-import ch.droptilllate.application.xml.AbstractXmlDatabase;
 import ch.droptilllate.filesystem.preferences.Constants;
 
 public class KeyManager {
@@ -71,12 +70,7 @@ public class KeyManager {
 	 */
 	public boolean checkIfStructureFileExist() {
 		File file = new File(Configuration.getPropertieDropBoxPath(true) + Messages.getIdSize()+ OSValidator.getSlash()+ XMLConstruct.IdXMLContainer+"."+ Constants.CONTAINER_EXTENTION);
-		if(file.exists()){
-			return true;
-		}
-		else{
-			return false;
-		}
+		return file.exists();
 	}
 	
 

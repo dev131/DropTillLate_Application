@@ -1,25 +1,25 @@
 package ch.droptilllate.application.views;
-import java.awt.Color;
+
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
+
+
+
 import java.io.IOException;
-import java.net.URISyntaxException;
+
 import java.net.URL;
-import java.util.Properties;
+
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.window.ApplicationWindow;
+
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
-import org.eclipse.swt.widgets.Display;
+
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
@@ -35,8 +35,8 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.wb.swt.ResourceManager;
+
+
 import org.eclipse.swt.custom.CLabel;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
@@ -51,7 +51,7 @@ public class PasswordDialog extends Dialog {
   
   public PasswordDialog(Shell parentShell) {
     super(parentShell);
-    shell = parentShell;
+    this.shell = parentShell;
   }
 
   @Override
@@ -83,8 +83,8 @@ public class PasswordDialog extends Dialog {
     Label lblLoginPassword = new Label(container, SWT.NONE);
     lblLoginPassword.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
     lblLoginPassword.setText("Login Password");
-    loginPassword = new Text(container, SWT.BORDER);
-    loginPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+    this.loginPassword = new Text(container, SWT.BORDER);
+    this.loginPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
     new Label(container, SWT.NONE);
     new Label(container, SWT.NONE);
     new Label(container, SWT.NONE);
@@ -99,7 +99,7 @@ public class PasswordDialog extends Dialog {
          	}
 
 		private void openFolderDialog() {
-			    DirectoryDialog dialog = new DirectoryDialog(shell);
+			    DirectoryDialog dialog = new DirectoryDialog(PasswordDialog.this.shell);
 			    dialog.setText("Choose Dropbox Directory");
 			    String dropboxPath = dialog.open();
 			    if(dropboxPath != null)
@@ -123,7 +123,7 @@ public class PasswordDialog extends Dialog {
       		openFolderDialog();
       	}
       	private void openFolderDialog() {
-		    DirectoryDialog dialog = new DirectoryDialog(shell);
+		    DirectoryDialog dialog = new DirectoryDialog(PasswordDialog.this.shell);
 		    dialog.setText("Choose Tempfolder");
 		    String tempPath = dialog.open();
 		    if(tempPath != null)
@@ -192,13 +192,13 @@ public class PasswordDialog extends Dialog {
     new Label(container, SWT.NONE);
     new Label(container, SWT.NONE);
     
-    lblResult = new Label(container, SWT.NONE);
-    lblResult.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
-    lblResult.setEnabled(false);
-    lblResult.setFont(SWTResourceManager.getFont("Lucida Grande", 11, SWT.NORMAL));
-    lblResult.setText("Wrong Password! Try Again");
-    lblResult.setToolTipText("");
-    lblResult.setVisible(false);
+    this.lblResult = new Label(container, SWT.NONE);
+    this.lblResult.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+    this.lblResult.setEnabled(false);
+    this.lblResult.setFont(SWTResourceManager.getFont("Lucida Grande", 11, SWT.NORMAL));
+    this.lblResult.setText("Wrong Password! Try Again");
+    this.lblResult.setToolTipText("");
+    this.lblResult.setVisible(false);
     new Label(container, SWT.NONE);
     new Label(container, SWT.NONE);
     new Label(container, SWT.NONE);
@@ -208,13 +208,13 @@ public class PasswordDialog extends Dialog {
     new Label(container, SWT.NONE);
     new Label(container, SWT.NONE);
     
-    lblMissingPasswordOr = new Label(container, SWT.NONE);
-    lblMissingPasswordOr.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
-    lblMissingPasswordOr.setEnabled(false);
-    lblMissingPasswordOr.setFont(SWTResourceManager.getFont("Lucida Grande", 11, SWT.NORMAL));
-    lblMissingPasswordOr.setText("Missing password or folder definition!");
-    lblMissingPasswordOr.setToolTipText("");
-    lblMissingPasswordOr.setVisible(false);
+    this.lblMissingPasswordOr = new Label(container, SWT.NONE);
+    this.lblMissingPasswordOr.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+    this.lblMissingPasswordOr.setEnabled(false);
+    this.lblMissingPasswordOr.setFont(SWTResourceManager.getFont("Lucida Grande", 11, SWT.NORMAL));
+    this.lblMissingPasswordOr.setText("Missing password or folder definition!");
+    this.lblMissingPasswordOr.setToolTipText("");
+    this.lblMissingPasswordOr.setVisible(false);
     KeyManager km = new KeyManager();
     if((Configuration.getPropertieDropBoxPath(true) == null)){
     	//If path not defined
@@ -224,7 +224,7 @@ public class PasswordDialog extends Dialog {
     if (!km.checkIfStructureFileExist()){
     		  //FileStructure and Masterpassword missing
     	    	lblLoginPassword.setText("Create Password");   	    	  
-    	    	newUser = true;
+    	    	this.newUser = true;
     	      
     	    }
     return container;

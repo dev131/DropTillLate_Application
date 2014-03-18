@@ -1,18 +1,18 @@
 package ch.droptilllate.application.dao;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+
+
 import java.util.List;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+
+
+
 
 import ch.droptilllate.application.dnb.ShareFolder;
-import ch.droptilllate.application.model.EncryptedFileDob;
-import ch.droptilllate.application.model.GhostFolderDob;
-import ch.droptilllate.application.query.FileQuery;
-import ch.droptilllate.application.query.GhostFolderQuery;
+
+
+
+
 import ch.droptilllate.application.query.ShareFolderQuery;
 import ch.droptilllate.application.xml.AbstractXmlDatabase;
 
@@ -21,38 +21,38 @@ public class ShareFolderDao extends AbstractXmlDatabase {
 
 	@Override
 	public Object newElement(Object obj, String key) {
-		if (sharefolderQuery == null)
-			sharefolderQuery = new ShareFolderQuery(key);		 
-		 return sharefolderQuery.newShareFolder((ShareFolder) obj);
+		if (this.sharefolderQuery == null)
+			this.sharefolderQuery = new ShareFolderQuery(key);		 
+		 return this.sharefolderQuery.newShareFolder((ShareFolder) obj);
 	}
 
 	@Override
 	public Object getElementByID(int id, String key) {
-		if (sharefolderQuery == null)
-			sharefolderQuery = new ShareFolderQuery(key);		
-		return  sharefolderQuery.getShareFolder(id);
+		if (this.sharefolderQuery == null)
+			this.sharefolderQuery = new ShareFolderQuery(key);		
+		return  this.sharefolderQuery.getShareFolder(id);
 	}
 
 	@Override
 	public void updateElement(Object obj, String key) {
-		if (sharefolderQuery == null)
-			sharefolderQuery = new ShareFolderQuery(key);		
-		sharefolderQuery.updateShareFolder((ShareFolder) obj);	
+		if (this.sharefolderQuery == null)
+			this.sharefolderQuery = new ShareFolderQuery(key);		
+		this.sharefolderQuery.updateShareFolder((ShareFolder) obj);	
 	}
 
 	@Override
 	public void deleteElement(Object obj, String key) {
-		if (sharefolderQuery == null)
-			sharefolderQuery = new ShareFolderQuery(key);
-			sharefolderQuery.deleteShareFolder((List<ShareFolder>) obj);
+		if (this.sharefolderQuery == null)
+			this.sharefolderQuery = new ShareFolderQuery(key);
+			this.sharefolderQuery.deleteShareFolder((List<ShareFolder>) obj);
 	
 	}
 
 	@Override
 	public Object checkDatabase(Object obj, String key) {
-		if (sharefolderQuery == null)
-			sharefolderQuery = new ShareFolderQuery(key);		
-		return sharefolderQuery.checkDatabase((List<ShareFolder>) obj);
+		if (this.sharefolderQuery == null)
+			this.sharefolderQuery = new ShareFolderQuery(key);		
+		return this.sharefolderQuery.checkDatabase((List<ShareFolder>) obj);
 	}
 
 	@Override

@@ -4,7 +4,7 @@ import java.net.URL;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.dialogs.IDialogConstants;
+
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
@@ -15,10 +15,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.wb.swt.ResourceManager;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+
+
+
+
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
@@ -54,17 +54,17 @@ public class ImportDialog extends TitleAreaDialog {
 		label.setText("Password");
 		label.setBounds(10, 12, 55, 14);
 		
-		passwordText = new Text(container, SWT.BORDER);
-		passwordText.setBounds(87, 10, 333, 19);
+		this.passwordText = new Text(container, SWT.BORDER);
+		this.passwordText.setBounds(87, 10, 333, 19);
 		
 		Label label_1 = new Label(container, SWT.NONE);
 		label_1.setVisible(true);
 		label_1.setText("Folder Name");
 		label_1.setBounds(10, 60, 72, 14);
 		
-		foldernameText = new Text(container, SWT.BORDER);
-		foldernameText.setVisible(true);
-		foldernameText.setBounds(87, 58, 333, 19);
+		this.foldernameText = new Text(container, SWT.BORDER);
+		this.foldernameText.setVisible(true);
+		this.foldernameText.setBounds(87, 58, 333, 19);
 
 		return area;
 	}
@@ -80,7 +80,7 @@ public class ImportDialog extends TitleAreaDialog {
 	 @Override
 	  protected void okPressed() {
 		 saveInput();
-		    if(passwordString == null || foldernameString == null){
+		    if(this.passwordString == null || this.foldernameString == null){
 		    	//TODO error messages
 		    }
 		    else{
@@ -96,16 +96,16 @@ public class ImportDialog extends TitleAreaDialog {
 	  // save content of the Text fields because they get disposed
 	  // as soon as the Dialog closes
 	  private void saveInput() {
-		  passwordString = passwordText.getText();
-		  foldernameString = foldernameText.getText();
+		  this.passwordString = this.passwordText.getText();
+		  this.foldernameString = this.foldernameText.getText();
 	  }
 
 	public String getPasswordString() {
-		return passwordString;
+		return this.passwordString;
 	}
 
 	public String getFoldernameString() {
-		return foldernameString;
+		return this.foldernameString;
 	}
 	  
 

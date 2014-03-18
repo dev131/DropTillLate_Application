@@ -32,12 +32,12 @@ public class DecryptedView {
 	@PostConstruct
 	public void createControls(Composite parent, Shell shell) {
 		createImage();
-		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-		viewer.setContentProvider(new ViewContentProvider());
-		viewer.setLabelProvider(new ViewLabelProvider());
-		viewer.setInput(File.listRoots());
+		this.viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+		this.viewer.setContentProvider(new ViewContentProvider());
+		this.viewer.setLabelProvider(new ViewLabelProvider());
+		this.viewer.setInput(File.listRoots());
 		// add a doubleclicklistener
-		viewer.addDoubleClickListener(new IDoubleClickListener() {
+		this.viewer.addDoubleClickListener(new IDoubleClickListener() {
 			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				TreeViewer viewer = (TreeViewer) event.getViewer();
@@ -110,7 +110,7 @@ public class DecryptedView {
 		public Image getImage(Object element) {
 			File file = (File) element;
 			if (file.isDirectory()) {
-				return image;
+				return DecryptedView.this.image;
 			}
 			return null;
 		}
@@ -118,11 +118,11 @@ public class DecryptedView {
 
 	@Focus
 	public void setFocus() {
-		viewer.getControl().setFocus();
+		this.viewer.getControl().setFocus();
 	}
 
 	@PreDestroy
 	public void dispose() {
-		image.dispose();
+		this.image.dispose();
 	}
 }

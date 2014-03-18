@@ -2,7 +2,7 @@ package ch.droptilllate.application.views;
 
 import java.util.Observable;
 
-import ch.droptilllate.application.controller.ViewController;
+
 
 public class Status extends Observable{
 	private String message;
@@ -19,7 +19,7 @@ public class Status extends Observable{
 	}
 	
 	public String getMessage() {
-		return message;
+		return this.message;
 	}
 
 	public void setMessage(String message) {

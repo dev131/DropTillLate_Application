@@ -20,14 +20,14 @@ public class UpdateXMLImporter {
 	private Document document;
 	
 	public UpdateXMLImporter(String key){
-		conn = new XmlConnection(false, key);
-		document = conn.getXML();
+		this.conn = new XmlConnection(false, key);
+		this.document = this.conn.getXML();
 	}
 	public List<EncryptedFileDob> getFileUpdateXML(){
 		List<EncryptedFileDob> files = new ArrayList<EncryptedFileDob>();	
 		//String xpath= "/collection/file";
 
-		NodeList nodelist = document.getElementsByTagName(XMLConstruct.ChildElementFile);
+		NodeList nodelist = this.document.getElementsByTagName(XMLConstruct.ChildElementFile);
 		for (int i = 0; i < nodelist.getLength(); i++) {
 			String date1 = nodelist.item(i).getAttributes().getNamedItem(XMLConstruct.AttDate)
 					.getNodeValue().toString();
@@ -57,7 +57,7 @@ public class UpdateXMLImporter {
 	
 	public List<GhostFolderDob> getFolderUpdateXML(){
 		List<GhostFolderDob> folders = new ArrayList<GhostFolderDob>();
-		NodeList nodelist = document.getElementsByTagName(XMLConstruct.ChildElementGhostFolder);
+		NodeList nodelist = this.document.getElementsByTagName(XMLConstruct.ChildElementGhostFolder);
 		// cast the result to a DOM NodeList
 		for (int i = 0; i < nodelist.getLength(); i++) {
 			//Integer id, String name, GhostFolderDob parent
@@ -71,7 +71,7 @@ public class UpdateXMLImporter {
 	}
 	
 	public List<EncryptedContainer> getContainerUpdateXML(){
-		NodeList nodelist = document.getElementsByTagName(XMLConstruct.ChildElementContainer);
+		NodeList nodelist = this.document.getElementsByTagName(XMLConstruct.ChildElementContainer);
 		// cast the result to a DOM NodeList
 		List<EncryptedContainer> containerList = new ArrayList<EncryptedContainer>();
 		for (int idx = 0; idx < nodelist.getLength(); idx++) {
@@ -85,7 +85,7 @@ public class UpdateXMLImporter {
 	}
 	
 	public List<ShareRelation> getShareRelationUpdateXML(){
-		NodeList nodelist = document.getElementsByTagName(XMLConstruct.ChildElementShareRelation);
+		NodeList nodelist = this.document.getElementsByTagName(XMLConstruct.ChildElementShareRelation);
 		List<ShareRelation> shareList = new ArrayList<ShareRelation>();
 		for (int idx = 0; idx < nodelist.getLength(); idx++) {
 			ShareRelation tmp = new ShareRelation(

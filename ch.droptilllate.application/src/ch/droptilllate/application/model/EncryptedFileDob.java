@@ -76,11 +76,11 @@ public class EncryptedFileDob extends DroppedElement {
 	
 	// =========================================================================
 
-	public String defineFileType(String name) {
+	public final String defineFileType(String name) {
 		String ext = "";
-		if (this.name.lastIndexOf(".") > 0) {
-			ext = this.name.substring(this.name.lastIndexOf(".") + 1,
-					this.name.length());
+		if (name.lastIndexOf(".") > 0) {
+			ext = name.substring(name.lastIndexOf(".") + 1,
+					name.length());
 		}
 		return ext.toLowerCase();
 	}

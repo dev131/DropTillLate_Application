@@ -13,18 +13,18 @@ public class GhostFolderDao extends AbstractXmlDatabase {
 
 	public List<GhostFolderDob> getFoldersInFolder(
 			GhostFolderDob folder, String key) {
-		if (folderquery == null)
-			folderquery = new GhostFolderQuery(key);
+		if (this.folderquery == null)
+			this.folderquery = new GhostFolderQuery(key);
 		List<GhostFolderDob> folders = new ArrayList<GhostFolderDob>();
-		folders = folderquery.getFolderInFolder(folder);
+		folders = this.folderquery.getFolderInFolder(folder);
 		return folders;
 	}
 
 	@Override
 	public Object newElement(Object obj, String key) {
-		if (folderquery == null)
-			folderquery = new GhostFolderQuery(key);
-		return  folderquery.newFolder((GhostFolderDob) obj);
+		if (this.folderquery == null)
+			this.folderquery = new GhostFolderQuery(key);
+		return  this.folderquery.newFolder((GhostFolderDob) obj);
 	}
 
 	@Override
@@ -35,23 +35,23 @@ public class GhostFolderDao extends AbstractXmlDatabase {
 
 	@Override
 	public void updateElement(Object obj, String key) {
-		if (folderquery == null)
-			folderquery = new GhostFolderQuery(key);		
-		folderquery.updateFolder((GhostFolderDob) obj);
+		if (this.folderquery == null)
+			this.folderquery = new GhostFolderQuery(key);		
+		this.folderquery.updateFolder((GhostFolderDob) obj);
 	}
 
 	@Override
 	public void deleteElement(Object obj, String key) {	
-		if (folderquery == null)
-			folderquery = new GhostFolderQuery(key);
-			folderquery.deleteFolder((List<GhostFolderDob>) obj);	
+		if (this.folderquery == null)
+			this.folderquery = new GhostFolderQuery(key);
+			this.folderquery.deleteFolder((List<GhostFolderDob>) obj);	
 	}
 
 	@Override
 	public Object checkDatabase(Object obj, String key) {
-		if (folderquery == null)
-			folderquery = new GhostFolderQuery(key);		
-		return folderquery.checkDatabase((List<GhostFolderDob>) obj);
+		if (this.folderquery == null)
+			this.folderquery = new GhostFolderQuery(key);		
+		return this.folderquery.checkDatabase((List<GhostFolderDob>) obj);
 		
 	}
 

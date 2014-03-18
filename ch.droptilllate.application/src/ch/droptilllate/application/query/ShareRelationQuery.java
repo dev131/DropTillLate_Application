@@ -19,7 +19,7 @@ public class ShareRelationQuery {
 	private XmlConnection conn;
 
 	public ShareRelationQuery(String key) {
-		conn = new XmlConnection(true, key);	
+		this.conn = new XmlConnection(true, key);	
 	}
 
 	/**
@@ -29,23 +29,23 @@ public class ShareRelationQuery {
 	 * @return
 	 */
 	public ShareRelation newShareRelation(ShareRelation shareRelation) {
-		document = conn.getXML();
-		NodeList nodelist = document.getElementsByTagName(XMLConstruct.RootElementShareRelation);
+		this.document = this.conn.getXML();
+		NodeList nodelist = this.document.getElementsByTagName(XMLConstruct.RootElementShareRelation);
 		Node node = nodelist.item(0);
-		Element folder = document.createElement(XMLConstruct.ChildElementShareRelation);
+		Element folder = this.document.createElement(XMLConstruct.ChildElementShareRelation);
 		folder.setAttribute(XMLConstruct.AttShareFolderId,
 				Integer.toString(shareRelation.getSharefolderId()));
 		folder.setAttribute(XMLConstruct.AttMail, shareRelation.getMail());
 		node.appendChild(folder);
-		conn.writeToXML();
+		this.conn.writeToXML();
 		return shareRelation;
 	}
 
 	public List<ShareRelation> getShareRelations(int shareRelationId) {
 		List<ShareRelation> shareRelations = new ArrayList<ShareRelation>();
-		document = conn.getXML();
+		this.document = this.conn.getXML();
 		// cast the result to a DOM NodeList
-		NodeList nodes = conn.executeQuery(XMLConstruct.getShareRelationExpression()+"[@"
+		NodeList nodes = this.conn.executeQuery(XMLConstruct.getShareRelationExpression()+"[@"
 				+ XMLConstruct.AttShareFolderId + "='" + shareRelationId + "']");
 		for (int i = 0; i < nodes.getLength(); i++) {
 			//Integer sharefolderId, String mail
@@ -66,9 +66,9 @@ public class ShareRelationQuery {
 	 * @return
 	 */
 	public boolean updateShareRelation(ShareRelation shareRelation) {
-		document = conn.getXML();
+		this.document = this.conn.getXML();
 		// cast the result to a DOM NodeList
-		NodeList nodes = conn.executeQuery(XMLConstruct.getShareRelationExpression()+ "[@"
+		NodeList nodes = this.conn.executeQuery(XMLConstruct.getShareRelationExpression()+ "[@"
 				+ XMLConstruct.AttShareFolderId + "='"
 				+ shareRelation.getSharefolderId() + "']");
 		for (int idx = 0; idx < nodes.getLength(); idx++) {
@@ -79,7 +79,7 @@ public class ShareRelationQuery {
 		}
 		System.out.println("Everything updated.");
 		// save xml file back
-		conn.writeToXML();
+		this.conn.writeToXML();
 		return true;
 	}
 
@@ -90,24 +90,24 @@ public class ShareRelationQuery {
 	 * @return
 	 */
 	public boolean deleteShareFolder(ShareRelation shareRelation) {
-		document = conn.getXML();
-		NodeList nodes = conn.executeQuery(XMLConstruct.getShareRelationExpression()+ "[@"
+		this.document = this.conn.getXML();
+		NodeList nodes = this.conn.executeQuery(XMLConstruct.getShareRelationExpression()+ "[@"
 				+ XMLConstruct.AttShareFolderId + "='"
 				+ shareRelation.getSharefolderId() + "']");
 		for (int idx = 0; idx < nodes.getLength(); idx++) {
 			nodes.item(idx).getParentNode().removeChild(nodes.item(idx));
 		}
-		conn.writeToXML();
+		this.conn.writeToXML();
 		return true;
 	}
 
 	public CRUDShareRelationInfo checkDatabase(
 			List<ShareRelation> shareRelationList) {
-		document = conn.getXML();
+		this.document = this.conn.getXML();
 		List<ShareRelation> shareRelationSuccessList = new ArrayList<ShareRelation>();
 		List<ShareRelation> shareRelationErrorList = new ArrayList<ShareRelation>();
 		for (ShareRelation relation : shareRelationList) {
-			NodeList nodes = conn.executeQuery(XMLConstruct.getShareRelationExpression()+ "[@"
+			NodeList nodes = this.conn.executeQuery(XMLConstruct.getShareRelationExpression()+ "[@"
 					+ XMLConstruct.AttShareFolderId + "='"
 					+ relation.getSharefolderId() + "']");
 			if (nodes.getLength() > 0) {

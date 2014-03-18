@@ -42,7 +42,7 @@ public class GhostFolderDob extends DroppedElement{
 	}
 
 	public List<GhostFolderDob> getFolders() {
-		return folders;
+		return this.folders;
 	}
 
 	public void removeFolder(GhostFolderDob folder) {
@@ -66,7 +66,7 @@ public class GhostFolderDob extends DroppedElement{
 	}
 
 	public List<EncryptedFileDob> getFiles() {
-		return files;
+		return this.files;
 	}
 
 	public void removeFile(EncryptedFileDob file) {

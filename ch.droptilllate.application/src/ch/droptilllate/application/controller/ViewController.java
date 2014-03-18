@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.FileSystemManager;
-import org.apache.commons.vfs2.VFS;
-import org.apache.commons.vfs2.impl.DefaultFileMonitor;
+
+
+
+
+
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -149,9 +149,9 @@ public class ViewController {
 	private void getFolderContent(GhostFolderDob folder) {
 		GhostFolderDao encryptedFolderDao = new GhostFolderDao();
 		EncryptedFileDao encryptedFileDao = new EncryptedFileDao();
-		folder.addFiles(((EncryptedFileDao) encryptedFileDao)
+		folder.addFiles((encryptedFileDao)
 				.getFilesInFolder(folder, null));
-		List<GhostFolderDob> childFolders = ((GhostFolderDao) encryptedFolderDao)
+		List<GhostFolderDob> childFolders = (encryptedFolderDao)
 				.getFoldersInFolder(folder, null);
 		if (childFolders != null && childFolders.size() > 0) {
 			folder.addFolders(childFolders);
@@ -258,23 +258,8 @@ public class ViewController {
 	 */
 	public void decrypteFile() {
 		// TODO Statusline
-		List<EncryptedFileDob> fileList = new ArrayList<EncryptedFileDob>();
-		// List inserts and prepare for delete
-		TreeItem[] treeItems = tree.getSelection();
-		if (treeItems != null) {
-			for (int i = 0; i < treeItems.length; i++) {
-				Object obj = treeItems[i].getData();
-				// IF selection a Folder
-				if (obj.getClass() == GhostFolderDob.class) {
-					// do Nothing
-				}
-				// IF selection a File
-				if (obj.getClass() == EncryptedFileDob.class) {
-					EncryptedFileDob f2 = (EncryptedFileDob) obj;
-					fileList.add(f2);
-				}
-			}
-		}
+		List<EncryptedFileDob> fileList = getSelectedFileList();
+
 		// check succesfull list
 		IFileSystemCom iFileSystem = FileSystemCom.getInstance();
 		CRUDCryptedFileInfo result = iFileSystem.decryptFile(fileList);
@@ -295,6 +280,26 @@ public class ViewController {
 			Status status = Status.getInstance();
 			status.setMessage(fileDob.getName() + " -> decryption not worked");
 		}
+	}
+
+	private List<EncryptedFileDob> getSelectedFileList() {
+		List<EncryptedFileDob> fileList = new ArrayList<EncryptedFileDob>();
+		TreeItem[] treeItems = tree.getSelection();
+		if (treeItems != null) {
+			for (int i = 0; i < treeItems.length; i++) {
+				Object obj = treeItems[i].getData();
+				// IF selection a Folder
+				if (obj.getClass() == GhostFolderDob.class) {
+					// do Nothing
+				}
+				// IF selection a File
+				if (obj.getClass() == EncryptedFileDob.class) {
+					EncryptedFileDob f2 = (EncryptedFileDob) obj;
+					fileList.add(f2);
+				}
+			}			
+		}
+		return fileList;
 	}
 
 	/**
@@ -409,23 +414,7 @@ public class ViewController {
 			MessageDialog.openError(shell, "Error", "Error occured no password or email");
 		}
 		else{
-			List<EncryptedFileDob> fileList = new ArrayList<EncryptedFileDob>();
-			// List inserts and prepare for delete
-			TreeItem[] treeItems = tree.getSelection();
-			if (treeItems != null) {
-				for (int i = 0; i < treeItems.length; i++) {
-					Object obj = treeItems[i].getData();
-					// IF selection a Folder
-					if (obj.getClass() == GhostFolderDob.class) {
-						// do Nothing
-					}
-					// IF selection a File
-					if (obj.getClass() == EncryptedFileDob.class) {
-						EncryptedFileDob f2 = (EncryptedFileDob) obj;
-						fileList.add(f2);
-					}
-				}
-			}
+			List<EncryptedFileDob> fileList =  getSelectedFileList();
 			ShareManager shareManager = new ShareManager();
 			ShareFolder shareFolder = shareManager.newShareRelation(fileList, password, mailList);
 			//TODO check if it worked

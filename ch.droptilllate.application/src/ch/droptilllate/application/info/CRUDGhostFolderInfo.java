@@ -9,14 +9,14 @@ public class CRUDGhostFolderInfo {
 	private List<GhostFolderDob> encryptedFolderListSuccess;
 	
 	public List<GhostFolderDob> getEncryptedFolderListError() {
-		return encryptedFolderListError;
+		return this.encryptedFolderListError;
 	}
 	public void setEncryptedFolderListError(
 			List<GhostFolderDob> encryptedFolderListError) {
 		this.encryptedFolderListError = encryptedFolderListError;
 	}
 	public List<GhostFolderDob> getEncryptedFolderListSuccess() {
-		return encryptedFolderListSuccess;
+		return this.encryptedFolderListSuccess;
 	}
 	public void setEncryptedFolderListSuccess(
 			List<GhostFolderDob> encryptedFolderListSuccess) {

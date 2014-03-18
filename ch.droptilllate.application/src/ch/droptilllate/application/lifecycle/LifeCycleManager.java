@@ -1,7 +1,7 @@
 package ch.droptilllate.application.lifecycle;
 
 
-import java.util.ArrayList;
+
 
 import org.eclipse.e4.ui.workbench.lifecycle.PostContextCreate;
 import org.eclipse.equinox.app.IApplicationContext;
@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 
 import ch.droptilllate.application.views.PasswordDialog;
-import ch.droptilllate.application.views.ShareDialog;
+
 
 
 // for a extended example see

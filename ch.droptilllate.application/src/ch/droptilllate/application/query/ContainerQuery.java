@@ -24,7 +24,7 @@ import ch.droptilllate.application.xml.XmlConnection;
 public class ContainerQuery {
 	private XmlConnection conn;
 	public ContainerQuery(String key) {
-		conn = new XmlConnection(true, key);
+		this.conn = new XmlConnection(true, key);
 	}
 
 	/**
@@ -47,15 +47,15 @@ public class ContainerQuery {
 		else{
 			if(getContainerByID(container.getId())!= null){
 				return;
-			};
+			}
 		}
-		Document document = conn.getXML();
+		Document document = this.conn.getXML();
 		NodeList nodelist = document.getElementsByTagName(XMLConstruct.RootElementContainer);
 		Node node = nodelist.item(0);
 		//GetNodeList by name
 		for(int i=0; i<nodelist.getLength(); i++){
 			  Node childNode = nodelist.item(i);
-			  if (childNode.getNodeName() == XMLConstruct.RootElementContainer) {
+			  if (childNode.getNodeName().equals(XMLConstruct.RootElementContainer)) {
 			     node = nodelist.item(i);
 			  }
 			}
@@ -65,13 +65,13 @@ public class ContainerQuery {
 		element.setAttribute(XMLConstruct.AttShareFolderId,
 				Integer.toString(container.getShareFolderId()));
 		node.appendChild(element);
-		conn.writeToXML();
+		this.conn.writeToXML();
 	}
 	private boolean checkExist(int containerId) {
-		conn.getXML();
+		this.conn.getXML();
 		boolean result = false;
 		// cast the result to a DOM NodeList
-		NodeList nodes = conn.executeQuery(XMLConstruct.getContainerExpression()+ "[@"+XMLConstruct.AttId+"='"
+		NodeList nodes = this.conn.executeQuery(XMLConstruct.getContainerExpression()+ "[@"+XMLConstruct.AttId+"='"
 				+ containerId + "']");
 		if (nodes.getLength() > 0)
 			result = true;
@@ -79,9 +79,9 @@ public class ContainerQuery {
 	}
 
 	public EncryptedContainer getContainerByID(int id) {
-		conn.getXML();
+		this.conn.getXML();
 		// cast the result to a DOM NodeList
-		NodeList nodes = conn.executeQuery(XMLConstruct.getContainerExpression()+ "[@"+XMLConstruct.AttId+"='" + id
+		NodeList nodes = this.conn.executeQuery(XMLConstruct.getContainerExpression()+ "[@"+XMLConstruct.AttId+"='" + id
 				+ "']");
 		EncryptedContainer container = null;
 		if (nodes.getLength() > 0) {
@@ -99,9 +99,9 @@ public class ContainerQuery {
 	 * @return
 	 */
 	public boolean updateContainer(EncryptedContainer container) {
-		conn.getXML();
+		this.conn.getXML();
 		// cast the result to a DOM NodeList
-		NodeList nodes = conn.executeQuery(XMLConstruct.getContainerExpression() + "[@"+XMLConstruct.AttId+"='"
+		NodeList nodes = this.conn.executeQuery(XMLConstruct.getContainerExpression() + "[@"+XMLConstruct.AttId+"='"
 				+ container.getId() + "']");
 		for (int idx = 0; idx < nodes.getLength(); idx++) {
 			nodes.item(idx)
@@ -112,7 +112,7 @@ public class ContainerQuery {
 		}
 		System.out.println("Everything updated.");
 		// save xml file back
-		conn.writeToXML();
+		this.conn.writeToXML();
 		return true;
 	}
 
@@ -123,15 +123,15 @@ public class ContainerQuery {
 	 * @return
 	 */
 	public boolean deleteContainer(List<EncryptedContainer> container) {
-		Document document = conn.getXML();
+		Document document = this.conn.getXML();
 		for(EncryptedContainer container1 : container){
-		NodeList nodes = conn.executeQuery(XMLConstruct.getContainerExpression() + "[@"+XMLConstruct.AttId+"='"
+		NodeList nodes = this.conn.executeQuery(XMLConstruct.getContainerExpression() + "[@"+XMLConstruct.AttId+"='"
 				+ container1.getId() + "']");
 		for (int idx = 0; idx < nodes.getLength(); idx++) {
 			nodes.item(idx).getParentNode().removeChild(nodes.item(idx));
 		}
 		}
-		conn.writeToXML();
+		this.conn.writeToXML();
 		return true;
 	}
 

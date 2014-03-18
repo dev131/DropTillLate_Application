@@ -20,20 +20,19 @@
 
    <windowImages i16="/icons/icon_16x16.png" i32="/icons/icon_32x32.png" i48="/icons/icon_32x32.png" i64="/icons/icon_32x32.png" i128="/icons/icon_128x128.png"/>
 
-
    <launcher name="DropTillLate">
-      <macosx icon="/icons/logos.icns"/>
+      <macosx icon="/icons/icon_osx.icns"/>
       <solaris/>
-      <win useIco="false">
+      <win useIco="true">
+         <ico path="/icons/icon_windows.ico"/>
          <bmp/>
       </win>
    </launcher>
 
-
    <vm>
       <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7</macos>
+      <windows include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7</windows>
    </vm>
-
 
    <plugins>
       <plugin id="ch.droptilllate.application"/>

@@ -1,17 +1,12 @@
 package ch.droptilllate.application.com;
 
-import java.io.File;
-import java.sql.Date;
+
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-
-import org.apache.commons.io.FilenameUtils;
 
 import ch.droptilllate.application.converter.FileInfoConverter;
 import ch.droptilllate.application.dao.ContainerDao;
-import ch.droptilllate.application.dao.EncryptedFileDao;
 import ch.droptilllate.application.dao.ShareFolderDao;
 import ch.droptilllate.application.dnb.EncryptedContainer;
 import ch.droptilllate.application.dnb.ShareFolder;
@@ -20,8 +15,6 @@ import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.StructureXmlDob;
 import ch.droptilllate.application.properties.Configuration;
 import ch.droptilllate.application.properties.Messages;
-import ch.droptilllate.application.properties.XMLConstruct;
-import ch.droptilllate.application.views.Status;
 import ch.droptilllate.couldprovider.api.IFileSystemCom;
 import ch.droptilllate.filesystem.error.FileError;
 import ch.droptilllate.filesystem.info.*;
@@ -36,8 +29,7 @@ import ch.droptilllate.filesystem.api.IFileSystem;
  * @author marcobetschart
  * 
  */
-public class FileSystemCom implements IFileSystemCom {
-	
+public class FileSystemCom implements IFileSystemCom {	
 	private static FileSystemCom instance = null;
 	private IFileSystem ifile;
 	private FileSystemCom(){

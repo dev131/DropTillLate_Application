@@ -5,11 +5,11 @@ import ch.droptilllate.application.listener.NullDeltaListener;
 import ch.droptilllate.application.model.GhostFolderDob;
 
 public abstract class DroppedElement {
-	protected IDeltaListener listener = NullDeltaListener.getSoleInstance();
+	private IDeltaListener listener = NullDeltaListener.getSoleInstance();
 	
 	private GhostFolderDob parent;
-	protected String name;
-	protected Integer id;
+	private String name;
+	private Integer id;
 	
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
@@ -32,17 +32,17 @@ public abstract class DroppedElement {
 	}
 
 	protected void fireAdd(Object added) {
-		listener.add(new DeltaEvent(added));
+		this.listener.add(new DeltaEvent(added));
 	}
 
 	protected void fireRemove(Object removed) {
-		listener.remove(new DeltaEvent(removed));
+		this.listener.remove(new DeltaEvent(removed));
 	}
 	
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	
 	public GhostFolderDob getParent() {
-		return parent;
+		return this.parent;
 	}
 
 	public void setParent(GhostFolderDob parent) {
@@ -50,7 +50,7 @@ public abstract class DroppedElement {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(String name) {
@@ -58,7 +58,7 @@ public abstract class DroppedElement {
 	}
 
 	public Integer getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Integer id) {

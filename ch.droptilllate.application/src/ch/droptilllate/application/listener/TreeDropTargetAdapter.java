@@ -24,8 +24,8 @@ import ch.droptilllate.application.xml.AbstractXmlDatabase;
 
 public class TreeDropTargetAdapter extends DropTargetAdapter {
 	@Inject
-	EModelService service;
-	MApplication application;
+	private EModelService service;
+	private MApplication application;
 
 	private FileTransfer fileTransfer = FileTransfer.getInstance();
 	private TreeViewer treeViewer;
@@ -36,7 +36,7 @@ public class TreeDropTargetAdapter extends DropTargetAdapter {
 			GhostFolderDob dragOverFolder) {
 		this.treeViewer = treeViewer;
 		this.root = dragOverFolder;
-		this.dragOverFolder = root;
+		this.dragOverFolder = this.root;
 	}
 
 	@Override
@@ -72,29 +72,29 @@ public class TreeDropTargetAdapter extends DropTargetAdapter {
 		EncryptedFileDao encryptedFileDao = new EncryptedFileDao();
 		GhostFolderDao encryptedFolderDao = new GhostFolderDao();
 		// Handle Drag'N'Drop from Desktop into tree
-		if (fileTransfer.isSupportedType(event.currentDataType)) {
+		if (this.fileTransfer.isSupportedType(event.currentDataType)) {
 			final String[] droppedFileInformation = (String[]) event.data;
 			TreeItem item = null;
 			if (event.item != null) {
 				item = (TreeItem) event.item;
 				if (item.getData() instanceof GhostFolderDob) {
-					dragOverFolder = (GhostFolderDob) item.getData();
+					this.dragOverFolder = (GhostFolderDob) item.getData();
 					item.setExpanded(true);
 				} else {
-					dragOverFolder = ((DroppedElement) item.getData()).getParent();
+					this.dragOverFolder = ((DroppedElement) item.getData()).getParent();
 				}
 			}
 			try {
 				// TODO Monitor
 				 ViewController viewcontroller = ViewController.getInstance();
-				 viewcontroller.encryptDropElements(droppedFileInformation, dragOverFolder);
+				 viewcontroller.encryptDropElements(droppedFileInformation, this.dragOverFolder);
 
 			} catch (Exception e) {
 				// log.error("Error at proccessing dropped data. " + e);
 			}
 			// set dragOverFolder back to root for next drop. Otherwise dropping
 			// to root wont be possible.
-			dragOverFolder = root;
+			this.dragOverFolder = this.root;
 		}
 
 		// This part handles Drag'N'Drop within the tree
@@ -110,10 +110,10 @@ public class TreeDropTargetAdapter extends DropTargetAdapter {
 					item = (TreeItem) event.item;
 
 					if (item.getData() instanceof GhostFolderDob) {
-						dragOverFolder = (GhostFolderDob) item.getData();
+						this.dragOverFolder = (GhostFolderDob) item.getData();
 						item.setExpanded(true);
 					} else {
-						dragOverFolder = ((DroppedElement) item.getData())
+						this.dragOverFolder = ((DroppedElement) item.getData())
 								.getParent();
 					}
 				}
@@ -121,16 +121,16 @@ public class TreeDropTargetAdapter extends DropTargetAdapter {
 				if (draggedElement instanceof EncryptedFileDob) {
 					EncryptedFileDob draggedFile = (EncryptedFileDob) draggedElement;
 					draggedFile.getParent().removeFile(draggedFile);
-					draggedFile.setParent(dragOverFolder);
+					draggedFile.setParent(this.dragOverFolder);
 					//Write to Database
 					encryptedFileDao.updateElement(draggedFile, null);
-					dragOverFolder.addFile(draggedFile);
+					this.dragOverFolder.addFile(draggedFile);
 				} else if (draggedElement instanceof GhostFolderDob) {
 					GhostFolderDob draggedFolder = (GhostFolderDob) draggedElement;
 
-					GhostFolderDob currentDragOverFolder = dragOverFolder;
+					GhostFolderDob currentDragOverFolder = this.dragOverFolder;
 
-					while (!currentDragOverFolder.equals(root)) {
+					while (!currentDragOverFolder.equals(this.root)) {
 						if (currentDragOverFolder.equals(draggedFolder)) {
 							itemsNotMoved++;
 							continue draggedElements;
@@ -140,13 +140,13 @@ public class TreeDropTargetAdapter extends DropTargetAdapter {
 					}
 
 					draggedFolder.getParent().removeFolder(draggedFolder);
-					draggedFolder.setParent(dragOverFolder);
+					draggedFolder.setParent(this.dragOverFolder);
 					encryptedFolderDao.updateElement(draggedFolder, null);
-					dragOverFolder.addFolder(draggedFolder);
+					this.dragOverFolder.addFolder(draggedFolder);
 				}
 				// set dragOverFolder back to root for next drop. Otherwise
 				// dropping to root wont be possible.
-				dragOverFolder = root;
+				this.dragOverFolder = this.root;
 			}
 
 			if (itemsNotMoved > 0) {
@@ -156,6 +156,6 @@ public class TreeDropTargetAdapter extends DropTargetAdapter {
 			itemsNotMoved = 0;
 		}
 		TreeDragSourceListener.draggedDroppedElements.clear();
-		treeViewer.refresh();
+		this.treeViewer.refresh();
 	}
 }

@@ -9,14 +9,14 @@ public class CRUDCryptedFileInfo {
 	private List<EncryptedFileDob> encryptedFileListSuccess;
 	
 	public List<EncryptedFileDob> getEncryptedFileListError() {
-		return encryptedFileListError;
+		return this.encryptedFileListError;
 	}
 	public void setEncryptedFileListError(
 			List<EncryptedFileDob> encryptedFileListError) {
 		this.encryptedFileListError = encryptedFileListError;
 	}
 	public List<EncryptedFileDob> getEncryptedFileListSuccess() {
-		return encryptedFileListSuccess;
+		return this.encryptedFileListSuccess;
 	}
 	public void setEncryptedFileListSuccess(
 			List<EncryptedFileDob> encryptedFileListSuccess) {

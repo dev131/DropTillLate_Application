@@ -10,14 +10,14 @@ public class CRUDContainerInfo {
 	private List<EncryptedContainer> encryptedContainerListSuccess;
 	
 	public List<EncryptedContainer> getEncryptedContainerListError() {
-		return encryptedContainerListError;
+		return this.encryptedContainerListError;
 	}
 	public void setEncryptedContainerListError(
 			List<EncryptedContainer> encryptedContainerListError) {
 		this.encryptedContainerListError = encryptedContainerListError;
 	}
 	public List<EncryptedContainer> getEncryptedContainerListSuccess() {
-		return encryptedContainerListSuccess;
+		return this.encryptedContainerListSuccess;
 	}
 	public void setEncryptedContainerListSuccess(
 			List<EncryptedContainer> encryptedContainerListSuccess) {

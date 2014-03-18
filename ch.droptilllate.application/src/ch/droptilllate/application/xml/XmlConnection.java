@@ -114,7 +114,7 @@ public class XmlConnection {
 		if(fileSystem.decryptFile(shareFolder, true)){
 			//TODO Successfull
 			status = true;
-		};
+		}
 		StructureXmlDob sxml;
 		File file = new File(path);	
 		if(!local){

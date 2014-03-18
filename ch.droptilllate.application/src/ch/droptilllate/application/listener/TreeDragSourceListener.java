@@ -28,7 +28,7 @@ public class TreeDragSourceListener implements DragSourceListener {
 		if (selection.length > 0 && selection[0].getItemCount() >= 0) {
 			event.doit = true;
 			for (TreeItem currentSelection : selection) {
-				dragSourceItems.add(currentSelection);
+				this.dragSourceItems.add(currentSelection);
 			}
 		} else {
 			event.doit = false;
@@ -38,7 +38,7 @@ public class TreeDragSourceListener implements DragSourceListener {
 
 	@Override
 	public void dragSetData(DragSourceEvent event) {
-		for (TreeItem currentDragSourceItem : dragSourceItems) {
+		for (TreeItem currentDragSourceItem : this.dragSourceItems) {
 			TreeDragSourceListener.draggedDroppedElements
 					.add((DroppedElement) currentDragSourceItem.getData());
 		}
@@ -48,11 +48,11 @@ public class TreeDragSourceListener implements DragSourceListener {
 	@Override
 	public void dragFinished(DragSourceEvent event) {
 		if (event.detail == DND.DROP_MOVE) {
-			for (TreeItem currentDragSourceItem : dragSourceItems) {
+			for (TreeItem currentDragSourceItem : this.dragSourceItems) {
 				currentDragSourceItem.dispose();
 			}
 		}
-		dragSourceItems.clear();
+		this.dragSourceItems.clear();
 	}
 
 }

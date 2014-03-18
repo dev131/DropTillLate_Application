@@ -12,13 +12,13 @@ public class ShareRelation {
 		this.mail = mail;
 	}
 	public Integer getSharefolderId() {
-		return sharefolderId;
+		return this.sharefolderId;
 	}
 	public void setSharefolderId(Integer sharefolderId) {
 		this.sharefolderId = sharefolderId;
 	}
 	public String getMail() {
-		return mail;
+		return this.mail;
 	}
 	public void setMail(String mail) {
 		this.mail = mail;

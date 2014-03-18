@@ -20,7 +20,7 @@ public class ShareFolder {
 	}
 	
 	public Integer getID(){
-		return id;
+		return this.id;
 	}
 	
 	public void setID(Integer id){
@@ -28,7 +28,7 @@ public class ShareFolder {
 	}
 	
 	public String getKey(){
-		return key;
+		return this.key;
 	}
 	
 	public void setKey(String key){

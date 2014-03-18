@@ -15,7 +15,7 @@ public class DropTillLateContentProvider implements ITreeContentProvider,
 		IDeltaListener {
 
 	private static Object[] EMPTY_ARRAY = new Object[0];
-	protected TreeViewer viewer;
+	private TreeViewer viewer;
 
 	@Override
 	public void dispose() {
@@ -96,7 +96,7 @@ public class DropTillLateContentProvider implements ITreeContentProvider,
 	@Override
 	public void add(DeltaEvent event) {
 		Object folder = ((DroppedElement) event.receiver()).getParent();
-		viewer.refresh(folder, false);
+		this.viewer.refresh(folder, false);
 	}
 
 	@Override
