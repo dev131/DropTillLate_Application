@@ -19,13 +19,21 @@ import java.io.IOException;
 
 
 
+
+
+
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.model.application.ui.advanced.MPerspective;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
+import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.e4.ui.workbench.swt.modeling.EMenuService;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -44,9 +52,9 @@ import ch.droptilllate.application.controller.ViewController;
 import ch.droptilllate.application.properties.Configuration;
 
 
-public class EncryptedView {
+public class EncryptedView{
 
-	public static final String ID = "ch.droptillate.application.decryptedview";
+	public static final String ID = "ch.droptilllate.application.partdescriptor.InitialView";
 	private TreeViewer viewer;
 	private ViewController controller;
 	@Inject
@@ -54,19 +62,23 @@ public class EncryptedView {
 	@Inject
 	private MApplication application;
 	@Inject ESelectionService selectionService;
+	private Shell shell;
+	private Composite parent;
 	
 	@PostConstruct
-	public void createPartControl(Composite parent, EMenuService menuService, Shell shell) {
+	public void createPartControl(Composite parent, EMenuService menuService, Shell shell, EModelService service) {
 		// Treeviewer
 		this.viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		menuService.registerContextMenu(this.viewer.getControl(),
 				"ch.droptilllate.application.popupmenu.table");
+		this.shell = shell;
+		this.parent = parent;
 		this.controller = ViewController.getInstance();
 		this.controller.initViewController(this.viewer, shell);
 		addListeners();
 		addCloseListener(parent);
-
 	}
+	
 
 	private void addCloseListener(Composite parent) {
 		parent.addDisposeListener(new DisposeListener(){

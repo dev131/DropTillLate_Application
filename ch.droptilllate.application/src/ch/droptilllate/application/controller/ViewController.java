@@ -111,12 +111,16 @@ public class ViewController {
 			tree.getColumn(identifier.ordinal()).setWidth(
 					identifier.columnWidth);
 		}
+		
+	}
+	
+	public void initController(){
 		// Get InitialInput
-		root = getInitialInput();
-		viewer.setInput(root);
-		viewer.expandToLevel(1);
-		// Register Drag&Drop Listener
-		registerDragDrop();	
+				root = getInitialInput();
+				viewer.setInput(root);
+				viewer.expandToLevel(1);
+				// Register Drag&Drop Listener
+				registerDragDrop();	
 	}
 
 	/**
@@ -139,7 +143,7 @@ public class ViewController {
 	/**
 	 * Returns the initial input for the table, right after application start.
 	 */
-	private GhostFolderDob getInitialInput() {
+	public GhostFolderDob getInitialInput() {
 		// Create RootDob
 		//Integer id, String name, Date date, String path,GhostFolderDob parent) {
 		root = new GhostFolderDob(0, "Root-Folder", null);

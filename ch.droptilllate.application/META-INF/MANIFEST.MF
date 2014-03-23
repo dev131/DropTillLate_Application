@@ -46,5 +46,6 @@ Bundle-ClassPath: .,
  lib/commons-logging-1.1.3.jar,
  lib/commons-logging-adapters-1.1.3.jar,
  lib/commons-logging-api-1.1.3.jar,
- lib/selenium-java-2.40.0.jar
+ lib/selenium-java-2.40.0.jar,
+ swing2swt.jar
 
