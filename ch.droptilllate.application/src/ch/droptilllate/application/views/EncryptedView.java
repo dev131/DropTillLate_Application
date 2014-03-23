@@ -16,6 +16,9 @@ import java.io.IOException;
 
 
 
+
+
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
@@ -23,13 +26,13 @@ import org.apache.commons.io.FileUtils;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
+import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.e4.ui.workbench.swt.modeling.EMenuService;
-
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -50,6 +53,7 @@ public class EncryptedView {
 	private EModelService service;
 	@Inject
 	private MApplication application;
+	@Inject ESelectionService selectionService;
 	
 	@PostConstruct
 	public void createPartControl(Composite parent, EMenuService menuService, Shell shell) {
@@ -61,6 +65,7 @@ public class EncryptedView {
 		this.controller.initViewController(this.viewer, shell);
 		addListeners();
 		addCloseListener(parent);
+
 	}
 
 	private void addCloseListener(Composite parent) {
@@ -100,6 +105,8 @@ public class EncryptedView {
 		this.viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
+				StructuredSelection selection = (StructuredSelection) event.getSelection();
+				selectionService.setSelection(selection);
 				EncryptedView.this.controller.selectionChanged(event);
 			}
 		});

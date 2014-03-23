@@ -1,18 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:advanced="http://www.eclipse.org/ui/2010/UIModel/application/ui/advanced" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_puoP4INwEeOZSfPuT6ZnVQ" elementId="org.eclipse.e4.ide.application" bindingContexts="_puo2-INwEeOZSfPuT6ZnVQ">
+<application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:advanced="http://www.eclipse.org/ui/2010/UIModel/application/ui/advanced" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmlns:ui="http://www.eclipse.org/ui/2010/UIModel/application/ui" xmi:id="_puoP4INwEeOZSfPuT6ZnVQ" elementId="org.eclipse.e4.ide.application" bindingContexts="_puo2-INwEeOZSfPuT6ZnVQ">
   <children xsi:type="basic:TrimmedWindow" xmi:id="_puo28INwEeOZSfPuT6ZnVQ" label="DropTillLate" iconURI="platform:/plugin/ch.droptilllate.application/icons/icon_16x16.png" width="900" height="600">
     <children xsi:type="advanced:PerspectiveStack" xmi:id="_puqFFoNwEeOZSfPuT6ZnVQ">
       <children xsi:type="advanced:Perspective" xmi:id="_puqFF4NwEeOZSfPuT6ZnVQ">
         <children xsi:type="basic:PartSashContainer" xmi:id="_zIcCwJWWEeOV_sbJE0cJGg" elementId="ch.droptilllate.application.partsashcontainer.0">
           <children xsi:type="basic:Part" xmi:id="_ggtJ8IN_EeOPbN9mpPOXoQ" elementId="ch.droptilllate.application.part.decryptedview" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.views.EncryptedView" label="Decrypted">
             <menus xsi:type="menu:PopupMenu" xmi:id="_2duWYIdaEeO6wsyQtk52Vg" elementId="ch.droptilllate.application.popupmenu.table" label="Table Menu">
-              <children xsi:type="menu:HandledMenuItem" xmi:id="_4l8AEIdaEeO6wsyQtk52Vg" elementId="ch.droptilllate.application.handledmenuitem.Open" label="Open" command="_Ku9s4IdZEeO6wsyQtk52Vg"/>
-              <children xsi:type="menu:HandledMenuItem" xmi:id="_7KavAIdaEeO6wsyQtk52Vg" elementId="ch.droptilllate.application.handledmenuitem.Delete" label="Delete" command="_PAnvUIdZEeO6wsyQtk52Vg"/>
-              <children xsi:type="menu:HandledMenuItem" xmi:id="_WAKpIJAREeOHkoJaezvPIA" elementId="ch.droptilllate.application.handledmenuitem.NewFolder" label="New Folder" command="_euHAYIN-EeOPbN9mpPOXoQ"/>
-              <children xsi:type="menu:HandledMenuItem" xmi:id="_7zYdgJbyEeOHEZkAJ8XYZg" elementId="ch.droptilllate.application.handledmenuitem.ShareFiles" label="Share selected files" command="_Bi6zMJbzEeOHEZkAJ8XYZg"/>
+              <children xsi:type="menu:HandledMenuItem" xmi:id="_4l8AEIdaEeO6wsyQtk52Vg" elementId="ch.droptilllate.application.handledmenuitem.Open" label="Open" command="_Ku9s4IdZEeO6wsyQtk52Vg">
+                <visibleWhen xsi:type="ui:CoreExpression" xmi:id="_hFPQwLKaEeOdJ_svOfiflg" coreExpressionId="ch.droptilllate.application.selectionset"/>
+              </children>
+              <children xsi:type="menu:HandledMenuItem" xmi:id="_7KavAIdaEeO6wsyQtk52Vg" elementId="ch.droptilllate.application.handledmenuitem.Delete" label="Delete" command="_PAnvUIdZEeO6wsyQtk52Vg">
+                <visibleWhen xsi:type="ui:CoreExpression" xmi:id="_dLso0LKZEeOdJ_svOfiflg" coreExpressionId="ch.droptilllate.application.selectionset"/>
+              </children>
+              <children xsi:type="menu:HandledMenuItem" xmi:id="_WAKpIJAREeOHkoJaezvPIA" elementId="ch.droptilllate.application.handledmenuitem.NewFolder" label="New Folder" command="_euHAYIN-EeOPbN9mpPOXoQ">
+                <visibleWhen xsi:type="ui:CoreExpression" xmi:id="_gSFK8LKZEeOdJ_svOfiflg" coreExpressionId="ch.droptilllate.application.selectionset"/>
+              </children>
+              <children xsi:type="menu:HandledMenuItem" xmi:id="_7zYdgJbyEeOHEZkAJ8XYZg" elementId="ch.droptilllate.application.handledmenuitem.ShareFiles" label="Share selected files" command="_Bi6zMJbzEeOHEZkAJ8XYZg">
+                <visibleWhen xsi:type="ui:CoreExpression" xmi:id="_hfIz8LKZEeOdJ_svOfiflg" coreExpressionId="ch.droptilllate.application.selectionset"/>
+              </children>
             </menus>
           </children>
-          <children xsi:type="basic:Part" xmi:id="_stQhUJWREeOV_sbJE0cJGg" elementId="ch.droptilllate.application.part.0" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.views.LogView"/>
+          <children xsi:type="basic:Part" xmi:id="_stQhUJWREeOV_sbJE0cJGg" elementId="ch.droptilllate.application.part.logview" visible="false" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.views.LogView" label="LogView"/>
         </children>
       </children>
     </children>

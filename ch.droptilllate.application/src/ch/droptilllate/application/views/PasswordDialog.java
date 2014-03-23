@@ -97,7 +97,7 @@ public class PasswordDialog extends Dialog {
          	public void widgetSelected(SelectionEvent e) {
          		openFolderDialog();
          	}
-
+            //********************** OPEN DROPBOX "*****************************************
 		private void openFolderDialog() {
 			    DirectoryDialog dialog = new DirectoryDialog(PasswordDialog.this.shell);
 			    dialog.setText("Choose Dropbox Directory");
@@ -115,7 +115,8 @@ public class PasswordDialog extends Dialog {
         btnChooseDropboxFolder.setVisible(false);
     new Label(container, SWT.NONE);
     new Label(container, SWT.NONE);
-    //Listener TempFolder
+ 
+    //********************** OPEP TEMPFOLDER "*****************************************
       Button btnChooseTempFolder = new Button(container, SWT.NONE);
       btnChooseTempFolder.addSelectionListener(new SelectionAdapter() {
       	@Override
@@ -154,11 +155,7 @@ public class PasswordDialog extends Dialog {
     new Label(container, SWT.NONE);
     new Label(container, SWT.NONE);
     new Label(container, SWT.NONE);
-    new Label(container, SWT.NONE);
-    
-    
-
-    
+    new Label(container, SWT.NONE);  
     new Label(container, SWT.NONE);
     new Label(container, SWT.NONE);
     new Label(container, SWT.NONE);
@@ -215,6 +212,8 @@ public class PasswordDialog extends Dialog {
     this.lblMissingPasswordOr.setText("Missing password or folder definition!");
     this.lblMissingPasswordOr.setToolTipText("");
     this.lblMissingPasswordOr.setVisible(false);
+    
+ //*************** CHECK IF PROPERTIE EXIST**************************************************   
     KeyManager km = new KeyManager();
     if((Configuration.getPropertieDropBoxPath(true) == null)){
     	//If path not defined
@@ -230,6 +229,9 @@ public class PasswordDialog extends Dialog {
     return container;
   }
 
+  /**
+   * Check if Password Exist
+   */
   public void checkPassword(){ 
 	  KeyManager km = new KeyManager();
 		if(!km.checkPassword(getPassword(), Messages.SaltMasterPassword, Messages.getIdSize())){

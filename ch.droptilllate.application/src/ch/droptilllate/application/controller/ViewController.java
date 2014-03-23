@@ -13,6 +13,10 @@ import java.util.List;
 
 
 
+
+import javax.inject.Inject;
+
+import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -64,6 +68,7 @@ import ch.droptilllate.couldprovider.api.IFileSystemCom;
 import ch.droptilllate.couldprovider.api.IShareFolder;
 
 public class ViewController {
+
 	private Tree tree;
 	private TreeViewer viewer;
 	private GhostFolderDob root;
@@ -75,7 +80,6 @@ public class ViewController {
 	private ShareDialog sharedialog;
 	private ImportDialog importdialog;
 	private Shell shell;
-
 	public ViewController() {
 		// Exists only to defeat instantiation.
 	}

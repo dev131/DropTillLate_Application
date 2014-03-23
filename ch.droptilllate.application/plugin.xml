@@ -33,5 +33,26 @@
          </property>
       </product>
    </extension>
+   <extension
+         point="org.eclipse.core.expressions.definitions">
+      <definition
+            id="ch.droptilllate.application.selectionset">
+         <with
+               variable="org.eclipse.ui.selection">
+            <iterate
+                  ifEmpty="false"
+                  operator="or">
+               <or>
+                  <instanceof
+                        value="ch.droptilllate.application.model.GhostFolderDob">
+                  </instanceof>
+                  <instanceof
+                        value="ch.droptilllate.application.model.EncryptedFileDob">
+                  </instanceof>
+               </or>
+            </iterate>
+         </with>
+      </definition>
+   </extension>
 
 </plugin>
