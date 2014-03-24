@@ -25,17 +25,28 @@ import ch.droptilllate.couldprovider.api.IFileSystemCom;
 
 public class ShareManager {
 
+	private int ERROR = 0;
+	private int CREATE = 1;
+	private int USEEXIST = 2;
+	private int STATUS = 0;
+	
 	private List<String> emailList;
 	/**
-	 * Create new ShareFolder and Move fileList into it
-	 * 
+	* Limited functionality
+	*/
+	public ShareManager(){
+		
+	}
+	/**
+	 * ShareManager
 	 * @param fileList
 	 * @param password
-	 * @param emaillist 
+	 * @param emailList
 	 */
-	public ShareFolder newShareRelation(List<EncryptedFileDob> fileList,
+	public ShareManager(List<EncryptedFileDob> fileList,
 			String password, List<String> emailList) {
 		this.emailList = emailList;
+		
 		ShareFolder shareFolder = new ShareFolder(null, null);
 		// create HashSet with all ShareFolderId
 		HashSet<Integer> hashSet_shareFolderList = getShareFolderList(fileList);
@@ -45,40 +56,27 @@ public class ShareManager {
 		// Check if entries available
 		// TODO cancel sharing
 		if (hashmap.isEmpty())
-			return shareFolder;
+			STATUS = ERROR;
 
 		// Check if All Files from one ShareFolder
 		if (hashmap.size() == 1) {
 			// Check if Files from same SharedFolder but not all
 			if (!checkIfMoreFilesAvailable(hashSet_shareFolderList.iterator()
-					.next(), fileList)) {
-				// NotAllFiles from this folder, there are some left
-				if (hashmap.containsKey(Messages.getIdSize())) {
-					//SharedFolder0
-					shareFolder = createNewSharedFolder(fileList, password);
-					alertMembers(hashSet_shareFolderList);
-				} else {
-					//NotSharedFolder0
-					shareFolder = createNewSharedFolder(fileList, password);
-					alertMembers(hashSet_shareFolderList);
-				}
+					.next(), fileList)) {	
+					STATUS = CREATE;
 			} else {
 				if (hashmap.containsKey(Messages.getIdSize())) {
 					// All Files from SharedFolder 0
-					shareFolder = createNewSharedFolder(fileList, password);
-					alertMembers(hashSet_shareFolderList);
+					STATUS = CREATE;
 				} else {
 					// All Files from SharedFolder x not 0
-					shareFolder = useExistingSharedFolder(fileList, password);
-					alertMembers(hashSet_shareFolderList);
+					STATUS = USEEXIST;
 				}
 			}
 		} else {
 			// From more then one ShareFolder
-			shareFolder = createNewSharedFolder(fileList, password);
-			alertMembers(hashSet_shareFolderList);
+			STATUS = CREATE;
 		}
-		return shareFolder;
 	}
 
 	public  List<EncryptedFileDob> getUpdateFiles(String key){
@@ -96,17 +94,17 @@ public class ShareManager {
 		return importer.getShareRelationUpdateXML();
 	}
 	    
-	private void insertShareRelation(ShareFolder shareFolder) {
+	public void insertShareRelation(ShareFolder shareFolder, ArrayList<String> mailList) {
 		ShareRelationDao dao = new ShareRelationDao();
 		ShareRelation sharerelation = new ShareRelation(shareFolder.getID(), Messages.OwnerMail);
 		dao.newElement(sharerelation, null);
-		for(String mail : emailList){
+		for(String mail : mailList){
 			sharerelation = new ShareRelation(shareFolder.getID(), mail);
 			dao.newElement(sharerelation, null);
 		}	
 	}
 
-	private ShareFolder useExistingSharedFolder(List<EncryptedFileDob> fileList,
+	public ShareFolder useExistingSharedFolder(List<EncryptedFileDob> fileList,
 			String password) {
 		HashSet<Integer> hashFile = new HashSet<Integer>();
 		for(EncryptedFileDob fileDob : fileList){
@@ -117,22 +115,16 @@ public class ShareManager {
 		for(Integer id : hashFile){
 		 container = (EncryptedContainer) dao.getElementByID(id, null);			
 		}		
-		// Create and insert newShareFolder in DB and create Id
-		ShareFolder shareFolder = new ShareFolder(container.getShareFolderId(), password);
-		return shareFolder;
+		// Get existing sharefolder
+		ShareFolderDao sDao = new ShareFolderDao();		
+		return (ShareFolder) sDao.getElementByID(container.getShareFolderId(), null);
 	}
 
-	private ShareFolder createNewSharedFolder(
-			List<EncryptedFileDob> fileList, String password) {
-		// Create and insert newShareFolder in DB and create Id
-		ShareFolderDao shareDao = new ShareFolderDao();
-		ShareFolder sharedFolder = new ShareFolder(null, null);
-		sharedFolder = (ShareFolder) shareDao.newElement(sharedFolder, null);
-		sharedFolder.setKey(password);
-		shareDao.updateElement(sharedFolder, null);
+	public ShareFolder createNewSharedFolder(
+			ArrayList<EncryptedFileDob> fileList, String password, ShareFolder shareFolder) {
 		// Move Files
 		IFileSystemCom iFile = FileSystemCom.getInstance();	
-		CRUDCryptedFileInfo result = iFile.moveFiles(fileList, sharedFolder);
+		CRUDCryptedFileInfo result = iFile.moveFiles(fileList, shareFolder);
 		// Handle Error
 		for (EncryptedFileDob fileDob : result.getEncryptedFileListError()) {
 			Status status = Status.getInstance();
@@ -149,17 +141,13 @@ public class ShareManager {
 		ContainerDao containerDB = new ContainerDao();
 		for(Integer i : hashSet){
 			//TODO Delete not used container in db
-			EncryptedContainer container = new EncryptedContainer(i, sharedFolder.getID());
+			EncryptedContainer container = new EncryptedContainer(i, shareFolder.getID());
 			containerDB.newElement(container, null);
 		}
-		//Insert new ShareRelations
-		insertShareRelation(sharedFolder);
-		
-		createUpdateFiles(sharedFolder);
-		return sharedFolder;
+		return shareFolder;
 	}
 	
-	private void createUpdateFiles(ShareFolder sharedFolder) {
+	public void createUpdateFiles(ShareFolder sharedFolder) {
 	ContainerDao contDao = new ContainerDao();
 	List<EncryptedContainer> contList = (List<EncryptedContainer>) contDao.getContainerBySharedFolderId(sharedFolder.getID(), null);
 	EncryptedFileDao fileDao = new EncryptedFileDao();
@@ -186,7 +174,7 @@ public class ShareManager {
 	
 	}
 
-	private void alertMembers(HashSet<Integer> hashSet_shareFolderList){
+	public void alertMembers(HashSet<Integer> hashSet_shareFolderList){
 		List<ShareRelation> shareRelationList = new ArrayList<ShareRelation>();	
 		for(Integer i : hashSet_shareFolderList){
 			ShareRelationDao dao = new ShareRelationDao();
@@ -252,4 +240,10 @@ public class ShareManager {
 		return hashmap;
 	}
 
+	public int getSTATUS() {
+		return STATUS;
+	}
+
+	
+	
 }

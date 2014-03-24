@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 
+import ch.droptilllate.application.com.CloudDropboxCom;
 import ch.droptilllate.application.com.FileSystemCom;
 import ch.droptilllate.application.dao.ContainerDao;
 import ch.droptilllate.application.dao.EncryptedFileDao;
@@ -42,6 +43,7 @@ import ch.droptilllate.application.dnb.ShareFolder;
 import ch.droptilllate.application.dnb.ShareRelation;
 import ch.droptilllate.application.handlers.FileHandler;
 import ch.droptilllate.application.info.CRUDCryptedFileInfo;
+import ch.droptilllate.application.info.ErrorMessage;
 import ch.droptilllate.application.listener.TreeDragSourceListener;
 import ch.droptilllate.application.listener.TreeDropTargetAdapter;
 import ch.droptilllate.application.model.EncryptedFileDob;
@@ -56,6 +58,7 @@ import ch.droptilllate.application.share.ShareManager;
 import ch.droptilllate.application.views.Status;
 import ch.droptilllate.application.views.TableIdentifier;
 import ch.droptilllate.cloudprovider.dropbox.DropboxFolderSharer;
+import ch.droptilllate.couldprovider.api.ICloudProviderCom;
 import ch.droptilllate.couldprovider.api.IFileSystemCom;
 import ch.droptilllate.couldprovider.api.IShareFolder;
 import ch.droptilllate.application.views.ShareView;
@@ -408,22 +411,51 @@ public class ViewController {
 	 * ShareFiles
 	 */
 	public void shareFiles(ArrayList<String> mailList, ArrayList<EncryptedFileDob> fileList, String password) {		
-			
-			ShareManager shareManager = new ShareManager();
-			ShareFolder shareFolder = shareManager.newShareRelation(fileList, password, mailList);
+			ShareFolder shareFolder=null;
+			ShareManager shareManager = new ShareManager(fileList, password, mailList);
+			if(shareManager.getSTATUS() == 0){
+				//ERROR
+				shareFolder = null;
+			}
+			if(shareManager.getSTATUS() == 1){
+				//CREATE
+				// Create and insert newShareFolder in DB and create Id
+				ShareFolderDao shareDao = new ShareFolderDao();
+				ShareFolder sharedFolder = new ShareFolder(null, null);
+				sharedFolder = (ShareFolder) shareDao.newElement(sharedFolder, null);
+				sharedFolder.setKey(password);
+				shareDao.updateElement(sharedFolder, null);
+				shareFolder = shareManager.createNewSharedFolder(fileList, password, shareFolder);
+				shareManager.insertShareRelation(shareFolder,mailList);
+				shareManager.createUpdateFiles(shareFolder);
+			}
+			if(shareManager.getSTATUS() == 2){
+				//USING EXISTING
+				shareFolder = shareManager.useExistingSharedFolder(fileList, password);
+				new ErrorMessage(shell, "MESSAGE", "Shared ->  password = "+ shareFolder.getKey());
+			}	
 			//TODO check if it worked
-			IShareFolder dropbox = new DropboxFolderSharer();
-			dropbox.shareFolder(Configuration.getPropertieDropBoxPath(false), shareFolder.getID(), mailList);
-			FileHandler fileHandler = new FileHandler();
-			File source = new File(Configuration.getPropertieTempPath(true) + XMLConstruct.NameShareXML);
-			File dest = new File(Configuration.getPropertieTempPath(true)+ XMLConstruct.NameShareXML);
-			try {
-				//TODO Just for Tests
-				fileHandler.copyFile(source, dest);
-				fileHandler.delete(source);
-				//fileHandler.delete(file);
-			} catch (IOException e) {
-				e.printStackTrace();
+			if(shareFolder!=null){
+				ICloudProviderCom com = new CloudDropboxCom();
+				while(true){
+					//TODO ERROR sharing
+					com.checkIfFolderExists(shareFolder.getID());				
+				}
+				//TODO ERROR sharing
+				com.shareFolder(shareFolder.getID(), mailList);
+				FileHandler fileHandler = new FileHandler();
+				File source = new File(Configuration.getPropertieTempPath(true) + XMLConstruct.NameShareXML);
+				File dest = new File(Configuration.getPropertieTempPath(true)+ XMLConstruct.NameShareXML);
+				try {
+					//TODO Just for Tests
+					fileHandler.copyFile(source, dest);
+					fileHandler.delete(source);
+					//fileHandler.delete(file);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}else{
+				new ErrorMessage(shell, "ERROR", "Share error");
 			}
 
 	}

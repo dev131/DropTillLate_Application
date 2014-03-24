@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
+import ch.droptilllate.application.com.CloudDropboxCom;
 import ch.droptilllate.application.controller.ViewController;
 import ch.droptilllate.application.dao.CloudAccountDao;
 import ch.droptilllate.application.dnb.CloudAccount;
@@ -36,6 +37,7 @@ import ch.droptilllate.application.info.ErrorMessage;
 import ch.droptilllate.application.properties.Configuration;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.share.KeyManager;
+import ch.droptilllate.couldprovider.api.ICloudProviderCom;
 
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Label;
@@ -392,7 +394,9 @@ public class InitialView implements SelectionListener {
 			}
 			else{
 				//TODO Test if account correct
-				cloudaccount = new CloudAccount(cloudusername, cloudpassword);
+				ICloudProviderCom com = new CloudDropboxCom();
+				com.testCloudAccount(cloudusername, cloudpassword);
+				//ERROR
 			}
 		}
 
