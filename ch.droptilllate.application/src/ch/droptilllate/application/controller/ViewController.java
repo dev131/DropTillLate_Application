@@ -460,9 +460,7 @@ public class ViewController {
 			}			    		    
 		    //Create ShareFolder
 		    ShareFolderDao shareFolderDao = new ShareFolderDao();
-		    KeyManager keyManager = new KeyManager();
-		    String key =keyManager.generatePassword(password, sharefolderName);
-		    ShareFolder sharefolder = new ShareFolder(Integer.parseInt(source.getName()), key);
+		    ShareFolder sharefolder = new ShareFolder(Integer.parseInt(source.getName()), password);
 		   
 		    //Create GhostFolder
 		    GhostFolderDob ghostFolderDob = new GhostFolderDob(null, foldername, root);

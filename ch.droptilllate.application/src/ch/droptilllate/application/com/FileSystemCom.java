@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import javax.crypto.KeyGenerator;
+
 import ch.droptilllate.application.converter.FileInfoConverter;
 import ch.droptilllate.application.dao.ContainerDao;
 import ch.droptilllate.application.dao.ShareFolderDao;
@@ -15,6 +17,7 @@ import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.StructureXmlDob;
 import ch.droptilllate.application.properties.Configuration;
 import ch.droptilllate.application.properties.Messages;
+import ch.droptilllate.application.share.KeysGenerator;
 import ch.droptilllate.couldprovider.api.IFileSystemCom;
 import ch.droptilllate.filesystem.error.FileError;
 import ch.droptilllate.filesystem.info.*;
@@ -76,8 +79,9 @@ public class FileSystemCom implements IFileSystemCom {
 			ShareFolder shareFolder = (ShareFolder) shareDao
 					.getElementByID(Messages.getIdSize(), null);
 			relation = new KeyRelation();
-			relation.addKeyOfShareRelation(shareFolder.getID(),
-					shareFolder.getKey());
+			KeysGenerator kg = new KeysGenerator();
+			String key = kg.getKey(shareFolder.getKey(), Messages.SaltMasterPassword);
+			relation.addKeyOfShareRelation(shareFolder.getID(),key);
 		}
 		filehandling_result =ifile.encryptFiles(fileInfoList, relation);
 	// Convert to FileCRUDResults
@@ -169,16 +173,20 @@ public class FileSystemCom implements IFileSystemCom {
 		//create ghost file
 		EncryptedFileDob fileDob;
 		StructureXmlDob sxml;
+		KeysGenerator kg = new KeysGenerator();
+		String key;
 		if(!local){
-			 sxml = new StructureXmlDob(destinationShareFolder, false);		
+			 sxml = new StructureXmlDob(destinationShareFolder, false);	
+				key = kg.getKey(destinationShareFolder.getKey(), destinationShareFolder.getID().toString());
 		}
 		else{
-			sxml = new StructureXmlDob(destinationShareFolder, true);
+			sxml = new StructureXmlDob(destinationShareFolder, true);		
+			 key = kg.getKey(destinationShareFolder.getKey(), Messages.SaltMasterPassword);
 		}
 		fileDob = sxml.getEncryptedFileDob();
 		// encrypt file !!!!!
 		fileInfo = new FileInfoEncrypt(fileDob.getId(), destinationShareFolder.getID(), fileDob.getContainerId(), fileDob.getType());
-		fileInfo = ifile.storeFileStructure(fileInfo, destinationShareFolder.getKey());
+		fileInfo = ifile.storeFileStructure(fileInfo, key);
 		if(fileInfo.getError() == FileError.NONE ) return true;
 		return false;
 	}
@@ -188,17 +196,22 @@ public class FileSystemCom implements IFileSystemCom {
 		FileInfoDecrypt fileInfo = null;
 		EncryptedFileDob fileDob;
 		StructureXmlDob sxml;
+		String key;
+		KeysGenerator kg = new KeysGenerator();
 		if(!local){
 			sxml = new StructureXmlDob(sourceShareFolder ,false);
+			 key = kg.getKey(sourceShareFolder.getKey(), sourceShareFolder.getID().toString());
 		}
 		else{
-			sxml = new StructureXmlDob(sourceShareFolder ,true);			
+			sxml = new StructureXmlDob(sourceShareFolder ,true);
+			 key = kg.getKey(sourceShareFolder.getKey(), Messages.SaltMasterPassword);
 		}		
 		fileDob = sxml.getEncryptedFileDob();
 			fileInfo = new FileInfoDecrypt(fileDob.getId(), fileDob
 					.getType(), sourceShareFolder.getID(), fileDob
 					.getContainerId());	
-		fileInfo = ifile.loadFileStructure(fileInfo,  sourceShareFolder.getKey());
+		
+		fileInfo = ifile.loadFileStructure(fileInfo,  key);
 		if(fileInfo.getError() == FileError.NONE) return true;
 		return false;
 	}
@@ -220,8 +233,15 @@ public class FileSystemCom implements IFileSystemCom {
 			ShareFolderDao shareFolderDao = new ShareFolderDao();
 			ShareFolder shareFolder = (ShareFolder) shareFolderDao
 					.getElementByID(container.getShareFolderId(), null);
-			relation.addKeyOfShareRelation(shareFolder.getID(),
-					shareFolder.getKey());
+			//Key erzeugen
+			KeysGenerator kg = new KeysGenerator();
+			if(shareFolder.getID() == 100000){
+				String key = kg.getKey(shareFolder.getKey(), Messages.SaltMasterPassword);
+				relation.addKeyOfShareRelation(shareFolder.getID(),key);
+			}else{
+				String key = kg.getKey(shareFolder.getKey(), shareFolder.getID().toString());
+				relation.addKeyOfShareRelation(shareFolder.getID(),key);
+			}		
 		}
 		return relation;
 	}

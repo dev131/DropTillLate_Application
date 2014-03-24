@@ -331,7 +331,7 @@ public class InitialView implements SelectionListener {
 							cloudaccount !=null){
 						//CreateFolder
 						createFolder();
-						km.initPassword(password, Messages.SaltMasterPassword);
+						km.initPassword(password);
 						//Initi CloudAccount
 						CloudAccountDao dao = new CloudAccountDao();
 						dao.newElement(cloudaccount, null);

@@ -108,7 +108,6 @@ public class ShareManager {
 
 	private ShareFolder useExistingSharedFolder(List<EncryptedFileDob> fileList,
 			String password) {
-		ShareFolder shareFolder = new ShareFolder(null, null);
 		HashSet<Integer> hashFile = new HashSet<Integer>();
 		for(EncryptedFileDob fileDob : fileList){
 			hashFile.add(fileDob.getContainerId());
@@ -118,26 +117,18 @@ public class ShareManager {
 		for(Integer id : hashFile){
 		 container = (EncryptedContainer) dao.getElementByID(id, null);			
 		}		
-		KeyManager km = new KeyManager();
-		String key = null;		
 		// Create and insert newShareFolder in DB and create Id
-		ShareFolder sharedFolder = new ShareFolder(container.getShareFolderId(), null);
-		key = km.generatePassword(password, sharedFolder.getID().toString());
-		sharedFolder.setKey(key);	
-		shareFolder.setID(container.getShareFolderId());
+		ShareFolder shareFolder = new ShareFolder(container.getShareFolderId(), password);
 		return shareFolder;
 	}
 
 	private ShareFolder createNewSharedFolder(
 			List<EncryptedFileDob> fileList, String password) {
-		KeyManager km = new KeyManager();
-		String key = null;		
 		// Create and insert newShareFolder in DB and create Id
 		ShareFolderDao shareDao = new ShareFolderDao();
 		ShareFolder sharedFolder = new ShareFolder(null, null);
 		sharedFolder = (ShareFolder) shareDao.newElement(sharedFolder, null);
-		key = km.generatePassword(password, sharedFolder.getID().toString());
-		sharedFolder.setKey(key);
+		sharedFolder.setKey(password);
 		shareDao.updateElement(sharedFolder, null);
 		// Move Files
 		IFileSystemCom iFile = FileSystemCom.getInstance();	

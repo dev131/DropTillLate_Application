@@ -37,6 +37,7 @@ public class Messages extends NLS {
 
 	public static Integer getIdSize(){
 		return 100000;
+		
 	}
 	public static String getDropboxName(){
 		File file = new File(Configuration.getPropertieDropBoxPath(false));

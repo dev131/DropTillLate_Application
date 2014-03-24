@@ -17,12 +17,10 @@ public class KeyManager {
 	 * Init MasterPassword
 	 * @param password
 	 */
-	public void initPassword(String password, String salt){
-		KeysGenerator kg = new KeysGenerator();
+	public void initPassword(String password){
 		ShareFolderDao dao = new ShareFolderDao();
-		String key  = kg.getKey(password, salt);
-		ShareFolder	folder = new ShareFolder(Messages.getIdSize(),key );
-		dao.newElement(folder, key);
+		ShareFolder	folder = new ShareFolder(Messages.getIdSize(),password );
+		dao.newElement(folder, password);
 	}
 	
 	/**
@@ -42,28 +40,16 @@ public class KeyManager {
 	 * @param password
 	 * @return true if it match
 	 */
-	public boolean checkPassword(String password, String salt, int shareID){
+	public boolean checkPassword(String password,String salt, int shareID){
 		Boolean exist = false;
-		KeysGenerator kg = new KeysGenerator();
 		ShareFolderDao dao = new ShareFolderDao();
-		ShareFolder folder = (ShareFolder) dao.getElementByID(shareID, kg.getKey(password, salt));
+		ShareFolder folder = (ShareFolder) dao.getElementByID(shareID, password);
 		if(folder != null){
-			if(folder.getKey().equals(kg.getKey(password, salt)))exist= true;	
+			if(folder.getKey().equals(password))exist= true;	
 		}	
 		return exist;
 	}
 	
-	/**
-	 * 
-	 * @param password
-	 * @param salt
-	 * @return key
-	 */
-	public String generatePassword(String password, String salt){
-		KeysGenerator kg = new KeysGenerator();
-		return kg.getKey(password, salt);
-	}
-
 	/**
 	 * Return true if Dropbox/100000.xml exist
 	 * @return
