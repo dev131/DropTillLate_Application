@@ -4,8 +4,8 @@
     <children xsi:type="advanced:PerspectiveStack" xmi:id="_puqFFoNwEeOZSfPuT6ZnVQ">
       <children xsi:type="advanced:Perspective" xmi:id="_puqFF4NwEeOZSfPuT6ZnVQ">
         <children xsi:type="basic:Part" xmi:id="_9ux1ULKgEeOdJ_svOfiflg" elementId="ch.droptilllate.application.part.InitialView" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.views.InitialView" label="Initial View" closeable="true"/>
-        <children xsi:type="basic:PartSashContainer" xmi:id="_zIcCwJWWEeOV_sbJE0cJGg" elementId="ch.droptilllate.application.partsashcontainer.0">
-          <children xsi:type="basic:Part" xmi:id="_ggtJ8IN_EeOPbN9mpPOXoQ" elementId="ch.droptilllate.application.part.decryptedview" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.views.EncryptedView" label="Decrypted">
+        <children xsi:type="basic:PartSashContainer" xmi:id="_zIcCwJWWEeOV_sbJE0cJGg" elementId="ch.droptilllate.application.partsashcontainer.treeview" visible="false">
+          <children xsi:type="basic:Part" xmi:id="_ggtJ8IN_EeOPbN9mpPOXoQ" elementId="ch.droptilllate.application.part.decryptedview" visible="false" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.views.TreeView" label="Decrypted">
             <menus xsi:type="menu:PopupMenu" xmi:id="_2duWYIdaEeO6wsyQtk52Vg" elementId="ch.droptilllate.application.popupmenu.table" label="Table Menu">
               <children xsi:type="menu:HandledMenuItem" xmi:id="_4l8AEIdaEeO6wsyQtk52Vg" elementId="ch.droptilllate.application.handledmenuitem.Open" label="Open" command="_Ku9s4IdZEeO6wsyQtk52Vg">
                 <visibleWhen xsi:type="ui:CoreExpression" xmi:id="_hFPQwLKaEeOdJ_svOfiflg" coreExpressionId="ch.droptilllate.application.selectionset"/>
@@ -23,6 +23,9 @@
           </children>
           <children xsi:type="basic:Part" xmi:id="_stQhUJWREeOV_sbJE0cJGg" elementId="ch.droptilllate.application.part.logview" visible="false" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.views.LogView" label="LogView"/>
         </children>
+        <children xsi:type="basic:Part" xmi:id="_HqCZwLM_EeOKAbjRxitV7w" elementId="ch.droptilllate.application.part.sharepart" visible="false" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.views.ShareView" label="Share Part" closeable="true"/>
+        <children xsi:type="basic:Part" xmi:id="_Yht8ALNUEeOKo9xObYES1g" elementId="ch.droptilllate.application.part.Import" visible="false" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.views.ImportView" label="Import View" closeable="true"/>
+        <children xsi:type="basic:Part" xmi:id="_c90XELNYEeOKo9xObYES1g" elementId="ch.droptilllate.application.part.0" visible="false"/>
       </children>
     </children>
     <mainMenu xmi:id="_pupeDYNwEeOZSfPuT6ZnVQ" elementId="menu:org.eclipse.ui.main.menu">
@@ -37,9 +40,9 @@
     </mainMenu>
     <trimBars xmi:id="_puqsIYNwEeOZSfPuT6ZnVQ">
       <children xsi:type="menu:ToolBar" xmi:id="_puqsIoNwEeOZSfPuT6ZnVQ" elementId="toolbar:org.eclipse.ui.main.toolbar">
-        <children xsi:type="menu:HandledToolItem" xmi:id="_puqsJINwEeOZSfPuT6ZnVQ" iconURI="platform:/plugin/ch.droptilllate.application/icons/save_edit.png" command="_pupeB4NwEeOZSfPuT6ZnVQ"/>
-        <children xsi:type="menu:HandledToolItem" xmi:id="_t-CHMIN-EeOPbN9mpPOXoQ" elementId="ch.droptilllate.application.handledtoolitem.newFolder" iconURI="platform:/plugin/ch.droptilllate.application/icons/folder_add.png" command="_euHAYIN-EeOPbN9mpPOXoQ"/>
-        <children xsi:type="menu:HandledToolItem" xmi:id="_Ryo0UJWZEeOV_sbJE0cJGg" elementId="ch.droptilllate.application.handledtoolitem.import" iconURI="platform:/plugin/ch.droptilllate.application/icons/encrypt.png" command="_CUji4KFkEeO6qtPvj5SoMA"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_t-CHMIN-EeOPbN9mpPOXoQ" elementId="ch.droptilllate.application.handledtoolitem.newFolder" visible="false" iconURI="platform:/plugin/ch.droptilllate.application/icons/folder_add.png" command="_euHAYIN-EeOPbN9mpPOXoQ"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_Ryo0UJWZEeOV_sbJE0cJGg" elementId="ch.droptilllate.application.handledtoolitem.import" visible="false" iconURI="platform:/plugin/ch.droptilllate.application/icons/encrypt.png" command="_CUji4KFkEeO6qtPvj5SoMA"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_3YWesLNkEeOt2tTK8381Eg" elementId="ch.droptilllate.application.handledtoolitem.logview" visible="false" iconURI="platform:/plugin/ch.droptilllate.application/icons/info.png" command="__pJQMLNkEeOt2tTK8381Eg"/>
       </children>
     </trimBars>
     <trimBars xmi:id="_qv72YITlEeOE5pTDi_Agfw" elementId="ch.droptilllate.application.trimbar.0" side="Bottom">
@@ -53,6 +56,7 @@
   <handlers xmi:id="_X6WwIIdZEeO6wsyQtk52Vg" elementId="ch.droptilllate.application.handler.deleteFile" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.handlers.DeleteFileHandler" command="_PAnvUIdZEeO6wsyQtk52Vg"/>
   <handlers xmi:id="_DokREJbzEeOHEZkAJ8XYZg" elementId="ch.droptilllate.application.handler.shareFile" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.handlers.ShareHandler" command="_Bi6zMJbzEeOHEZkAJ8XYZg"/>
   <handlers xmi:id="_-ti_8KFjEeO6qtPvj5SoMA" elementId="ch.droptilllate.application.handler.importhandler" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.handlers.ImportHandler" command="_CUji4KFkEeO6qtPvj5SoMA"/>
+  <handlers xmi:id="_GZ_48LNlEeOt2tTK8381Eg" elementId="ch.droptilllate.application.handler.enableLogView" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.handlers.LogViewHandler" command="__pJQMLNkEeOt2tTK8381Eg"/>
   <bindingTables xmi:id="_pupeAoNwEeOZSfPuT6ZnVQ" bindingContext="_puo2-INwEeOZSfPuT6ZnVQ">
     <bindings xmi:id="_pupeA4NwEeOZSfPuT6ZnVQ" keySequence="M1+Q" command="_pupeAINwEeOZSfPuT6ZnVQ"/>
     <bindings xmi:id="_pupeBoNwEeOZSfPuT6ZnVQ" keySequence="M1+O"/>
@@ -69,6 +73,7 @@
   <commands xmi:id="_Ku9s4IdZEeO6wsyQtk52Vg" elementId="ch.droptilllate.application.command.open" commandName="open"/>
   <commands xmi:id="_PAnvUIdZEeO6wsyQtk52Vg" elementId="ch.droptilllate.application.command.delete" commandName="delete"/>
   <commands xmi:id="_Bi6zMJbzEeOHEZkAJ8XYZg" elementId="ch.droptilllate.application.command.share" commandName="share"/>
+  <commands xmi:id="__pJQMLNkEeOt2tTK8381Eg" elementId="ch.droptilllate.application.command.logviewEnable" commandName="logview enable"/>
   <commands xmi:id="_CUji4KFkEeO6qtPvj5SoMA" elementId="ch.droptilllate.application.command.import" commandName="import"/>
   <addons xmi:id="_puo28YNwEeOZSfPuT6ZnVQ" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_puo28oNwEeOZSfPuT6ZnVQ" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>

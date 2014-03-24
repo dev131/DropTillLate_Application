@@ -16,7 +16,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.properties.Messages;
-import ch.droptilllate.application.views.EncryptedView;
+import ch.droptilllate.application.views.TreeView;
 import ch.droptilllate.application.views.TableIdentifier;
 
 public class DropTillLateLabelProvider implements ITableLabelProvider {
@@ -161,7 +161,7 @@ public class DropTillLateLabelProvider implements ITableLabelProvider {
 
 	public Image getImage(String file) {
 		// assume that the current class is called View.java
-		Bundle bundle = FrameworkUtil.getBundle(EncryptedView.class);
+		Bundle bundle = FrameworkUtil.getBundle(TreeView.class);
 		URL url;		
 		url = FileLocator.find(bundle, new Path("icons/" + file), null);
 		if(url == null){return null;}

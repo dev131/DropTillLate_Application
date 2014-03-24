@@ -172,6 +172,9 @@ public class XmlConnection {
 			//CreateRoot Element
 			Element collection = document.createElement(XMLConstruct.RootElement);
 			document.appendChild(collection);
+			//Create CloudAccount
+			Element cloudAccount = document.createElement(XMLConstruct.RootElementCloudAccount);
+			collection.appendChild(cloudAccount);
 			//Create SubContainerElement
 			Element containers = document.createElement(XMLConstruct.RootElementContainer);
 			collection.appendChild(containers);

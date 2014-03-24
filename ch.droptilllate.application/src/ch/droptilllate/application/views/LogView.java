@@ -21,7 +21,7 @@ public class LogView implements Observer{
 	public void createControls(Composite parent) {
 		// TODO evt. Statusline
 				// statusLine.setMessage("gagag");
-				String message = "Applicationn is ready";
+				String message = "Application is ready";
 				this.textBox = new Text(parent, SWT.WRAP | SWT.BORDER);
 				this.textBox.setBounds(0, 200, 450, 100);
 				this.textBox.setTextLimit(100);

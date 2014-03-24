@@ -8,12 +8,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-
-
-
-
-
-
 import javax.inject.Inject;
 
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
@@ -59,13 +53,12 @@ import ch.droptilllate.application.provider.DropTillLateContentProvider;
 import ch.droptilllate.application.provider.DropTillLateLabelProvider;
 import ch.droptilllate.application.share.KeyManager;
 import ch.droptilllate.application.share.ShareManager;
-import ch.droptilllate.application.views.ImportDialog;
-import ch.droptilllate.application.views.ShareDialog;
 import ch.droptilllate.application.views.Status;
 import ch.droptilllate.application.views.TableIdentifier;
 import ch.droptilllate.cloudprovider.dropbox.DropboxFolderSharer;
 import ch.droptilllate.couldprovider.api.IFileSystemCom;
 import ch.droptilllate.couldprovider.api.IShareFolder;
+import ch.droptilllate.application.views.ShareView;
 
 public class ViewController {
 
@@ -77,8 +70,6 @@ public class ViewController {
 	private List<GhostFolderDob> folderList;
 	private static ViewController instance = null;
 	private List<EncryptedFileDob> actualDropFiles;
-	private ShareDialog sharedialog;
-	private ImportDialog importdialog;
 	private Shell shell;
 	public ViewController() {
 		// Exists only to defeat instantiation.
@@ -298,7 +289,7 @@ public class ViewController {
 				Object obj = treeItems[i].getData();
 				// IF selection a Folder
 				if (obj.getClass() == GhostFolderDob.class) {
-					// do Nothing
+					//TODO fill with file in ordner entries
 				}
 				// IF selection a File
 				if (obj.getClass() == EncryptedFileDob.class) {
@@ -405,24 +396,19 @@ public class ViewController {
 	}
 
 	/**
+	 * Open Share Part perspective
+	 */
+	public void openShareContext(){
+		fileList = new ArrayList<EncryptedFileDob>();
+		List<EncryptedFileDob> fileList =  getSelectedFileList();
+		ShareView.getInstance().setInitialTree((ArrayList<EncryptedFileDob>) fileList);
+		ShareView.getInstance().setInitialInputMailList();		
+	}
+	/**
 	 * ShareFiles
 	 */
-	public void shareFiles() {
-		fileList = new ArrayList<EncryptedFileDob>();
-		List<String> mailList = new ArrayList<String>();
-		String password = null;
-		sharedialog = new ShareDialog(shell);
-		sharedialog.create();
-		if (sharedialog.open() == Window.OK) {
-			password = sharedialog.getPassword();
-		// MailList
-			mailList = sharedialog.getEmailList();
-		}
-		if(password == null || mailList.isEmpty()){
-			MessageDialog.openError(shell, "Error", "Error occured no password or email");
-		}
-		else{
-			List<EncryptedFileDob> fileList =  getSelectedFileList();
+	public void shareFiles(ArrayList<String> mailList, ArrayList<EncryptedFileDob> fileList, String password) {		
+			
 			ShareManager shareManager = new ShareManager();
 			ShareFolder shareFolder = shareManager.newShareRelation(fileList, password, mailList);
 			//TODO check if it worked
@@ -430,7 +416,7 @@ public class ViewController {
 			dropbox.shareFolder(Configuration.getPropertieDropBoxPath(false), shareFolder.getID(), mailList);
 			FileHandler fileHandler = new FileHandler();
 			File source = new File(Configuration.getPropertieTempPath(true) + XMLConstruct.NameShareXML);
-			File dest = new File("/Users/marcobetschart/Documents/BDA_project/TempFolder/"+ XMLConstruct.NameShareXML);
+			File dest = new File(Configuration.getPropertieTempPath(true)+ XMLConstruct.NameShareXML);
 			try {
 				//TODO Just for Tests
 				fileHandler.copyFile(source, dest);
@@ -439,7 +425,7 @@ public class ViewController {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}	
+
 	}
 	
 	public  List<File> listFilesForFolder(final File folder) {
@@ -455,17 +441,15 @@ public class ViewController {
 		return fileList;
 	}
 	
-	public void importFiles() {
-		 DirectoryDialog dirDialog = new DirectoryDialog(shell);
-		    dirDialog.setText("Select your home directory");
-		    String selectedDir = dirDialog.open();	
+	public void importFiles(String path, String foldername, String password) {
 			String destinationPath = null;
 			File source = null;
 			String sharefolderName = "";
 			FileHandler fileHandler = null;
+			//MOVE SHAREFOLDER
 			try {
 				 fileHandler = new FileHandler();	
-				source = new File(selectedDir);
+				source = new File(path);
 				sharefolderName = source.getName();
 				destinationPath = Configuration.getPropertieDropBoxPath(true) + source.getName();
 				File destination = new File(destinationPath);					
@@ -473,21 +457,7 @@ public class ViewController {
 			
 			} catch (IOException e) {
 				e.printStackTrace();
-			}			    
-		 
-		    //OpenDialog to get Password and foldername
-		    importdialog = new ImportDialog(shell);
-		    importdialog.create();
-		    String password = null;
-		    String foldername = null;
-		    if (importdialog.open() == Window.OK) {
-			password = importdialog.getPasswordString();
-			foldername = importdialog.getFoldernameString();
-		    }
-		    if(password == null || foldername == null){
-		    MessageDialog.openError(shell, "Error", "Error occured no password or foldername");
-		    }
-		    
+			}			    		    
 		    //Create ShareFolder
 		    ShareFolderDao shareFolderDao = new ShareFolderDao();
 		    KeyManager keyManager = new KeyManager();

@@ -18,6 +18,6 @@ import org.eclipse.swt.widgets.Shell;
 public class AboutHandler {
 	@Execute
 	public void execute(Shell shell) {
-		MessageDialog.openInformation(shell, "About", "DropTillLate 0.2.0");
+		MessageDialog.openInformation(shell, "About", "DropTillLate");
 	}
 }

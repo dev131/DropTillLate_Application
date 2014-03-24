@@ -52,7 +52,7 @@ import ch.droptilllate.application.controller.ViewController;
 import ch.droptilllate.application.properties.Configuration;
 
 
-public class EncryptedView{
+public class TreeView{
 
 	public static final String ID = "ch.droptilllate.application.partdescriptor.InitialView";
 	private TreeViewer viewer;
@@ -119,7 +119,7 @@ public class EncryptedView{
 			public void selectionChanged(SelectionChangedEvent event) {
 				StructuredSelection selection = (StructuredSelection) event.getSelection();
 				selectionService.setSelection(selection);
-				EncryptedView.this.controller.selectionChanged(event);
+				TreeView.this.controller.selectionChanged(event);
 			}
 		});
 	}

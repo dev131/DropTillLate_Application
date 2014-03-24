@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 
 public class InputFolderDialog extends TitleAreaDialog {
@@ -48,12 +49,14 @@ public class InputFolderDialog extends TitleAreaDialog {
 		  
 		  private void createLastName(Composite container) {
 		    Label lbtLastName = new Label(container, SWT.NONE);
+		    lbtLastName.setFont(SWTResourceManager.getFont("Lucida Grande", 14, SWT.NORMAL));
 		    lbtLastName.setText("Folder Name");
 		    
 		    GridData dataLastName = new GridData();
 		    dataLastName.grabExcessHorizontalSpace = true;
 		    dataLastName.horizontalAlignment = GridData.FILL;
 		    this.FolderNameText = new Text(container, SWT.BORDER);
+		    FolderNameText.setFont(SWTResourceManager.getFont("Lucida Grande", 11, SWT.NORMAL));
 		    this.FolderNameText.setLayoutData(dataLastName);
 		  }
 

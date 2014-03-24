@@ -1,3 +1,4 @@
 eclipse.preferences.version=1
 encoding//src/ch/droptilllate/application/share/KeyManager.java=UTF-8
-encoding//src/ch/droptilllate/application/views/EncryptedView.java=UTF-8
+encoding//src/ch/droptilllate/application/views/ShareView.java=UTF-8
+encoding//src/ch/droptilllate/application/views/TreeView.java=UTF-8

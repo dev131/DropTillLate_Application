@@ -32,6 +32,10 @@ public class XMLConstruct extends NLS {
 	public static String IdXMLContainer;
 	public static String IdLocalXMLFiles;
 	public static String IdShareXMLFiles;
+	public static String AttCloudPassword;
+	public static String AttCloudUsername;
+	public static String ChildElementCloudAccount;
+	public static String RootElementCloudAccount;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, XMLConstruct.class);
