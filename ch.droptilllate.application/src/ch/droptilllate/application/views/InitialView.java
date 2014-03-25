@@ -206,21 +206,21 @@ public class InitialView implements SelectionListener {
 		btnSearchDropFolder.addSelectionListener(this);
 		
     	//Invisible
-//    	btnSearchDropFolder.setVisible(false);
-//    	btnSearchTmpFolder.setVisible(false);
-//    	 text_dropboxPath.setVisible(false);
-//    	 text_tempPath.setVisible(false);
-//    	 text_DropboxPassword.setVisible(false);
-//    	 btnTestDropbox.setVisible(false);
-//    	 text_DropboxLoginName.setVisible(false);
-//    	 lblPassword_1.setVisible(false);
-//    	 lblDropboxLoginname.setVisible(false);
-//    	 lblInformationForSharing.setVisible(false);
-//    	 lblDropboxFolder.setVisible(false);
-//    	 lblTempFolder.setVisible(false);
-//		btnLogin.setVisible(false);
-//		txtDroptilllate.setVisible(false);
-//		lblDroptilllateFoldername.setVisible(false);
+    	btnSearchDropFolder.setVisible(false);
+    	btnSearchTmpFolder.setVisible(false);
+    	 text_dropboxPath.setVisible(false);
+    	 text_tempPath.setVisible(false);
+    	 text_DropboxPassword.setVisible(false);
+    	 btnTestDropbox.setVisible(false);
+    	 text_DropboxLoginName.setVisible(false);
+    	 lblPassword_1.setVisible(false);
+    	 lblDropboxLoginname.setVisible(false);
+    	 lblInformationForSharing.setVisible(false);
+    	 lblDropboxFolder.setVisible(false);
+    	 lblTempFolder.setVisible(false);
+		btnLogin.setVisible(false);
+		txtDroptilllate.setVisible(false);
+		lblDroptilllateFoldername.setVisible(false);
 		sashForm.setWeights(new int[] {271, 414});
 		checkPropertiesExists();
 	  }

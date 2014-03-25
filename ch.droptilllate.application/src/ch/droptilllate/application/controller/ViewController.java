@@ -106,7 +106,7 @@ public class ViewController {
 			tree.getColumn(identifier.ordinal()).setWidth(
 					identifier.columnWidth);
 		}
-
+		
 	}
 
 	public void initController() {
@@ -116,6 +116,8 @@ public class ViewController {
 		viewer.expandToLevel(1);
 		// Register Drag&Drop Listener
 		registerDragDrop();
+
+		
 	}
 
 	/**

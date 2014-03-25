@@ -38,7 +38,8 @@ public class TreeDragSourceListener implements DragSourceListener {
 
 	@Override
 	public void dragSetData(DragSourceEvent event) {
-		for (TreeItem currentDragSourceItem : this.dragSourceItems) {
+		event.data = "tilllate";
+		for (TreeItem currentDragSourceItem : dragSourceItems) {
 			TreeDragSourceListener.draggedDroppedElements
 					.add((DroppedElement) currentDragSourceItem.getData());
 		}
