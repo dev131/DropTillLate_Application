@@ -83,49 +83,58 @@ public class ShareView implements SelectionListener {
 		
 		treeViewer = new TreeViewer(composite, SWT.BORDER);
 		tree = treeViewer.getTree();
-		tree.setBounds(10, 10, 390, 431);
+		tree.setBounds(10, 30, 390, 431);
+		
+		Label lblSharedFiles = new Label(composite, SWT.NONE);
+		lblSharedFiles.setFont(SWTResourceManager.getFont("Lucida Grande", 13, SWT.NORMAL));
+		lblSharedFiles.setBounds(10, 10, 146, 14);
+		lblSharedFiles.setText("Shared Files:");
 		
 		Composite composite_1 = new Composite(sashForm, SWT.NONE);
 		
 		Label lblPassword = new Label(composite_1, SWT.NONE);
 		lblPassword.setFont(SWTResourceManager.getFont("Lucida Grande", 14, SWT.NORMAL));
-		lblPassword.setBounds(10, 40, 79, 19);
+		lblPassword.setBounds(35, 39, 79, 19);
 		lblPassword.setText("Password");
 		
 		text_password = new Text(composite_1,SWT.PASSWORD| SWT.BORDER);
-		text_password.setBounds(95, 40, 145, 19);
+		text_password.setBounds(120, 39, 145, 19);
 		
 		Label lblEmail = new Label(composite_1, SWT.NONE);
 		lblEmail.setFont(SWTResourceManager.getFont("Lucida Grande", 14, SWT.NORMAL));
-		lblEmail.setBounds(10, 73, 59, 19);
+		lblEmail.setBounds(35, 73, 59, 19);
 		lblEmail.setText("E-Mail");
 		
 		 btnAdd = new Button(composite_1, SWT.NONE);
-		btnAdd.setBounds(266, 69, 62, 28);
+		btnAdd.setBounds(291, 69, 62, 28);
 		btnAdd.setText("Add");
 		btnAdd.addSelectionListener(this);
 		
 		btnShare = new Button(composite_1, SWT.NONE);
-		btnShare.setBounds(166, 413, 94, 28);
+		btnShare.setBounds(191, 431, 94, 28);
 		btnShare.setText("Share");
 		btnShare.addSelectionListener(this);
 		
 		 btnCancel = new Button(composite_1, SWT.NONE);
-		btnCancel.setBounds(10, 413, 94, 28);
+		btnCancel.setBounds(35, 431, 94, 28);
 		btnCancel.setText("cancel");
 		btnCancel.addSelectionListener(this);
 		
 		comboViewer = new ComboViewer(composite_1, SWT.NONE);
 		combo_mail = comboViewer.getCombo();
-		combo_mail.setBounds(68, 72, 192, 22);
+		combo_mail.setBounds(91, 72, 194, 22);
 		
 		ListViewer listViewer = new ListViewer(composite_1, SWT.BORDER | SWT.V_SCROLL);
 		 maillist = listViewer.getList();
-		maillist.setBounds(14, 111, 246, 240);
+		maillist.setBounds(39, 143, 246, 240);
 		
 		btnDelete= new Button(composite_1, SWT.NONE);
-		btnDelete.setBounds(266, 108, 62, 28);
+		btnDelete.setBounds(291, 143, 62, 28);
 		btnDelete.setText("Delete");
+		
+		Label lblShareEmailList = new Label(composite_1, SWT.NONE);
+		lblShareEmailList.setBounds(37, 128, 127, 14);
+		lblShareEmailList.setText("Share e-mail list:");
 		btnDelete.addSelectionListener(this);
 		
 		sashForm.setWeights(new int[] {1, 1});
@@ -212,7 +221,7 @@ public class ShareView implements SelectionListener {
 	}
 
 	private void addMail() {
-		maillist.add(combo_mail.getItem(combo_mail.getSelectionIndex()));		
+		maillist.add(combo_mail.getText());		
 	}
 
 	

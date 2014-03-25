@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import ch.droptilllate.application.com.CloudDropboxCom;
 import ch.droptilllate.application.com.FileSystemCom;
 import ch.droptilllate.application.dao.ContainerDao;
 import ch.droptilllate.application.dao.EncryptedFileDao;
@@ -20,6 +21,8 @@ import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.views.Status;
 import ch.droptilllate.application.xml.UpdateXMLGenerator;
 import ch.droptilllate.application.xml.UpdateXMLImporter;
+import ch.droptilllate.cloudprovider.error.CloudError;
+import ch.droptilllate.couldprovider.api.ICloudProviderCom;
 import ch.droptilllate.couldprovider.api.IFileSystemCom;
 
 
@@ -238,6 +241,30 @@ public class ShareManager {
 			hashmap.put(sharefolderId, arraylist);
 		}
 		return hashmap;
+	}
+	
+	public CloudError shareFileToCloud(ShareFolder shareFolder, ArrayList<String> mailList){
+		ICloudProviderCom com = new CloudDropboxCom();
+		//TODO CHECK IF FOLDER AVAILABLE
+//		while(com.checkIfFolderExists(shareFolder.getID()) != CloudError.NONE && i<10){	
+//			//TEST IF FOLDER EXIST
+//			try {
+//				Thread.sleep(1000);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			i++;
+//		}
+		//WAIT a little
+		try {
+			Thread.sleep(4000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		CloudError state = com.shareFolder(shareFolder.getID(), mailList);
+		return state;
 	}
 
 	public int getSTATUS() {

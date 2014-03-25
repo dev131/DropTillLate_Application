@@ -36,6 +36,7 @@
 
    <plugins>
       <plugin id="ch.droptilllate.application"/>
+      <plugin id="ch.droptilllate.cloudprovider"/>
       <plugin id="ch.droptilllate.filesystem"/>
       <plugin id="com.ibm.icu"/>
       <plugin id="com.instantiations.assist.eclipse.fragment.swt" fragment="true"/>

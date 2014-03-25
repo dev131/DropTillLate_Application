@@ -42,5 +42,20 @@ public class OSValidator {
 		}
 		return Slash;
 	}
+	
+	public static String getSlashForSplit(){
+		if (isWindows()) {
+			Slash = "\\\\";
+		} else if (isMac()) {
+			Slash="/";
+		} else if (isUnix()) {
+			System.out.println("This is Unix or Linux");
+		} else if (isSolaris()) {
+			System.out.println("This is Solaris");
+		} else {
+			System.out.println("Your OS is not support!!");
+		}
+		return Slash;
+	}
  
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import ch.droptilllate.application.dao.CloudAccountDao;
 import ch.droptilllate.application.dnb.CloudAccount;
+import ch.droptilllate.application.lifecycle.OSValidator;
 import ch.droptilllate.application.properties.Configuration;
 import ch.droptilllate.cloudprovider.api.ICloudProvider;
 import ch.droptilllate.cloudprovider.dropbox.DropboxHandler;
@@ -19,7 +20,7 @@ public class CloudDropboxCom implements ICloudProviderCom {
 		iprovider = new DropboxHandler(); 	
 		CloudAccountDao dao = new CloudAccountDao();
 		CloudAccount account = (CloudAccount) dao.getElementAll(null);
-		return iprovider.shareFolder(Configuration.getPropertieDropBoxPath(false), shareFolderID, account.getUsername(), account.getPassword(), shareEmailList);
+		return iprovider.shareFolder(getDropboxPath(), shareFolderID, account.getUsername(), account.getPassword(), shareEmailList);
 	}
 
 	@Override
@@ -33,6 +34,36 @@ public class CloudDropboxCom implements ICloudProviderCom {
 		iprovider = new DropboxHandler();
 		CloudAccountDao dao = new CloudAccountDao();
 		CloudAccount account = (CloudAccount) dao.getElementAll(null);
-		return iprovider.checkIfFolderExists(Configuration.getPropertieDropBoxPath(false), shareRelationID, account.getUsername(), account.getPassword());
+		return iprovider.checkIfFolderExists(getDropboxPath(), shareRelationID, account.getUsername(), account.getPassword());
 	}
+	
+	/**
+	 * OSX Convert /Users/dropbox/stuff/droptilllate in stuff/droptilllate
+	 * WINDOWS Covert C:\\dropbox\\stuff\\droptilllate
+	 * @return string path
+	 */
+	private String getDropboxPath() {
+		// TODO Auto-generated method stub
+		Boolean reached = false;
+		int count = 0;
+		String path ="";
+		String tempPath = Configuration.getPropertieDropBoxPath(false);
+		String[] splitResult = tempPath.split(OSValidator.getSlashForSplit());
+		for(String pathPart : splitResult){
+			if(reached == true){
+				if(count>0){
+					path =path+"/"+ pathPart;
+				}
+				else{
+					path = pathPart;
+					count++;
+				}		
+			}
+			if(pathPart.equalsIgnoreCase("dropbox")){
+				reached = true;
+			}
+		}
+		return path;
+	}
+
 }

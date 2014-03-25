@@ -37,6 +37,7 @@ import ch.droptilllate.application.info.ErrorMessage;
 import ch.droptilllate.application.properties.Configuration;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.share.KeyManager;
+import ch.droptilllate.cloudprovider.error.CloudError;
 import ch.droptilllate.couldprovider.api.ICloudProviderCom;
 
 import org.eclipse.swt.widgets.Text;
@@ -75,6 +76,7 @@ public class InitialView implements SelectionListener {
 	private String password;
 	private String cloudusername;
 	private String cloudpassword;
+	private String status;
 	private Label lblWelcomeToDroptilllate;
 	private Button btnLogin_1;
 	private Label lbldroptilllate;
@@ -103,99 +105,99 @@ public class InitialView implements SelectionListener {
 		
 		lbldroptilllate = new Label(composite_1, SWT.NONE);
 		lbldroptilllate.setFont(SWTResourceManager.getFont("Lucida Grande", 16, SWT.NORMAL));
-		lbldroptilllate.setBounds(82, 247, 120, 34);
+		lbldroptilllate.setBounds(77, 212, 120, 34);
 		lbldroptilllate.setText("\u00A9DropTillLate");
 		
 		Composite composite = new Composite(sashForm, SWT.NONE);
 		
 		text_password = new Text(composite,SWT.PASSWORD| SWT.BORDER);
 		text_password.setFont(SWTResourceManager.getFont("Lucida Grande", 11, SWT.NORMAL));
-		text_password.setBounds(131, 56, 125, 19);
+		text_password.setBounds(131, 79, 125, 19);
 		
 		lblPassword = new Label(composite, SWT.NONE);
 		lblPassword.setFont(SWTResourceManager.getFont("Lucida Grande", 14, SWT.NORMAL));
-		lblPassword.setBounds(10, 56, 129, 17);
+		lblPassword.setBounds(17, 79, 129, 17);
 		lblPassword.setText("Password");
 		
 		text_dropboxPath = new Text(composite, SWT.BORDER);
 		text_dropboxPath.setFont(SWTResourceManager.getFont("Lucida Grande", 11, SWT.NORMAL));
-		text_dropboxPath.setBounds(131, 124, 125, 19);
+		text_dropboxPath.setBounds(131, 163, 125, 19);
 		
 		lblDropboxFolder = new Label(composite, SWT.NONE);
 		lblDropboxFolder.setFont(SWTResourceManager.getFont("Lucida Grande", 14, SWT.NORMAL));
-		lblDropboxFolder.setBounds(10, 125, 115, 19);
+		lblDropboxFolder.setBounds(17, 163, 115, 19);
 		lblDropboxFolder.setText("Dropbox path");
 		btnSearchDropFolder = new Button(composite, SWT.NONE);
 		btnSearchDropFolder.setFont(SWTResourceManager.getFont("Lucida Grande", 12, SWT.NORMAL));
-		btnSearchDropFolder.setBounds(264, 123, 78, 28);
+		btnSearchDropFolder.setBounds(264, 160, 78, 28);
 		btnSearchDropFolder.setText("search ...");
 		
 		btnSearchTmpFolder = new Button(composite, SWT.NONE);
 		btnSearchTmpFolder.setFont(SWTResourceManager.getFont("Lucida Grande", 12, SWT.NORMAL));
-		btnSearchTmpFolder.setBounds(264, 160, 78, 28);
+		btnSearchTmpFolder.setBounds(264, 192, 78, 28);
 		btnSearchTmpFolder.setText("search...");
 		
 		text_tempPath = new Text(composite, SWT.BORDER);
 		text_tempPath.setFont(SWTResourceManager.getFont("Lucida Grande", 11, SWT.NORMAL));
-		text_tempPath.setBounds(131, 163, 125, 19);
+		text_tempPath.setBounds(131, 195, 125, 19);
 		
 		
 		btnLogin = new Button(composite, SWT.NONE);
 		btnLogin.setFont(SWTResourceManager.getFont("Lucida Grande", 12, SWT.NORMAL));
-		btnLogin.setBounds(226, 371, 103, 28);
+		btnLogin.setBounds(226, 394, 103, 28);
 		btnLogin.setText("login");
 		
 		lblTempFolder = new Label(composite, SWT.NONE);
 		lblTempFolder.setFont(SWTResourceManager.getFont("Lucida Grande", 14, SWT.NORMAL));
-		lblTempFolder.setBounds(13, 162, 104, 19);
+		lblTempFolder.setBounds(17, 195, 104, 19);
 		lblTempFolder.setText("Temp path");
 		
 		text_DropboxLoginName = new Text(composite, SWT.BORDER);
 		text_DropboxLoginName.setFont(SWTResourceManager.getFont("Lucida Grande", 11, SWT.NORMAL));
-		text_DropboxLoginName.setBounds(120, 245, 125, 19);
+		text_DropboxLoginName.setBounds(131, 272, 125, 19);
 		
 		 lblDropboxLoginname = new Label(composite, SWT.NONE);
 		 lblDropboxLoginname.setFont(SWTResourceManager.getFont("Lucida Grande", 14, SWT.NORMAL));
-		lblDropboxLoginname.setBounds(10, 245, 115, 19);
+		lblDropboxLoginname.setBounds(17, 272, 115, 19);
 		lblDropboxLoginname.setText("Dropbox Login");
 		
 		 lblInformationForSharing = new Label(composite, SWT.NONE);
 		 lblInformationForSharing.setFont(SWTResourceManager.getFont("Lucida Grande", 16, SWT.BOLD));
-		lblInformationForSharing.setBounds(10, 208, 200, 19);
+		lblInformationForSharing.setBounds(10, 235, 200, 19);
 		lblInformationForSharing.setText("Information for Sharing:");
 		
 		 lblPassword_1 = new Label(composite, SWT.NONE);
 		 lblPassword_1.setFont(SWTResourceManager.getFont("Lucida Grande", 14, SWT.NORMAL));
-		lblPassword_1.setBounds(10, 291, 78, 17);
+		lblPassword_1.setBounds(17, 312, 78, 17);
 		lblPassword_1.setText("Password");
 		
 		text_DropboxPassword = new Text(composite, SWT.PASSWORD|SWT.BORDER);
 		text_DropboxPassword.setFont(SWTResourceManager.getFont("Lucida Grande", 11, SWT.NORMAL));
-		text_DropboxPassword.setBounds(120, 291, 125, 19);
+		text_DropboxPassword.setBounds(131, 312, 125, 19);
 		
 		btnTestDropbox= new Button(composite, SWT.NONE);
 		btnTestDropbox.setFont(SWTResourceManager.getFont("Lucida Grande", 12, SWT.NORMAL));
-		btnTestDropbox.setBounds(251, 287, 72, 28);
+		btnTestDropbox.setBounds(270, 309, 72, 28);
 		btnTestDropbox.setText("Test");
 		
 		lblWelcomeToDroptilllate = new Label(composite, SWT.NONE);
 		lblWelcomeToDroptilllate.setFont(SWTResourceManager.getFont("Lucida Grande", 20, SWT.BOLD));
-		lblWelcomeToDroptilllate.setBounds(10, 10, 336, 23);
+		lblWelcomeToDroptilllate.setBounds(17, 31, 336, 23);
 		lblWelcomeToDroptilllate.setText("Welcome to DropTillLate");
 		
 		btnLogin_1 = new Button(composite, SWT.NONE);
 		btnLogin_1.setFont(SWTResourceManager.getFont("Lucida Grande", 12, SWT.NORMAL));
-		btnLogin_1.setBounds(262, 52, 84, 28);
+		btnLogin_1.setBounds(258, 76, 84, 28);
 		btnLogin_1.setText("login");
 		
 		lblDroptilllateFoldername = new Label(composite, SWT.NONE);
 		lblDroptilllateFoldername.setFont(SWTResourceManager.getFont("Lucida Grande", 14, SWT.NORMAL));
-		lblDroptilllateFoldername.setBounds(10, 81, 184, 27);
+		lblDroptilllateFoldername.setBounds(17, 106, 184, 27);
 		lblDroptilllateFoldername.setText("Foldername");
 		
 		txtDroptilllate = new Text(composite, SWT.BORDER);
 		txtDroptilllate.setText("DropTillLate");
-		txtDroptilllate.setBounds(130, 81, 126, 19);
+		txtDroptilllate.setBounds(130, 106, 126, 19);
 		btnLogin_1.addSelectionListener(this);
 		btnTestDropbox.addSelectionListener(this);
 		
@@ -204,21 +206,21 @@ public class InitialView implements SelectionListener {
 		btnSearchDropFolder.addSelectionListener(this);
 		
     	//Invisible
-    	btnSearchDropFolder.setVisible(false);
-    	btnSearchTmpFolder.setVisible(false);
-    	 text_dropboxPath.setVisible(false);
-    	 text_tempPath.setVisible(false);
-    	 text_DropboxPassword.setVisible(false);
-    	 btnTestDropbox.setVisible(false);
-    	 text_DropboxLoginName.setVisible(false);
-    	 lblPassword_1.setVisible(false);
-    	 lblDropboxLoginname.setVisible(false);
-    	 lblInformationForSharing.setVisible(false);
-    	 lblDropboxFolder.setVisible(false);
-    	 lblTempFolder.setVisible(false);
-		btnLogin.setVisible(false);
-		txtDroptilllate.setVisible(false);
-		lblDroptilllateFoldername.setVisible(false);
+//    	btnSearchDropFolder.setVisible(false);
+//    	btnSearchTmpFolder.setVisible(false);
+//    	 text_dropboxPath.setVisible(false);
+//    	 text_tempPath.setVisible(false);
+//    	 text_DropboxPassword.setVisible(false);
+//    	 btnTestDropbox.setVisible(false);
+//    	 text_DropboxLoginName.setVisible(false);
+//    	 lblPassword_1.setVisible(false);
+//    	 lblDropboxLoginname.setVisible(false);
+//    	 lblInformationForSharing.setVisible(false);
+//    	 lblDropboxFolder.setVisible(false);
+//    	 lblTempFolder.setVisible(false);
+//		btnLogin.setVisible(false);
+//		txtDroptilllate.setVisible(false);
+//		lblDroptilllateFoldername.setVisible(false);
 		sashForm.setWeights(new int[] {271, 414});
 		checkPropertiesExists();
 	  }
@@ -309,6 +311,9 @@ public class InitialView implements SelectionListener {
 
 
 	public void loginPressed(){
+		if(text_DropboxPassword.getVisible()){
+			testDropboxLogin();
+		}
 		//IF Configfile not exist, insert tmp and dropbox path	
 		if(newConfigFile){
 				if(checkPath()){
@@ -385,18 +390,28 @@ public class InitialView implements SelectionListener {
 			ownpart.setVisible(false);			
 	  }
 	  
-
-		private void testDropboxLogin() {
+/**
+ * Test Dropbox Loing
+ * @return true if correct
+ */
+		private boolean testDropboxLogin() {
 			cloudusername=text_DropboxLoginName.getText();
 			cloudpassword =text_DropboxPassword.getText();
 			if(cloudusername.isEmpty() || cloudpassword.isEmpty()){
 				new ErrorMessage(shell, "Error", "Missing Parameters");
+				return false;
 			}
 			else{
 				//TODO Test if account correct
 				ICloudProviderCom com = new CloudDropboxCom();
-				com.testCloudAccount(cloudusername, cloudpassword);
-				//ERROR
+				CloudError status = com.testCloudAccount(cloudusername, cloudpassword);
+				if(com.testCloudAccount(cloudusername, cloudpassword) != CloudError.NONE){
+					new ErrorMessage(shell, "Error", status.getMessage());
+					return false;
+				};
+				//NO ERROR
+				cloudaccount = new CloudAccount(cloudusername, cloudpassword);
+				return true; 
 			}
 		}
 
