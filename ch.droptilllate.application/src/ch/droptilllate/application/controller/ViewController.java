@@ -74,6 +74,7 @@ public class ViewController {
 	private static ViewController instance = null;
 	private List<EncryptedFileDob> actualDropFiles;
 	private Shell shell;
+	private ShareManager shareManager;
 
 	public ViewController() {
 		// Exists only to defeat instantiation.
@@ -422,12 +423,17 @@ public class ViewController {
 	}
 
 	/**
-	 * ShareFiles
+	 * ShareFiles Return true if oke Return false for Manually
+	 * @param mailList
+	 * @param fileList
+	 * @param password
+	 * @return
 	 */
-	public void shareFiles(ArrayList<String> mailList,
-			ArrayList<EncryptedFileDob> fileList, String password) {
+	public boolean shareFiles(ArrayList<String> mailList,
+			ArrayList<EncryptedFileDob> fileList, String password, boolean auto) {
 		ShareFolder shareFolder = null;
-		ShareManager shareManager = new ShareManager(fileList, password,
+		CloudError status = CloudError.NONE;
+		shareManager = new ShareManager(fileList, password,
 				mailList);
 		if (shareManager.getSTATUS() == 0) {
 			// ERROR
@@ -444,6 +450,14 @@ public class ViewController {
 					password, shareFolder);
 			shareManager.insertShareRelation(shareFolder, mailList);
 			shareManager.createUpdateFiles(shareFolder);
+			//Share file Automatically
+			if(!auto){
+				status = shareFileToCloudManually(shareFolder, mailList, false);
+			}
+			else{
+				status = shareFileToCloudAutomaticaly(shareFolder, mailList);
+			}
+		
 		}
 		if (shareManager.getSTATUS() == 2) {
 			// USING EXISTING
@@ -451,13 +465,10 @@ public class ViewController {
 					password);
 			new ErrorMessage(shell, "MESSAGE", "Shared ->  password = "
 					+ shareFolder.getKey());
+			status = shareFileToCloudManually(shareFolder, mailList, false);
 		}
-		// TODO check if it worked
-		if (shareFolder != null) {
-			CloudError status = shareManager.shareFileToCloud(shareFolder,
-					mailList);
 			// TODO ERROR sharing
-			if (status == CloudError.NONE) {
+		if (status == CloudError.NONE) {
 				// NO ERROR OCCURED
 				// TODO JUST FOR TESTS
 				FileHandler fileHandler = new FileHandler();
@@ -473,13 +484,33 @@ public class ViewController {
 					e.printStackTrace();
 				}
 				new ErrorMessage(shell, "Success", "shared");
+				return true;
 			} else {
 				// ERROR ocured
-				new ErrorMessage(shell, "ERROR", status.getMessage());
+				new ErrorMessage(shell, "ERROR", status.getMessage() +"  Share error -> Check files or Try Manually");
+				return false;
 			}
-		} else {
-			new ErrorMessage(shell, "ERROR", "Share error -> Check files");
-		}
+	}
+
+	private CloudError shareFileToCloudAutomaticaly(ShareFolder shareFolder, ArrayList<String> mailList) {
+		ICloudProviderCom com = new CloudDropboxCom();
+		CloudError status = com.shareFolder(shareFolder.getID(), mailList);
+		int i = 0;
+		if(status != CloudError.NONE && i < 2){
+			status = com.shareFolder(shareFolder.getID(), mailList);
+		}		
+		return status;
+	}
+	/**
+	 * Open webbrowser for CloudProvider
+	 * @param shareFolder
+	 * @param mailList
+	 * @param alreadyShared
+	 * @return
+	 */
+	private CloudError shareFileToCloudManually(ShareFolder shareFolder, ArrayList<String> mailList, boolean alreadyShared){
+		ICloudProviderCom com = new CloudDropboxCom();
+		return com.shareFolderManuallyViaBrowser(shareFolder.getID(), alreadyShared);
 	}
 
 	public List<File> listFilesForFolder(final File folder) {

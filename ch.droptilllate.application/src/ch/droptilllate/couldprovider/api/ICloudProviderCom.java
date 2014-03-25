@@ -6,10 +6,10 @@ import ch.droptilllate.cloudprovider.error.CloudError;
 
 public interface ICloudProviderCom {
 	/**
-	 * Share Folder
+	 * Share Folder Automatically
 	 * @param shareFolderID
 	 * @param shareEmailList
-	 * @return
+	 * @return CloudError
 	 */
 	CloudError shareFolder(int shareFolderID, List<String> shareEmailList);
 	
@@ -17,7 +17,7 @@ public interface ICloudProviderCom {
 	 * Test if user exist
 	 * @param cloudUser
 	 * @param cloundPW
-	 * @return
+	 * @return CloudError
 	 */
 	CloudError testCloudAccount(String cloudUser, String cloundPW);
 	
@@ -25,7 +25,16 @@ public interface ICloudProviderCom {
 	 * Check if Folder Upload
 	 * @param droptilllatePath
 	 * @param shareRelationID
-	 * @return
+	 * @return CloudError
 	 */
 	CloudError checkIfFolderExists(int shareRelationID);
+	
+	/**
+	 * Share Folder Manually
+	 * @param droptilllatePath
+	 * @param shareRelationID
+	 * @param alreadyShared
+	 * @return CloudError
+	 */
+	 CloudError shareFolderManuallyViaBrowser(Integer shareRelationID, boolean alreadyShared);
 }

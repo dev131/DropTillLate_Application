@@ -177,22 +177,6 @@ public class ShareManager {
 	
 	}
 
-	public void alertMembers(HashSet<Integer> hashSet_shareFolderList){
-		List<ShareRelation> shareRelationList = new ArrayList<ShareRelation>();	
-		for(Integer i : hashSet_shareFolderList){
-			ShareRelationDao dao = new ShareRelationDao();
-			//Return list of all shareRelation
-			List<ShareRelation> shareRelationListTemp = (List<ShareRelation>) dao.getElementByID(i, null);
-			for(ShareRelation relation : shareRelationListTemp){
-				shareRelationList.add(relation);
-			}
-		}
-		for(ShareRelation shareRelation : shareRelationList){
-			Status status = Status.getInstance();
-			status.setMessage("SharedWith:" + shareRelation.getMail());
-		}		
-	}
-
 	private boolean checkIfMoreFilesAvailable(Integer shareFolderId,
 			List<EncryptedFileDob> fileList) {
 		ContainerDao dao = new ContainerDao();
@@ -243,29 +227,7 @@ public class ShareManager {
 		return hashmap;
 	}
 	
-	public CloudError shareFileToCloud(ShareFolder shareFolder, ArrayList<String> mailList){
-		ICloudProviderCom com = new CloudDropboxCom();
-		//TODO CHECK IF FOLDER AVAILABLE
-//		while(com.checkIfFolderExists(shareFolder.getID()) != CloudError.NONE && i<10){	
-//			//TEST IF FOLDER EXIST
-//			try {
-//				Thread.sleep(1000);
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			i++;
-//		}
-		//WAIT a little
-		try {
-			Thread.sleep(4000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		CloudError state = com.shareFolder(shareFolder.getID(), mailList);
-		return state;
-	}
+
 
 	public int getSTATUS() {
 		return STATUS;

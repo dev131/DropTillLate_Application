@@ -20,7 +20,7 @@ public class CloudDropboxCom implements ICloudProviderCom {
 		iprovider = new DropboxHandler(); 	
 		CloudAccountDao dao = new CloudAccountDao();
 		CloudAccount account = (CloudAccount) dao.getElementAll(null);
-		return iprovider.shareFolder(getDropboxPath(), shareFolderID, account.getUsername(), account.getPassword(), shareEmailList);
+		return iprovider.shareFolder(getDropboxPath(), shareFolderID, account.getUsername(), account.getPassword(), shareEmailList);		
 	}
 
 	@Override
@@ -35,6 +35,11 @@ public class CloudDropboxCom implements ICloudProviderCom {
 		CloudAccountDao dao = new CloudAccountDao();
 		CloudAccount account = (CloudAccount) dao.getElementAll(null);
 		return iprovider.checkIfFolderExists(getDropboxPath(), shareRelationID, account.getUsername(), account.getPassword());
+	}
+	
+	@Override
+	public CloudError shareFolderManuallyViaBrowser(Integer shareRelationID, boolean alreadyShared) {
+		return iprovider.shareFolderManuallyViaBrowser(getDropboxPath(), shareRelationID, alreadyShared);
 	}
 	
 	/**
@@ -65,5 +70,7 @@ public class CloudDropboxCom implements ICloudProviderCom {
 		}
 		return path;
 	}
+
+
 
 }

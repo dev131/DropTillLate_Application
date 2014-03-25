@@ -56,5 +56,4 @@ public interface IFileSystemCom {
 	public boolean decryptFile(ShareFolder sourceShareFolder, boolean local);
 	
 	
-	
 }

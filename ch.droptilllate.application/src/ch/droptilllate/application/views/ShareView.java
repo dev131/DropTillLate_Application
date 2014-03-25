@@ -56,6 +56,7 @@ public class ShareView implements SelectionListener {
 	private Button btnDelete;
 	private List maillist;
 	private Combo combo_mail;
+	private Button btnShareManually;
 	private ArrayList<EncryptedFileDob> fileList;
 	public ShareView() {
 		instance = this;
@@ -135,6 +136,12 @@ public class ShareView implements SelectionListener {
 		Label lblShareEmailList = new Label(composite_1, SWT.NONE);
 		lblShareEmailList.setBounds(37, 128, 127, 14);
 		lblShareEmailList.setText("Share e-mail list:");
+		
+		 btnShareManually = new Button(composite_1, SWT.NONE);
+		btnShareManually.setBounds(290, 431, 117, 28);
+		btnShareManually.setText("Share manually");
+		btnShareManually.setVisible(false);
+		btnShareManually.addSelectionListener(this);
 		btnDelete.addSelectionListener(this);
 		
 		sashForm.setWeights(new int[] {1, 1});
@@ -201,8 +208,9 @@ public class ShareView implements SelectionListener {
 		
 	}
 
-	private void share() {
+	private void share(boolean auto) {
 		//CHECK if all data are available
+		boolean state;
 		if(text_password.equals("") || maillist.getItems().length == 0 || this.fileList.isEmpty()  ){
 			new ErrorMessage(shell, "Error", "Missing Argument");
 		}
@@ -211,12 +219,21 @@ public class ShareView implements SelectionListener {
 			for(String temp : maillist.getItems()){
 				emailList.add(temp);
 			  }
-			MPart ownpart = partService.findPart("ch.droptilllate.application.part.decryptedview");
-			ownpart.setVisible(true);
-			MPart mPart = partService.findPart("ch.droptilllate.application.part.sharepart");
-			mPart.setVisible(false);
-			ViewController.getInstance().shareFiles(emailList ,fileList, text_password.getText() );
-		
+			if(auto){
+				state = ViewController.getInstance().shareFiles(emailList ,fileList, text_password.getText(), true);
+			}
+			else{
+				state = ViewController.getInstance().shareFiles(emailList ,fileList, text_password.getText(), false);
+			}
+			if(state){
+				MPart ownpart = partService.findPart("ch.droptilllate.application.part.decryptedview");
+				ownpart.setVisible(true);
+				MPart mPart = partService.findPart("ch.droptilllate.application.part.sharepart");
+				mPart.setVisible(false);
+			}
+			else{
+				btnShareManually.setVisible(true);
+			}
 		}		
 	}
 
@@ -241,7 +258,7 @@ public class ShareView implements SelectionListener {
 			addMail();
 	        } 	
 		if(e.getSource() == btnShare){ 
-			share();
+			share(true);
         } 
 		if(e.getSource() == btnCancel){ 
 			cancel();
@@ -249,8 +266,12 @@ public class ShareView implements SelectionListener {
 		if(e.getSource() == btnDelete){ 
 			deleteMail();
         } 
-		
+		if(e.getSource() == btnShareManually){ 		
+			share(false);
+        } 
+	
 	}
+
 
 	@Override
 	public void widgetDefaultSelected(SelectionEvent e) {
