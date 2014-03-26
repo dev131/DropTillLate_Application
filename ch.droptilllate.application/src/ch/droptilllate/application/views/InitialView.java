@@ -34,9 +34,10 @@ import ch.droptilllate.application.controller.ViewController;
 import ch.droptilllate.application.dao.CloudAccountDao;
 import ch.droptilllate.application.dnb.CloudAccount;
 import ch.droptilllate.application.info.ErrorMessage;
+import ch.droptilllate.application.info.SuccessMessage;
+import ch.droptilllate.application.key.KeyManager;
 import ch.droptilllate.application.properties.Configuration;
 import ch.droptilllate.application.properties.Messages;
-import ch.droptilllate.application.share.KeyManager;
 import ch.droptilllate.cloudprovider.error.CloudError;
 import ch.droptilllate.couldprovider.api.ICloudProviderCom;
 
@@ -84,6 +85,7 @@ public class InitialView implements SelectionListener {
 	private Text txtDroptilllate;
 	private String dropboxPath ="";
 	private String tmpPath="";
+	private Boolean dropboxaccountvalidation;
 	@PostConstruct
 	public void createControls(Composite parent, Shell shell, EPartService partService, EModelService modelService, MApplication application) {
 		
@@ -283,6 +285,10 @@ public class InitialView implements SelectionListener {
 		}
 	
 
+	/**
+	 * set Properties
+	 * @return true if it worked
+	 */
 	private boolean setProperties(){
 		if(!dropboxPath.isEmpty() && !tmpPath.isEmpty() && !txtDroptilllate.getText().isEmpty() ){
 			try {
@@ -302,6 +308,10 @@ public class InitialView implements SelectionListener {
 
 	}
 
+	/**
+	 * Check Path
+	 * @return return true if tmp-path and dropbox-path not equal
+	 */
 	private boolean checkPath() {
 			if(tmpPath.equals(dropboxPath)){
 				return false;
@@ -312,13 +322,13 @@ public class InitialView implements SelectionListener {
 
 	public void loginPressed(){
 		if(text_DropboxPassword.getVisible()){
-			testDropboxLogin();
+			dropboxaccountvalidation = testDropboxLogin();
 		}
 		//IF Configfile not exist, insert tmp and dropbox path	
 		if(newConfigFile){
 				if(checkPath()){
 					if(!setProperties()){
-						new ErrorMessage(shell,"Error","Propertie Error! Check if Temp path and Dropbox path are equals" );
+						new ErrorMessage(shell,"Error","Propertie Error! Check Attributes" );
 						return;						
 					}
 				}
@@ -330,12 +340,12 @@ public class InitialView implements SelectionListener {
 			password = text_password.getText();
 			KeyManager km = new KeyManager();
 			if(!password.isEmpty()){
-				if(newUser){
-					testDropboxLogin();
+				if(newUser){	
+					dropboxaccountvalidation = testDropboxLogin();
 					//Check if all properties are set
 					if((Configuration.getPropertieDropBoxPath(true) != null)&&
 							(Configuration.getPropertieTempPath(true) !=null)&& 
-							cloudaccount !=null){
+							dropboxaccountvalidation){
 						//CreateFolder
 						createFolder();
 						km.initPassword(password);
@@ -387,7 +397,7 @@ public class InitialView implements SelectionListener {
 			part.setVisible(true);
 			ViewController.getInstance().initController();
 			MPart ownpart = partService.findPart("ch.droptilllate.application.part.InitialView");
-			ownpart.setVisible(false);			
+			ownpart.setVisible(false);	
 	  }
 	  
 /**
@@ -410,6 +420,7 @@ public class InitialView implements SelectionListener {
 					return false;
 				};
 				//NO ERROR
+				//new SuccessMessage(shell,"Information", "Dropbox-Login Correct");
 				cloudaccount = new CloudAccount(cloudusername, cloudpassword);
 				return true; 
 			}

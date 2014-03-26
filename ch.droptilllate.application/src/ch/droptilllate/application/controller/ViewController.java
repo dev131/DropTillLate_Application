@@ -10,7 +10,12 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.model.application.ui.menu.MHandledToolItem;
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
+import org.eclipse.e4.ui.workbench.swt.modeling.EMenuService;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -32,11 +37,13 @@ import org.eclipse.swt.widgets.TreeItem;
 
 import ch.droptilllate.application.com.CloudDropboxCom;
 import ch.droptilllate.application.com.FileSystemCom;
+import ch.droptilllate.application.dao.CloudAccountDao;
 import ch.droptilllate.application.dao.ContainerDao;
 import ch.droptilllate.application.dao.EncryptedFileDao;
 import ch.droptilllate.application.dao.GhostFolderDao;
 import ch.droptilllate.application.dao.ShareFolderDao;
 import ch.droptilllate.application.dao.ShareRelationDao;
+import ch.droptilllate.application.dnb.CloudAccount;
 import ch.droptilllate.application.dnb.EncryptedContainer;
 import ch.droptilllate.application.dnb.DroppedElement;
 import ch.droptilllate.application.dnb.ShareFolder;
@@ -44,6 +51,8 @@ import ch.droptilllate.application.dnb.ShareRelation;
 import ch.droptilllate.application.handlers.FileHandler;
 import ch.droptilllate.application.info.CRUDCryptedFileInfo;
 import ch.droptilllate.application.info.ErrorMessage;
+import ch.droptilllate.application.info.SuccessMessage;
+import ch.droptilllate.application.key.KeyManager;
 import ch.droptilllate.application.listener.TreeDragSourceListener;
 import ch.droptilllate.application.listener.TreeDropTargetAdapter;
 import ch.droptilllate.application.model.EncryptedFileDob;
@@ -53,7 +62,6 @@ import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.properties.XMLConstruct;
 import ch.droptilllate.application.provider.DropTillLateContentProvider;
 import ch.droptilllate.application.provider.DropTillLateLabelProvider;
-import ch.droptilllate.application.share.KeyManager;
 import ch.droptilllate.application.share.ShareManager;
 import ch.droptilllate.application.views.Status;
 import ch.droptilllate.application.views.TableIdentifier;
@@ -64,7 +72,10 @@ import ch.droptilllate.couldprovider.api.IFileSystemCom;
 import ch.droptilllate.application.views.ShareView;
 
 public class ViewController {
-
+	private EModelService modelService;
+	private MApplication application;
+	private EPartService partService;
+	
 	private Tree tree;
 	private TreeViewer viewer;
 	private GhostFolderDob root;
@@ -87,10 +98,13 @@ public class ViewController {
 		return instance;
 	}
 
-	public void initViewController(TreeViewer viewer, Shell shell) {
+	public void initViewController(TreeViewer viewer, Shell shell, EPartService partService, EModelService modelService, MApplication application) {
 		// Treeviewer
 		this.viewer = viewer;
 		this.shell = shell;
+		this.partService = partService;
+		this.modelService = modelService;
+		this.application = application;
 		// Set ContentProvider and Labels
 		viewer.setContentProvider(new DropTillLateContentProvider());
 		viewer.setLabelProvider(new DropTillLateLabelProvider());
@@ -117,8 +131,21 @@ public class ViewController {
 		viewer.expandToLevel(1);
 		// Register Drag&Drop Listener
 		registerDragDrop();
-
 		
+		//checkCloudAccount();
+		
+	}
+
+	private void checkCloudAccount() {
+		CloudAccountDao dao = new CloudAccountDao();
+		CloudAccount account = (CloudAccount) dao.getElementAll(null);
+		ICloudProviderCom com = new CloudDropboxCom();
+		CloudError status = com.testCloudAccount(account.getUsername(), account.getPassword());
+		if(status != CloudError.NONE){
+			new ErrorMessage(shell, "Error", status.getMessage());
+			  MHandledToolItem newFolderHandler = (MHandledToolItem) modelService.find("ch.droptilllate.application.handledmenuitem.ShareFiles", application);
+				newFolderHandler.setVisible(false);		
+		}		
 	}
 
 	/**
@@ -455,7 +482,7 @@ public class ViewController {
 				status = shareFileToCloudManually(shareFolder, mailList, false);
 			}
 			else{
-				status = shareFileToCloudAutomaticaly(shareFolder, mailList);
+				status = shareFileToCloudAutomatically(shareFolder, mailList);
 			}
 		
 		}
@@ -463,7 +490,7 @@ public class ViewController {
 			// USING EXISTING
 			shareFolder = shareManager.useExistingSharedFolder(fileList,
 					password);
-			new ErrorMessage(shell, "MESSAGE", "Shared ->  password = "
+			new SuccessMessage(shell, "MESSAGE", "Shared ->  password = "
 					+ shareFolder.getKey());
 			status = shareFileToCloudManually(shareFolder, mailList, false);
 		}
@@ -483,7 +510,7 @@ public class ViewController {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				new ErrorMessage(shell, "Success", "shared");
+				new SuccessMessage(shell, "Success", "shared");
 				return true;
 			} else {
 				// ERROR ocured
@@ -492,7 +519,13 @@ public class ViewController {
 			}
 	}
 
-	private CloudError shareFileToCloudAutomaticaly(ShareFolder shareFolder, ArrayList<String> mailList) {
+	/**
+	 * ShareFileAutomatically
+	 * @param shareFolder
+	 * @param mailList
+	 * @return
+	 */
+	private CloudError shareFileToCloudAutomatically(ShareFolder shareFolder, ArrayList<String> mailList) {
 		ICloudProviderCom com = new CloudDropboxCom();
 		CloudError status = com.shareFolder(shareFolder.getID(), mailList);
 		int i = 0;

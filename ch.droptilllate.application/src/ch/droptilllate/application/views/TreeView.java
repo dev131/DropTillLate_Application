@@ -53,20 +53,20 @@ import ch.droptilllate.application.properties.Configuration;
 
 
 public class TreeView{
-
+	@Inject EModelService modelService;
+	@Inject MApplication application;
+	@Inject ESelectionService selectionService;
+	@Inject EPartService partService;
+	@Inject EMenuService menuService;
+	
 	public static final String ID = "ch.droptilllate.application.partdescriptor.InitialView";
 	private TreeViewer viewer;
 	private ViewController controller;
-	@Inject
-	private EModelService service;
-	@Inject
-	private MApplication application;
-	@Inject ESelectionService selectionService;
 	private Shell shell;
 	private Composite parent;
 	
 	@PostConstruct
-	public void createPartControl(Composite parent, EMenuService menuService, Shell shell, EModelService service) {
+	public void createPartControl(Composite parent, EMenuService menuService, Shell shell, EPartService partService, EModelService modelService, MApplication application) {
 		// Treeviewer
 		this.viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		menuService.registerContextMenu(this.viewer.getControl(),
@@ -74,7 +74,7 @@ public class TreeView{
 		this.shell = shell;
 		this.parent = parent;
 		this.controller = ViewController.getInstance();
-		this.controller.initViewController(this.viewer, shell);
+		this.controller.initViewController(this.viewer, shell, partService, modelService, application);
 		addListeners();
 		addCloseListener(parent);
 	}

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class-diagram version="1.1.4" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+<class-diagram version="1.1.5" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
   associations="true" dependencies="false" nesting-relationships="true">  
   <class id="1" language="java" name="ch.droptilllate.application.controller.ViewController" 
     project="ch.droptilllate.application" 
@@ -23,9 +23,9 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="3" language="java" name="ch.droptilllate.application.share.KeysGenerator" 
+  <class id="3" language="java" name="ch.droptilllate.application.key.KeysGenerator" 
     project="ch.droptilllate.application" 
-    file="/ch.droptilllate.application/src/ch/droptilllate/application/share/KeysGenerator.java" binary="false" 
+    file="/ch.droptilllate.application/src/ch/droptilllate/application/key/KeysGenerator.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="2278" y="-14"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
@@ -34,9 +34,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="4" language="java" name="ch.droptilllate.application.share.KeyManager" 
-    project="ch.droptilllate.application" 
-    file="/ch.droptilllate.application/src/ch/droptilllate/application/share/KeyManager.java" binary="false" 
+  <class id="4" language="java" name="ch.droptilllate.application.key.KeyManager" project="ch.droptilllate.application" 
+    file="/ch.droptilllate.application/src/ch/droptilllate/application/key/KeyManager.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1960" y="22"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
@@ -45,29 +44,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <interface id="5" language="java" name="ch.droptilllate.couldprovider.api.IShareFolder" 
-    project="ch.droptilllate.application" 
-    file="/ch.droptilllate.application/src/ch/droptilllate/couldprovider/api/IShareFolder.java" binary="false" 
-    corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="604" y="-24"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
-      visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </interface>  
-  <class id="6" language="java" name="ch.droptilllate.cloudprovider.dropbox.Dropbox" 
-    project="ch.droptilllate.application" 
-    file="/ch.droptilllate.application/src/ch/droptilllate/cloudprovider/dropbox/Dropbox.java" binary="false" 
-    corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="596" y="164"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
-      visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <interface id="7" language="java" name="ch.droptilllate.couldprovider.api.IFileSystemCom" 
+  <interface id="5" language="java" name="ch.droptilllate.couldprovider.api.IFileSystemCom" 
     project="ch.droptilllate.application" 
     file="/ch.droptilllate.application/src/ch/droptilllate/couldprovider/api/IFileSystemCom.java" binary="false" 
     corner="BOTTOM_RIGHT">    
@@ -78,7 +55,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <class id="8" language="java" name="ch.droptilllate.application.xml.UpdateXMLGenerator" 
+  <class id="6" language="java" name="ch.droptilllate.application.xml.UpdateXMLGenerator" 
     project="ch.droptilllate.application" 
     file="/ch.droptilllate.application/src/ch/droptilllate/application/xml/UpdateXMLGenerator.java" binary="false" 
     corner="BOTTOM_RIGHT">    
@@ -89,7 +66,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="9" language="java" name="ch.droptilllate.application.xml.UpdateXMLImporter" 
+  <class id="7" language="java" name="ch.droptilllate.application.xml.UpdateXMLImporter" 
     project="ch.droptilllate.application" 
     file="/ch.droptilllate.application/src/ch/droptilllate/application/xml/UpdateXMLImporter.java" binary="false" 
     corner="BOTTOM_RIGHT">    
@@ -100,7 +77,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="10" language="java" name="ch.droptilllate.application.xml.XmlConnection" 
+  <class id="8" language="java" name="ch.droptilllate.application.xml.XmlConnection" 
     project="ch.droptilllate.application" 
     file="/ch.droptilllate.application/src/ch/droptilllate/application/xml/XmlConnection.java" binary="false" 
     corner="BOTTOM_RIGHT">    
@@ -111,7 +88,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="11" language="java" name="ch.droptilllate.application.dao.ShareRelationDao" 
+  <class id="9" language="java" name="ch.droptilllate.application.dao.ShareRelationDao" 
     project="ch.droptilllate.application" 
     file="/ch.droptilllate.application/src/ch/droptilllate/application/dao/ShareRelationDao.java" binary="false" 
     corner="BOTTOM_RIGHT">    
@@ -122,7 +99,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="12" language="java" name="ch.droptilllate.application.dao.ShareFolderDao" 
+  <class id="10" language="java" name="ch.droptilllate.application.dao.ShareFolderDao" 
     project="ch.droptilllate.application" 
     file="/ch.droptilllate.application/src/ch/droptilllate/application/dao/ShareFolderDao.java" binary="false" 
     corner="BOTTOM_RIGHT">    
@@ -133,7 +110,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="13" language="java" name="ch.droptilllate.application.query.FileQuery" 
+  <class id="11" language="java" name="ch.droptilllate.application.query.FileQuery" 
     project="ch.droptilllate.application" 
     file="/ch.droptilllate.application/src/ch/droptilllate/application/query/FileQuery.java" binary="false" 
     corner="BOTTOM_RIGHT">    
@@ -144,7 +121,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="14" language="java" name="ch.droptilllate.application.query.ShareRelationQuery" 
+  <class id="12" language="java" name="ch.droptilllate.application.query.ShareRelationQuery" 
     project="ch.droptilllate.application" 
     file="/ch.droptilllate.application/src/ch/droptilllate/application/query/ShareRelationQuery.java" binary="false" 
     corner="BOTTOM_RIGHT">    
@@ -155,7 +132,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="15" language="java" name="ch.droptilllate.application.query.ShareFolderQuery" 
+  <class id="13" language="java" name="ch.droptilllate.application.query.ShareFolderQuery" 
     project="ch.droptilllate.application" 
     file="/ch.droptilllate.application/src/ch/droptilllate/application/query/ShareFolderQuery.java" binary="false" 
     corner="BOTTOM_RIGHT">    
@@ -166,94 +143,74 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <dependency id="16">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="11"/>  
-  </dependency>  
-  <realization id="17">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="5"/>  
-  </realization>  
-  <dependency id="18">    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="12"/>  
-  </dependency>  
-  <dependency id="19">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="4"/>  
-  </dependency>  
-  <association id="20">    
-    <end type="SOURCE" refId="14" navigable="false">      
-      <attribute id="21" name="conn"/>      
-      <multiplicity id="22" minimum="0" maximum="1"/>    
+  <association id="14">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="15" name="conn"/>      
+      <multiplicity id="16" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="10" navigable="true"/>    
+    <end type="TARGET" refId="8" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <dependency id="23">    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="11"/>  
-  </dependency>  
-  <dependency id="24">    
+  <dependency id="17">    
     <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="7"/>  
+    <end type="TARGET" refId="10"/>  
   </dependency>  
-  <association id="25">    
+  <dependency id="18">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="5"/>  
+  </dependency>  
+  <association id="19">    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="26" name="instance"/>      
-      <multiplicity id="27" minimum="0" maximum="1"/>    
+      <attribute id="20" name="instance"/>      
+      <multiplicity id="21" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="1" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="28">    
-    <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="29" name="conn"/>      
-      <multiplicity id="30" minimum="0" maximum="1"/>    
+  <association id="22">    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="23" name="conn"/>      
+      <multiplicity id="24" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="10" navigable="true"/>    
+    <end type="TARGET" refId="8" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <dependency id="31">    
-    <end type="SOURCE" refId="4"/>    
-    <end type="TARGET" refId="3"/>  
+  <dependency id="25">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="9"/>  
   </dependency>  
-  <dependency id="32">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="5"/>  
-  </dependency>  
-  <association id="33">    
-    <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="34" name="conn"/>      
-      <multiplicity id="35" minimum="0" maximum="1"/>    
+  <association id="26">    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="27" name="conn"/>      
+      <multiplicity id="28" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="10" navigable="true"/>    
+    <end type="TARGET" refId="8" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="36">    
+  <association id="29">    
     <end type="SOURCE" refId="13" navigable="false">      
-      <attribute id="37" name="conn"/>      
-      <multiplicity id="38" minimum="0" maximum="1"/>    
+      <attribute id="30" name="conn"/>      
+      <multiplicity id="31" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="10" navigable="true"/>    
+    <end type="TARGET" refId="8" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <dependency id="39">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="12"/>  
-  </dependency>  
-  <association id="40">    
-    <end type="SOURCE" refId="15" navigable="false">      
-      <attribute id="41" name="conn"/>      
-      <multiplicity id="42" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="10" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <dependency id="43">    
+  <dependency id="32">    
     <end type="SOURCE" refId="1"/>    
     <end type="TARGET" refId="2"/>  
   </dependency>  
+  <dependency id="33">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="10"/>  
+  </dependency>  
+  <association id="34">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="35" name="conn"/>      
+      <multiplicity id="36" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    
