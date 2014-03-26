@@ -321,12 +321,12 @@ public class InitialView implements SelectionListener {
 
 
 	public void loginPressed(){
-		if(text_DropboxPassword.getVisible()){
-			dropboxaccountvalidation = testDropboxLogin();
-		}
+//		if(text_DropboxPassword.getVisible()){
+//			dropboxaccountvalidation = testDropboxLogin();
+//		}
 		//IF Configfile not exist, insert tmp and dropbox path	
 		if(newConfigFile){
-				if(checkPath()){
+				if(!checkPath()){
 					if(!setProperties()){
 						new ErrorMessage(shell,"Error","Propertie Error! Check Attributes" );
 						return;						
