@@ -52,6 +52,7 @@ public class ImportView implements SelectionListener{
 		SashForm sashForm = new SashForm(parent, SWT.NONE);
 		
 		Composite composite = new Composite(sashForm, SWT.NONE);
+		composite.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		composite.setLayout(new GridLayout(2, false));
 		
 		Group grpImport = new Group(composite, SWT.NONE);
@@ -114,6 +115,7 @@ public class ImportView implements SelectionListener{
 		    btnCancel.addSelectionListener(this);
 		
 		Composite composite_1 = new Composite(sashForm, SWT.NONE);
+		composite_1.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		sashForm.setWeights(new int[] {398, 329});
 	}
 

@@ -88,12 +88,16 @@ public class ShareView implements SelectionListener {
 		this.shell = shell;
 		this.partService = partService;
 		SashForm sashForm = new SashForm(parent, SWT.NONE);
+		sashForm.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		sashForm.setBounds(0, 0, 725, 437);
 		
 		Composite composite = new Composite(sashForm, SWT.NONE);
+		composite.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		composite.setLayout(new GridLayout(1, false));
 		   
 		   grpSelectedFiles = new Group(composite, SWT.NONE);
+		   grpSelectedFiles.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+		   grpSelectedFiles.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		   grpSelectedFiles.setFont(SWTResourceManager.getFont("Arial", 14, SWT.BOLD));
 		   grpSelectedFiles.setText("Selected Files");
 		   GridData gd_grpSelectedFiles = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -107,6 +111,7 @@ public class ShareView implements SelectionListener {
 		   tree.setSize(270, 361);
 		
 		Composite composite_1 = new Composite(sashForm, SWT.NONE);
+		composite_1.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		composite_1.setLayout(new GridLayout(4, false));
 		
 		grpShareSettings = new Group(composite_1, SWT.NONE);

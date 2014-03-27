@@ -78,7 +78,6 @@ public class InitialView implements SelectionListener {
 	private String cloudusername;
 	private String cloudpassword;
 	private String status;
-	private Label lblWelcomeToDroptilllate;
 	private Button btnLogin_1;
 	private Label lbldroptilllate;
 	private Label lblDroptilllateFoldername;
@@ -90,47 +89,46 @@ public class InitialView implements SelectionListener {
 	private Group grpDropboxSettings;
 	@PostConstruct
 	public void createControls(Composite parent, Shell shell, EPartService partService, EModelService modelService, MApplication application) {
+		parent.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		
 		this.shell = shell;
 		Bundle bundle = FrameworkUtil.getBundle(TreeView.class);
-		URL url = FileLocator.find(bundle, new Path("icons/icon_128x128.png"), null);
+		//URL url = FileLocator.find(bundle, new Path("icons/icon_128x128.png"), null);
+		URL url = FileLocator.find(bundle, new Path("icons/LOGO_BIG_V1.png"), null);
 		ImageDescriptor image = ImageDescriptor.createFromURL(url);
     	
-    	SashForm sashForm = new SashForm(parent, SWT.NONE);
+    	SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
+    	sashForm.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
     	sashForm.setLocation(0, 0);
 		
 		Composite composite_1 = new Composite(sashForm, SWT.NONE);
+		composite_1.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		composite_1.setLayout(new GridLayout(1, false));
 		
-		lblWelcomeToDroptilllate = new Label(composite_1, SWT.NONE);
-		lblWelcomeToDroptilllate.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-		lblWelcomeToDroptilllate.setFont(SWTResourceManager.getFont("Arial", 20, SWT.BOLD));
-		lblWelcomeToDroptilllate.setText("Welcome to DropTillLate");
-		new Label(composite_1, SWT.NONE);
-		
 		CLabel lblDroptilllate = new CLabel(composite_1, SWT.NONE);
-		lblDroptilllate.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, false, false, 1, 1));
+		GridData gd_lblDroptilllate = new GridData(SWT.CENTER, SWT.FILL, false, false, 1, 1);
+		gd_lblDroptilllate.widthHint = 686;
+		gd_lblDroptilllate.heightHint = 104;
+		lblDroptilllate.setLayoutData(gd_lblDroptilllate);
 		lblDroptilllate.setAlignment(SWT.CENTER);
 		lblDroptilllate.setText("");
 		lblDroptilllate.setImage(image.createImage());
 		
-		lbldroptilllate = new Label(composite_1, SWT.NONE);
-		lbldroptilllate.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, false, false, 1, 1));
-		lbldroptilllate.setFont(SWTResourceManager.getFont("Arial", 14, SWT.BOLD));
-		lbldroptilllate.setText("\u00A9DropTillLate");
-		
 		Composite composite = new Composite(sashForm, SWT.NONE);
+		composite.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		composite.setFont(SWTResourceManager.getFont("Arial", 18, SWT.BOLD | SWT.ITALIC));
-		composite.setLayout(new GridLayout(2, false));
-		new Label(composite, SWT.NONE);
+		composite.setLayout(new GridLayout(4, false));
 		new Label(composite, SWT.NONE);
 		new Label(composite, SWT.NONE);
 		
 		grpDroptilllateSettings = new Group(composite, SWT.NONE);
+		grpDroptilllateSettings.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		grpDroptilllateSettings.setFont(SWTResourceManager.getFont("Arial", 18, SWT.NORMAL));
-		grpDroptilllateSettings.setLayout(new GridLayout(4, false));
-		GridData gd_grpDroptilllateSettings = new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1);
-		gd_grpDroptilllateSettings.widthHint = 410;
+		GridLayout gl_grpDroptilllateSettings = new GridLayout(4, false);
+		gl_grpDroptilllateSettings.marginTop = 5;
+		grpDroptilllateSettings.setLayout(gl_grpDroptilllateSettings);
+		GridData gd_grpDroptilllateSettings = new GridData(SWT.CENTER, SWT.FILL, true, false, 1, 1);
+		gd_grpDroptilllateSettings.widthHint = 393;
 		grpDroptilllateSettings.setLayoutData(gd_grpDroptilllateSettings);
 		grpDroptilllateSettings.setText("DropTillLate Settings");
 		new Label(grpDroptilllateSettings, SWT.NONE);
@@ -159,7 +157,9 @@ public class InitialView implements SelectionListener {
 		text_password.setFont(SWTResourceManager.getFont("Arial", 14, SWT.NORMAL));
 		
 		btnLogin_1 = new Button(grpDroptilllateSettings, SWT.NONE);
-		btnLogin_1.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, false, false, 1, 1));
+		GridData gd_btnLogin_1 = new GridData(SWT.CENTER, SWT.FILL, false, false, 1, 1);
+		gd_btnLogin_1.widthHint = 74;
+		btnLogin_1.setLayoutData(gd_btnLogin_1);
 		btnLogin_1.setFont(SWTResourceManager.getFont("Arial", 12, SWT.NORMAL));
 		btnLogin_1.setText("login");
 		btnLogin_1.addSelectionListener(this);
@@ -197,73 +197,83 @@ public class InitialView implements SelectionListener {
 		btnSearchTmpFolder.setText("search...");
 		btnSearchTmpFolder.addSelectionListener(this);
 		new Label(composite, SWT.NONE);
-		   new Label(composite, SWT.NONE);
-		   new Label(composite, SWT.NONE);
-		   
-		   grpDropboxSettings = new Group(composite, SWT.NONE);
-		   grpDropboxSettings.setFont(SWTResourceManager.getFont("Arial", 18, SWT.NORMAL));
-		   grpDropboxSettings.setText("Dropbox Settings");
-		   grpDropboxSettings.setLayout(new GridLayout(3, false));
-		   GridData gd_grpDropboxSettings = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		   gd_grpDropboxSettings.widthHint = 388;
-		   grpDropboxSettings.setLayoutData(gd_grpDropboxSettings);
-		   
-		    lblDropboxLoginname = new Label(grpDropboxSettings, SWT.NONE);
-		    lblDropboxLoginname.setFont(SWTResourceManager.getFont("Arial", 14, SWT.NORMAL));
-		    lblDropboxLoginname.setText("Dropbox Login");
-		    
-		    text_DropboxLoginName = new Text(grpDropboxSettings, SWT.BORDER);
-		    GridData gd_text_DropboxLoginName = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
-		    gd_text_DropboxLoginName.widthHint = 187;
-		    text_DropboxLoginName.setLayoutData(gd_text_DropboxLoginName);
-		    text_DropboxLoginName.setFont(SWTResourceManager.getFont("Arial", 14, SWT.NORMAL));
-		    new Label(grpDropboxSettings, SWT.NONE);
-		    
-		     lblPassword_1 = new Label(grpDropboxSettings, SWT.NONE);
-		     lblPassword_1.setFont(SWTResourceManager.getFont("Arial", 14, SWT.NORMAL));
-		     lblPassword_1.setText("Password");
-		     
-		     text_DropboxPassword = new Text(grpDropboxSettings, SWT.PASSWORD|SWT.BORDER);
-		     text_DropboxPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		     text_DropboxPassword.setFont(SWTResourceManager.getFont("Arial", 14, SWT.NORMAL));
-		     
-		     btnTestDropbox= new Button(grpDropboxSettings, SWT.NONE);
-		     GridData gd_btnTestDropbox = new GridData(SWT.CENTER, SWT.FILL, false, false, 1, 1);
-		     gd_btnTestDropbox.widthHint = 78;
-		     btnTestDropbox.setLayoutData(gd_btnTestDropbox);
-		     btnTestDropbox.setFont(SWTResourceManager.getFont("Arial", 12, SWT.NORMAL));
-		     btnTestDropbox.setText("Test");
-		     btnTestDropbox.addSelectionListener(this);
-		   new Label(composite, SWT.NONE);
-		   
-		   
-		   btnLogin = new Button(composite, SWT.NONE);
-		   btnLogin.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		   btnLogin.setFont(SWTResourceManager.getFont("Arial", 12, SWT.NORMAL));
-		   btnLogin.setText("login");
-		   sashForm.setWeights(new int[] {250, 444});
-		   
-		   btnLogin.addSelectionListener(this);
+		new Label(composite, SWT.NONE);
+		new Label(composite, SWT.NONE);
+		
+		grpDropboxSettings = new Group(composite, SWT.NONE);
+		grpDropboxSettings.setFont(SWTResourceManager.getFont("Arial", 18, SWT.NORMAL));
+		grpDropboxSettings.setText("Dropbox Settings");
+		GridLayout gl_grpDropboxSettings = new GridLayout(3, false);
+		gl_grpDropboxSettings.marginTop = 5;
+		grpDropboxSettings.setLayout(gl_grpDropboxSettings);
+		GridData gd_grpDropboxSettings = new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1);
+		gd_grpDropboxSettings.widthHint = 397;
+		grpDropboxSettings.setLayoutData(gd_grpDropboxSettings);
+		
+		 lblDropboxLoginname = new Label(grpDropboxSettings, SWT.NONE);
+		 lblDropboxLoginname.setFont(SWTResourceManager.getFont("Arial", 14, SWT.NORMAL));
+		 lblDropboxLoginname.setText("Dropbox Login");
+		 
+		 text_DropboxLoginName = new Text(grpDropboxSettings, SWT.BORDER);
+		 GridData gd_text_DropboxLoginName = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		 gd_text_DropboxLoginName.widthHint = 187;
+		 text_DropboxLoginName.setLayoutData(gd_text_DropboxLoginName);
+		 text_DropboxLoginName.setFont(SWTResourceManager.getFont("Arial", 14, SWT.NORMAL));
+		 new Label(grpDropboxSettings, SWT.NONE);
+		 
+		  lblPassword_1 = new Label(grpDropboxSettings, SWT.NONE);
+		  lblPassword_1.setFont(SWTResourceManager.getFont("Arial", 14, SWT.NORMAL));
+		  lblPassword_1.setText("Password");
+		  
+		  text_DropboxPassword = new Text(grpDropboxSettings, SWT.PASSWORD|SWT.BORDER);
+		  text_DropboxPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		  text_DropboxPassword.setFont(SWTResourceManager.getFont("Arial", 14, SWT.NORMAL));
+		  
+		  btnTestDropbox= new Button(grpDropboxSettings, SWT.NONE);
+		  GridData gd_btnTestDropbox = new GridData(SWT.CENTER, SWT.FILL, false, false, 1, 1);
+		  gd_btnTestDropbox.widthHint = 78;
+		  btnTestDropbox.setLayoutData(gd_btnTestDropbox);
+		  btnTestDropbox.setFont(SWTResourceManager.getFont("Arial", 12, SWT.NORMAL));
+		  btnTestDropbox.setText("Test");
+		  btnTestDropbox.addSelectionListener(this);
+		
+		
+		btnLogin = new Button(composite, SWT.NONE);
+		GridData gd_btnLogin = new GridData(SWT.RIGHT, SWT.BOTTOM, false, false, 1, 1);
+		gd_btnLogin.widthHint = 97;
+		btnLogin.setLayoutData(gd_btnLogin);
+		btnLogin.setFont(SWTResourceManager.getFont("Arial", 12, SWT.NORMAL));
+		btnLogin.setText("login");
+		new Label(composite, SWT.NONE);
+		
+		lbldroptilllate = new Label(composite, SWT.RIGHT);
+		lbldroptilllate.setFont(SWTResourceManager.getFont("Arial", 14, SWT.BOLD));
+		lbldroptilllate.setText("\u00A9DropTillLate");
+		new Label(composite, SWT.NONE);
+		new Label(composite, SWT.NONE);
+		sashForm.setWeights(new int[] {115, 385});
+		
+		btnLogin.addSelectionListener(this);
 		   //Visible config
-			btnSearchDropFolder.setVisible(false);
-	    	btnSearchTmpFolder.setVisible(false);
-	    	 text_dropboxPath.setVisible(false);
-	    	 text_tempPath.setVisible(false);
-	    	 lblDropboxFolder.setVisible(false);
-	    	 lblTempFolder.setVisible(false);
-	    	btnLogin.setVisible(false);
-	    	btnLogin_1.setVisible(true);
-	    	txtDroptilllate.setVisible(false);
-			lblDroptilllateFoldername.setVisible(false);
-			
-			 text_DropboxPassword.setVisible(false);
-	    	 btnTestDropbox.setVisible(false);
-	    	 text_DropboxLoginName.setVisible(false);
-	    	 lblPassword_1.setVisible(false);
-	    	 lblDropboxLoginname.setVisible(false); 
-	    		btnLogin.setVisible(false);
-		    	btnLogin_1.setVisible(true);
-		    	grpDropboxSettings.setVisible(false);
+//			btnSearchDropFolder.setVisible(false);
+//	    	btnSearchTmpFolder.setVisible(false);
+//	    	 text_dropboxPath.setVisible(false);
+//	    	 text_tempPath.setVisible(false);
+//	    	 lblDropboxFolder.setVisible(false);
+//	    	 lblTempFolder.setVisible(false);
+//	    	btnLogin.setVisible(false);
+//	    	btnLogin_1.setVisible(true);
+//	    	txtDroptilllate.setVisible(false);
+//			lblDroptilllateFoldername.setVisible(false);
+//			
+//			 text_DropboxPassword.setVisible(false);
+//	    	 btnTestDropbox.setVisible(false);
+//	    	 text_DropboxLoginName.setVisible(false);
+//	    	 lblPassword_1.setVisible(false);
+//	    	 lblDropboxLoginname.setVisible(false); 
+//	    		btnLogin.setVisible(false);
+//		    	btnLogin_1.setVisible(true);
+//		    	grpDropboxSettings.setVisible(false);
 			//CHECK properties
 		checkPropertiesExists();
 	  }
