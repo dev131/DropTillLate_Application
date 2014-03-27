@@ -25,7 +25,6 @@
         </children>
         <children xsi:type="basic:Part" xmi:id="_HqCZwLM_EeOKAbjRxitV7w" elementId="ch.droptilllate.application.part.sharepart" visible="false" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.views.ShareView" label="Share Part" closeable="true"/>
         <children xsi:type="basic:Part" xmi:id="_Yht8ALNUEeOKo9xObYES1g" elementId="ch.droptilllate.application.part.Import" visible="false" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.views.ImportView" label="Import View" closeable="true"/>
-        <children xsi:type="basic:Part" xmi:id="_c90XELNYEeOKo9xObYES1g" elementId="ch.droptilllate.application.part.0" visible="false"/>
       </children>
     </children>
     <mainMenu xmi:id="_pupeDYNwEeOZSfPuT6ZnVQ" elementId="menu:org.eclipse.ui.main.menu">

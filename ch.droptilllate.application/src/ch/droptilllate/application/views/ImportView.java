@@ -26,6 +26,9 @@ import ch.droptilllate.application.handlers.FileHandler;
 import ch.droptilllate.application.info.ErrorMessage;
 import ch.droptilllate.application.properties.Configuration;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.layout.GridData;
 
 public class ImportView implements SelectionListener{
 	@Inject EPartService partService;
@@ -49,59 +52,69 @@ public class ImportView implements SelectionListener{
 		SashForm sashForm = new SashForm(parent, SWT.NONE);
 		
 		Composite composite = new Composite(sashForm, SWT.NONE);
+		composite.setLayout(new GridLayout(2, false));
 		
-		text_path = new Text(composite, SWT.BORDER);
-		text_path.setFont(SWTResourceManager.getFont("Lucida Grande", 11, SWT.NORMAL));
-		text_path.setBounds(115, 80, 179, 19);
+		Group grpImport = new Group(composite, SWT.NONE);
+		grpImport.setLayout(new GridLayout(3, false));
+		GridData gd_grpImport = new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1);
+		gd_grpImport.heightHint = 158;
+		gd_grpImport.widthHint = 363;
+		grpImport.setLayoutData(gd_grpImport);
+		grpImport.setFont(SWTResourceManager.getFont("Arial", 18, SWT.BOLD));
+		grpImport.setText("Import");
 		
-		Label lblImportFolder = new Label(composite, SWT.NONE);
-		lblImportFolder.setFont(SWTResourceManager.getFont("Lucida Grande", 14, SWT.NORMAL));
-		lblImportFolder.setBounds(10, 80, 99, 19);
-		lblImportFolder.setText("Import Folder ...");
-		
-		 btnSearch = new Button(composite, SWT.NONE);
-		 btnSearch.setFont(SWTResourceManager.getFont("Lucida Grande", 12, SWT.NORMAL));
-		btnSearch.setBounds(300, 80, 91, 25);
-		btnSearch.setText("search ...");
-		btnSearch.addSelectionListener(this);
-		
-		Label lblPassword = new Label(composite, SWT.NONE);
-		lblPassword.setFont(SWTResourceManager.getFont("Lucida Grande", 14, SWT.NORMAL));
-		lblPassword.setBounds(13, 130, 75, 17);
-		lblPassword.setText("Password");
-		
-		text_password = new Text(composite,SWT.PASSWORD| SWT.BORDER);
-		text_password.setFont(SWTResourceManager.getFont("Lucida Grande", 11, SWT.NORMAL));
-		text_password.setBounds(115, 130, 179, 19);
-		
-		Label lblFolderName = new Label(composite, SWT.NONE);
+		Label lblFolderName = new Label(grpImport, SWT.NONE);
 		lblFolderName.setFont(SWTResourceManager.getFont("Lucida Grande", 14, SWT.NORMAL));
-		lblFolderName.setBounds(13, 204, 96, 19);
 		lblFolderName.setText("Folder name");
 		
-		text_foldername = new Text(composite, SWT.BORDER);
+		text_foldername = new Text(grpImport, SWT.BORDER);
+		GridData gd_text_foldername = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		gd_text_foldername.widthHint = 139;
+		text_foldername.setLayoutData(gd_text_foldername);
 		text_foldername.setFont(SWTResourceManager.getFont("Lucida Grande", 11, SWT.NORMAL));
-		text_foldername.setBounds(115, 204, 179, 19);
-		
-		 btnImport = new Button(composite, SWT.NONE);
-		 btnImport.setFont(SWTResourceManager.getFont("Lucida Grande", 12, SWT.NORMAL));
-		btnImport.setBounds(247, 286, 94, 28);
-		btnImport.setText("Import");
-		btnImport.addSelectionListener(this);
-		
-		 btnCancel = new Button(composite, SWT.NONE);
-		 btnCancel.setFont(SWTResourceManager.getFont("Lucida Grande", 12, SWT.NORMAL));
-		btnCancel.setBounds(57, 286, 94, 28);
-		btnCancel.setText("cancel");
-		
-		Label lblImport = new Label(composite, SWT.NONE);
-		lblImport.setFont(SWTResourceManager.getFont("Lucida Grande", 16, SWT.BOLD));
-		lblImport.setBounds(151, 10, 78, 28);
-		lblImport.setText("Import");
-		btnCancel.addSelectionListener(this);
+		new Label(grpImport, SWT.NONE);
+		new Label(grpImport, SWT.NONE);
+		new Label(grpImport, SWT.NONE);
+		new Label(grpImport, SWT.NONE);
+		  
+		  Label lblImportFolder = new Label(grpImport, SWT.NONE);
+		  lblImportFolder.setFont(SWTResourceManager.getFont("Lucida Grande", 14, SWT.NORMAL));
+		  lblImportFolder.setText("Import Folder ...");
+		  
+		  text_path = new Text(grpImport, SWT.BORDER);
+		  text_path.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		  text_path.setFont(SWTResourceManager.getFont("Lucida Grande", 11, SWT.NORMAL));
+		  new Label(grpImport, SWT.NONE);
+		  new Label(grpImport, SWT.NONE);
+		  new Label(grpImport, SWT.NONE);
+		  new Label(grpImport, SWT.NONE);
+		  
+		  Label lblPassword = new Label(grpImport, SWT.NONE);
+		  lblPassword.setFont(SWTResourceManager.getFont("Lucida Grande", 14, SWT.NORMAL));
+		  lblPassword.setText("Password");
+		   
+		   text_password = new Text(grpImport,SWT.PASSWORD| SWT.BORDER);
+		   text_password.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		   text_password.setFont(SWTResourceManager.getFont("Lucida Grande", 11, SWT.NORMAL));
+		  
+		   btnSearch = new Button(grpImport, SWT.NONE);
+		   btnSearch.setFont(SWTResourceManager.getFont("Lucida Grande", 12, SWT.NORMAL));
+		   btnSearch.setText("search ...");
+		   btnSearch.addSelectionListener(this);
+		   
+		    btnCancel = new Button(composite, SWT.NONE);
+		    btnCancel.setFont(SWTResourceManager.getFont("Lucida Grande", 12, SWT.NORMAL));
+		    btnCancel.setText("cancel");
+		     
+		      btnImport = new Button(composite, SWT.NONE);
+		      btnImport.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		      btnImport.setFont(SWTResourceManager.getFont("Lucida Grande", 12, SWT.NORMAL));
+		      btnImport.setText("Import");
+		      btnImport.addSelectionListener(this);
+		    btnCancel.addSelectionListener(this);
 		
 		Composite composite_1 = new Composite(sashForm, SWT.NONE);
-		sashForm.setWeights(new int[] {401, 382});
+		sashForm.setWeights(new int[] {398, 329});
 	}
 
 	

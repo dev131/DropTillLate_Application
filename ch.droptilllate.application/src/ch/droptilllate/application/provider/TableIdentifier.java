@@ -1,4 +1,4 @@
-package ch.droptilllate.application.views;
+package ch.droptilllate.application.provider;
 
 public enum TableIdentifier {
 
