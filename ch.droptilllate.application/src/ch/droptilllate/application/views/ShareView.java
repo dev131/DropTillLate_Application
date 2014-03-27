@@ -64,7 +64,6 @@ public class ShareView implements SelectionListener {
 	private Button btnDelete;
 	private List maillist;
 	private Combo combo_mail;
-	private Button btnShareManually;
 	private ArrayList<EncryptedFileDob> fileList;
 	private Group grpShareSettings;
 	private Group grpSelectedFiles;
@@ -100,8 +99,8 @@ public class ShareView implements SelectionListener {
 		   grpSelectedFiles.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		   grpSelectedFiles.setFont(SWTResourceManager.getFont("Arial", 14, SWT.BOLD));
 		   grpSelectedFiles.setText("Selected Files");
-		   GridData gd_grpSelectedFiles = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		   gd_grpSelectedFiles.heightHint = 371;
+		   GridData gd_grpSelectedFiles = new GridData(SWT.CENTER, SWT.TOP, false, false, 1, 1);
+		   gd_grpSelectedFiles.heightHint = 377;
 		   gd_grpSelectedFiles.widthHint = 280;
 		   grpSelectedFiles.setLayoutData(gd_grpSelectedFiles);
 		   
@@ -112,10 +111,12 @@ public class ShareView implements SelectionListener {
 		
 		Composite composite_1 = new Composite(sashForm, SWT.NONE);
 		composite_1.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		composite_1.setLayout(new GridLayout(4, false));
+		composite_1.setLayout(new GridLayout(2, false));
 		
 		grpShareSettings = new Group(composite_1, SWT.NONE);
-		grpShareSettings.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1));
+		GridData gd_grpShareSettings = new GridData(SWT.CENTER, SWT.TOP, true, true, 2, 1);
+		gd_grpShareSettings.heightHint = 381;
+		grpShareSettings.setLayoutData(gd_grpShareSettings);
 		grpShareSettings.setFont(SWTResourceManager.getFont("Arial", 14, SWT.BOLD));
 		grpShareSettings.setLayout(new GridLayout(3, false));
 		grpShareSettings.setText("Share Settings");
@@ -161,25 +162,20 @@ public class ShareView implements SelectionListener {
 		  gd_text_password.widthHint = 186;
 		  text_password.setLayoutData(gd_text_password);
 		  new Label(grpShareSettings, SWT.NONE);
-		      new Label(composite_1, SWT.NONE);
-		      
-		       btnCancel = new Button(composite_1, SWT.NONE);
-		       btnCancel.setText("cancel");
-		       btnCancel.addSelectionListener(this);
-		        
-		         btnShareManually = new Button(composite_1, SWT.NONE);
-		         GridData gd_btnShareManually = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
-		         gd_btnShareManually.widthHint = 223;
-		         btnShareManually.setLayoutData(gd_btnShareManually);
-		         btnShareManually.setText("Share manually");
-		         btnShareManually.setVisible(false);
-		         btnShareManually.addSelectionListener(this);
-		        
-		        btnShare = new Button(composite_1, SWT.NONE);
-		        btnShare.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		        btnShare.setText("Share");
-		        btnShare.addSelectionListener(this);
-		      sashForm.setWeights(new int[] {301, 507});
+		  new Label(grpShareSettings, SWT.NONE);
+		  new Label(grpShareSettings, SWT.NONE);
+		   new Label(grpShareSettings, SWT.NONE);
+		   new Label(grpShareSettings, SWT.NONE);
+		  
+		   btnCancel = new Button(grpShareSettings, SWT.NONE);
+		   btnCancel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		   btnCancel.setText("cancel");
+		   btnCancel.addSelectionListener(this);
+		  
+		  btnShare = new Button(grpShareSettings, SWT.NONE);
+		  btnShare.setText("Share");
+		  sashForm.setWeights(new int[] {317, 580});
+		  btnShare.addSelectionListener(this);
 		  btnDelete.addSelectionListener(this);
 		  btnAdd.addSelectionListener(this);
 		getInitialTree();
@@ -242,35 +238,6 @@ public class ShareView implements SelectionListener {
 		
 	}
 
-	private void share(boolean auto) {
-		//CHECK if all data are available
-		boolean state;
-		if(text_password.equals("") || maillist.getItems().length == 0 || this.fileList.isEmpty()  ){
-			new ErrorMessage(shell, "Error", "Missing Argument");
-		}
-		else{
-			ArrayList<String> emailList = new ArrayList<String>();
-			for(String temp : maillist.getItems()){
-				emailList.add(temp);
-			  }
-			if(auto){
-				state = ViewController.getInstance().shareFiles(emailList ,fileList, text_password.getText(), true);
-			}
-			else{
-				state = ViewController.getInstance().shareFiles(emailList ,fileList, text_password.getText(), false);
-			}
-			if(state){
-				MPart ownpart = partService.findPart("ch.droptilllate.application.part.decryptedview");
-				ownpart.setVisible(true);
-				MPart mPart = partService.findPart("ch.droptilllate.application.part.sharepart");
-				mPart.setVisible(false);
-			}
-			else{
-				btnShareManually.setVisible(true);
-			}
-		}		
-	}
-
 	private void addMail() {
 		maillist.add(combo_mail.getText());		
 	}
@@ -290,19 +257,13 @@ public class ShareView implements SelectionListener {
 	public void widgetSelected(SelectionEvent e) {
 		if(e.getSource() == btnAdd){ 
 			addMail();
-	        } 	
-		if(e.getSource() == btnShare){ 
-			share(true);
-        } 
+	        }
 		if(e.getSource() == btnCancel){ 
 			cancel();
         } 
 		if(e.getSource() == btnDelete){ 
 			deleteMail();
-        } 
-		if(e.getSource() == btnShareManually){ 		
-			share(false);
-        } 
+        }
 	
 	}
 

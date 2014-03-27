@@ -105,8 +105,8 @@ public class InitialView implements SelectionListener {
 		composite_1.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		composite_1.setLayout(new GridLayout(1, false));
 		
-		CLabel lblDroptilllate = new CLabel(composite_1, SWT.NONE);
-		GridData gd_lblDroptilllate = new GridData(SWT.CENTER, SWT.FILL, false, false, 1, 1);
+		CLabel lblDroptilllate = new CLabel(composite_1, SWT.CENTER);
+		GridData gd_lblDroptilllate = new GridData(SWT.CENTER, SWT.FILL, true, false, 1, 1);
 		gd_lblDroptilllate.widthHint = 686;
 		gd_lblDroptilllate.heightHint = 104;
 		lblDroptilllate.setLayoutData(gd_lblDroptilllate);
@@ -117,21 +117,20 @@ public class InitialView implements SelectionListener {
 		Composite composite = new Composite(sashForm, SWT.NONE);
 		composite.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		composite.setFont(SWTResourceManager.getFont("Arial", 18, SWT.BOLD | SWT.ITALIC));
-		composite.setLayout(new GridLayout(4, false));
+		composite.setLayout(new GridLayout(3, false));
 		new Label(composite, SWT.NONE);
 		new Label(composite, SWT.NONE);
 		
 		grpDroptilllateSettings = new Group(composite, SWT.NONE);
 		grpDroptilllateSettings.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		grpDroptilllateSettings.setFont(SWTResourceManager.getFont("Arial", 18, SWT.NORMAL));
-		GridLayout gl_grpDroptilllateSettings = new GridLayout(4, false);
+		GridLayout gl_grpDroptilllateSettings = new GridLayout(3, false);
 		gl_grpDroptilllateSettings.marginTop = 5;
 		grpDroptilllateSettings.setLayout(gl_grpDroptilllateSettings);
 		GridData gd_grpDroptilllateSettings = new GridData(SWT.CENTER, SWT.FILL, true, false, 1, 1);
 		gd_grpDroptilllateSettings.widthHint = 393;
 		grpDroptilllateSettings.setLayoutData(gd_grpDroptilllateSettings);
 		grpDroptilllateSettings.setText("DropTillLate Settings");
-		new Label(grpDroptilllateSettings, SWT.NONE);
 		
 		lblDroptilllateFoldername = new Label(grpDroptilllateSettings, SWT.NONE);
 		lblDroptilllateFoldername.setFont(SWTResourceManager.getFont("Arial", 14, SWT.NORMAL));
@@ -143,7 +142,6 @@ public class InitialView implements SelectionListener {
 		gd_txtDroptilllate.widthHint = 185;
 		txtDroptilllate.setLayoutData(gd_txtDroptilllate);
 		txtDroptilllate.setText("DropTillLate");
-		new Label(grpDroptilllateSettings, SWT.NONE);
 		new Label(grpDroptilllateSettings, SWT.NONE);
 		
 		lblPassword = new Label(grpDroptilllateSettings, SWT.NONE);
@@ -163,11 +161,10 @@ public class InitialView implements SelectionListener {
 		btnLogin_1.setFont(SWTResourceManager.getFont("Arial", 12, SWT.NORMAL));
 		btnLogin_1.setText("login");
 		btnLogin_1.addSelectionListener(this);
-		new Label(grpDroptilllateSettings, SWT.NONE);
 		
 		lblDropboxFolder = new Label(grpDroptilllateSettings, SWT.NONE);
 		lblDropboxFolder.setFont(SWTResourceManager.getFont("Arial", 14, SWT.NORMAL));
-		lblDropboxFolder.setText("Dropbox path");
+		lblDropboxFolder.setText("Dropbox path ");
 		
 		text_dropboxPath = new Text(grpDroptilllateSettings, SWT.BORDER);
 		text_dropboxPath.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
@@ -179,7 +176,6 @@ public class InitialView implements SelectionListener {
 		btnSearchDropFolder.setFont(SWTResourceManager.getFont("Arial", 12, SWT.NORMAL));
 		btnSearchDropFolder.setText("search ...");
 		btnSearchDropFolder.addSelectionListener(this);
-		new Label(grpDroptilllateSettings, SWT.NONE);
 		
 		lblTempFolder = new Label(grpDroptilllateSettings, SWT.NONE);
 		lblTempFolder.setFont(SWTResourceManager.getFont("Arial", 14, SWT.NORMAL));
@@ -190,13 +186,12 @@ public class InitialView implements SelectionListener {
 		text_tempPath.setFont(SWTResourceManager.getFont("Arial", 14, SWT.NORMAL));
 		
 		btnSearchTmpFolder = new Button(grpDroptilllateSettings, SWT.NONE);
-		GridData gd_btnSearchTmpFolder = new GridData(SWT.RIGHT, SWT.FILL, false, false, 1, 1);
+		GridData gd_btnSearchTmpFolder = new GridData(SWT.CENTER, SWT.FILL, false, false, 1, 1);
 		gd_btnSearchTmpFolder.widthHint = 75;
 		btnSearchTmpFolder.setLayoutData(gd_btnSearchTmpFolder);
 		btnSearchTmpFolder.setFont(SWTResourceManager.getFont("Arial", 12, SWT.NORMAL));
 		btnSearchTmpFolder.setText("search...");
 		btnSearchTmpFolder.addSelectionListener(this);
-		new Label(composite, SWT.NONE);
 		new Label(composite, SWT.NONE);
 		new Label(composite, SWT.NONE);
 		
@@ -211,8 +206,11 @@ public class InitialView implements SelectionListener {
 		grpDropboxSettings.setLayoutData(gd_grpDropboxSettings);
 		
 		 lblDropboxLoginname = new Label(grpDropboxSettings, SWT.NONE);
+		 GridData gd_lblDropboxLoginname = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		 gd_lblDropboxLoginname.minimumWidth = 200;
+		 lblDropboxLoginname.setLayoutData(gd_lblDropboxLoginname);
 		 lblDropboxLoginname.setFont(SWTResourceManager.getFont("Arial", 14, SWT.NORMAL));
-		 lblDropboxLoginname.setText("Dropbox Login");
+		 lblDropboxLoginname.setText("Dropbox Login ");
 		 
 		 text_DropboxLoginName = new Text(grpDropboxSettings, SWT.BORDER);
 		 GridData gd_text_DropboxLoginName = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
@@ -236,6 +234,10 @@ public class InitialView implements SelectionListener {
 		  btnTestDropbox.setFont(SWTResourceManager.getFont("Arial", 12, SWT.NORMAL));
 		  btnTestDropbox.setText("Test");
 		  btnTestDropbox.addSelectionListener(this);
+		new Label(composite, SWT.NONE);
+		
+		lbldroptilllate = new Label(composite, SWT.RIGHT);
+		lbldroptilllate.setFont(SWTResourceManager.getFont("Arial", 12, SWT.NORMAL));
 		
 		
 		btnLogin = new Button(composite, SWT.NONE);
@@ -244,16 +246,9 @@ public class InitialView implements SelectionListener {
 		btnLogin.setLayoutData(gd_btnLogin);
 		btnLogin.setFont(SWTResourceManager.getFont("Arial", 12, SWT.NORMAL));
 		btnLogin.setText("login");
-		new Label(composite, SWT.NONE);
-		
-		lbldroptilllate = new Label(composite, SWT.RIGHT);
-		lbldroptilllate.setFont(SWTResourceManager.getFont("Arial", 14, SWT.BOLD));
-		lbldroptilllate.setText("\u00A9DropTillLate");
-		new Label(composite, SWT.NONE);
-		new Label(composite, SWT.NONE);
-		sashForm.setWeights(new int[] {115, 385});
 		
 		btnLogin.addSelectionListener(this);
+		sashForm.setWeights(new int[] {115, 385});
 		   //Visible config
 //			btnSearchDropFolder.setVisible(false);
 //	    	btnSearchTmpFolder.setVisible(false);
