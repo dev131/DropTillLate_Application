@@ -36,10 +36,12 @@ import ch.droptilllate.application.dnb.CloudAccount;
 import ch.droptilllate.application.info.ErrorMessage;
 import ch.droptilllate.application.info.SuccessMessage;
 import ch.droptilllate.application.key.KeyManager;
+import ch.droptilllate.application.lifecycle.OSValidator;
 import ch.droptilllate.application.properties.Configuration;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.cloudprovider.error.CloudError;
 import ch.droptilllate.couldprovider.api.ICloudProviderCom;
+import ch.droptilllate.filesystem.commons.OsUtils;
 
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Label;
@@ -273,7 +275,7 @@ public class InitialView implements SelectionListener {
 			   if(dropbox == true){
 				   dialog.setText("Choose Dropbox Directory");
 				   dropboxPath = dialog.open();
-				   dropboxPath = dropboxPath + "/";
+				   dropboxPath = dropboxPath;
 				   text_dropboxPath.setText(dropboxPath);
 				   
 			   }
@@ -292,7 +294,8 @@ public class InitialView implements SelectionListener {
 	private boolean setProperties(){
 		if(!dropboxPath.isEmpty() && !tmpPath.isEmpty() && !txtDroptilllate.getText().isEmpty() ){
 			try {
-				dropboxPath = dropboxPath + txtDroptilllate.getText();
+				// TODO check for valid dropbox path (no eding slashes)
+				dropboxPath = dropboxPath + OSValidator.getSlash() + txtDroptilllate.getText();
 				Configuration.setPropertieDropBoxPath(dropboxPath);
 				Configuration.setPropertieTempPath(tmpPath);
 			} catch (IOException e) {
@@ -326,7 +329,7 @@ public class InitialView implements SelectionListener {
 //		}
 		//IF Configfile not exist, insert tmp and dropbox path	
 		if(newConfigFile){
-				if(!checkPath()){
+				if(checkPath()){
 					if(!setProperties()){
 						new ErrorMessage(shell,"Error","Propertie Error! Check Attributes" );
 						return;						
