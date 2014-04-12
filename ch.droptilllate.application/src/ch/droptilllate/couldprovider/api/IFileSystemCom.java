@@ -2,7 +2,7 @@ package ch.droptilllate.couldprovider.api;
 
 import java.util.List;
 
-import ch.droptilllate.application.dnb.ShareFolder;
+import ch.droptilllate.application.dnb.ShareRelation;
 import ch.droptilllate.application.info.CRUDCryptedFileInfo;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.filesystem.info.*;
@@ -10,18 +10,18 @@ import ch.droptilllate.filesystem.api.FileHandlingSummary;
 
 
 public interface IFileSystemCom {
+
 	/**
-	 * Encrypt Files
+	 * Encrypt files
 	 * @param droppedFiles
-	 * @param shareFolderPath example Dropbox/DroptillLate/Sharefolder1 
-	 * shareFolderPath == null -> existingFile
-	 * @return List<FileInfo>
+	 * @param exist if Exist == true = file is encrypted already
+	 * @return
 	 */
-	public CRUDCryptedFileInfo encryptFile(List<EncryptedFileDob> droppedFiles, ShareFolder sharefolder);
+	public CRUDCryptedFileInfo encryptFile(List<EncryptedFileDob> droppedFiles, Boolean exist);
 	/**
 	 * Update Files List<FileInfo>
 	 * @param filehandling_result  List<FileInfo>
-	 * @param sharefolderPath example Dropbox/DroptillLate/Sharefolder1
+	 * @param ShareRelationPath example Dropbox/DroptillLate/ShareRelation1
 	 * @return List<FileInfo>
 	 */
 	public CRUDCryptedFileInfo decryptFile(List<EncryptedFileDob> droppedFiles);
@@ -35,25 +35,25 @@ public interface IFileSystemCom {
 	/**
 	 * Move Files into new ShareRelation
 	 * @param fileList
-	 * @param ShareFolder
+	 * @param ShareRelation
 	 * @return FileInfoList
 	 */
-	public CRUDCryptedFileInfo moveFiles(List<EncryptedFileDob> fileList, ShareFolder sharedFolder);
+	public CRUDCryptedFileInfo moveFiles(List<EncryptedFileDob> fileList, ShareRelation destShareRelation);
 	/**
 	 *  Encrypt local/share File in specified Container ID
 	 * @param local
-	 * @param destinationShareFolder path = Dropbox/Sharefolder1
+	 * @param destinationShareRelation path = Dropbox/ShareRelation1
 	 * @return true if ok
 	 */
-	public boolean encryptFile(ShareFolder destinationShareFolder, boolean local);
+	public boolean encryptFile(ShareRelation destShareRelation, boolean local);
 
 	/**
 	 * Decrypte local/share XML files
-	 * @param sourceShareFolder path = Dropbox/Sharefolder1
+	 * @param sourceShareRelation path = Dropbox/ShareRelation1
 	 * @param local
 	 * @return true if ok
 	 */
-	public boolean decryptFile(ShareFolder sourceShareFolder, boolean local);
+	public boolean decryptFile(ShareRelation srcShareRelation, boolean local);
 	
 	
 }

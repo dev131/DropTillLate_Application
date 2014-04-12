@@ -1,5 +1,7 @@
 package ch.droptilllate.application.views;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -31,11 +33,13 @@ import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ListViewer;
 
 import ch.droptilllate.application.controller.ViewController;
-import ch.droptilllate.application.dao.ShareRelationDao;
-import ch.droptilllate.application.dnb.ShareRelation;
+import ch.droptilllate.application.dao.ShareMembersDao;
+import ch.droptilllate.application.dnb.ShareMember;
+import ch.droptilllate.application.handlers.FileHandler;
 import ch.droptilllate.application.info.ErrorMessage;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
+import ch.droptilllate.application.properties.Configuration;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.provider.DropTillLateContentProvider;
 import ch.droptilllate.application.provider.DropTillLateLabelProvider;
@@ -52,6 +56,7 @@ import org.eclipse.swt.layout.GridData;
 public class ShareView implements SelectionListener {
 	@Inject EPartService partService;
 	private Shell shell;
+	private Boolean success = false;
 	private static ShareView instance = null;
 	private Text text_password;
 	private ComboViewer comboViewer;
@@ -67,6 +72,7 @@ public class ShareView implements SelectionListener {
 	private ArrayList<EncryptedFileDob> fileList;
 	private Group grpShareSettings;
 	private Group grpSelectedFiles;
+	private Button btnManually ;
 	public ShareView() {
 		instance = this;
 	}
@@ -165,8 +171,12 @@ public class ShareView implements SelectionListener {
 		  new Label(grpShareSettings, SWT.NONE);
 		  new Label(grpShareSettings, SWT.NONE);
 		   new Label(grpShareSettings, SWT.NONE);
-		   new Label(grpShareSettings, SWT.NONE);
-		  
+		   
+		    btnManually = new Button(grpShareSettings, SWT.NONE);
+		   btnManually.setText("manually");
+		  btnManually.setVisible(false);
+		   btnManually.addSelectionListener(this);
+		   
 		   btnCancel = new Button(grpShareSettings, SWT.NONE);
 		   btnCancel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		   btnCancel.setText("cancel");
@@ -183,12 +193,13 @@ public class ShareView implements SelectionListener {
 
 	//*********** public METHODS**************////
 	public void setInitialInputMailList(){		
+		
 		combo_mail.removeAll();
-		ShareRelationDao dao = new ShareRelationDao();
-		ArrayList<ShareRelation> shareRelationList = (ArrayList<ShareRelation>) dao.getElementAll(null);
+		ShareMembersDao dao = new ShareMembersDao();
+		ArrayList<ShareMember> shareMemberList = (ArrayList<ShareMember>) dao.getElementAll(null);
 		HashSet<String> hashset = new HashSet<String>();
-		for(ShareRelation shareRelation : shareRelationList){
-			hashset.add(shareRelation.getMail());
+		for(ShareMember shareMember : shareMemberList){
+			hashset.add(shareMember.getMail());
 		}
 		for(String mail: hashset){
 			combo_mail.add(mail);
@@ -231,11 +242,27 @@ public class ShareView implements SelectionListener {
 	}
 
 	private void cancel() {
+		deleteUnSuccessShareFolder();
 		MPart ownpart = partService.findPart("ch.droptilllate.application.part.decryptedview");
 		ownpart.setVisible(true);
 		MPart mPart = partService.findPart("ch.droptilllate.application.part.sharepart");
 		mPart.setVisible(false);		
 		
+	}
+	
+	public void deleteUnSuccessShareFolder(){
+		//DELETE FOLDER
+		if(!success){
+		ViewController.getInstance().getLastShareRelation();
+		FileHandler filehandler = new FileHandler();
+		File file = new File(Configuration.getPropertieDropBoxPath(true) + ViewController.getInstance().getLastShareRelation().getID());
+		try {
+			filehandler.delete(file);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		}
 	}
 
 	private void addMail() {
@@ -264,13 +291,56 @@ public class ShareView implements SelectionListener {
 		if(e.getSource() == btnDelete){ 
 			deleteMail();
         }
+		if(e.getSource() == btnShare){ 
+			shareFile(true);
+        }
+		if(e.getSource() == btnManually){
+			shareFile(false);
+		}
 	
 	}
 
+
+	private void shareFile(boolean auto) {
+		//CHECK if all data are available
+				if(text_password.getText().isEmpty() || maillist.getItems().length == 0 || this.fileList.isEmpty()  ){
+					new ErrorMessage(shell, "Error", "Missing Argument");
+				}
+				else{
+					ArrayList<String> emailList = new ArrayList<String>();
+					for(String temp : maillist.getItems()){
+						emailList.add(temp);
+					  }
+					if(auto){
+						 success = ViewController.getInstance().shareFiles(emailList ,fileList, text_password.getText(),true);
+					}
+					else{
+						 success = ViewController.getInstance().shareFiles(emailList ,fileList, text_password.getText(),false);
+					}				
+					if(!success){
+						btnManually.setVisible(true);
+					}
+					else{
+						success = true;
+						MPart ownpart = partService.findPart("ch.droptilllate.application.part.decryptedview");
+						ownpart.setVisible(true);
+						MPart mPart = partService.findPart("ch.droptilllate.application.part.sharepart");
+						mPart.setVisible(false);
+					}
+				}		
+
+	}
 
 	@Override
 	public void widgetDefaultSelected(SelectionEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public void setInitView() {
+		success = true;
+		combo_mail.removeAll();
+		  btnManually.setVisible(true);
+		  text_password.setText("");
 	}
 }

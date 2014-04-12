@@ -8,14 +8,12 @@ public class XMLConstruct extends NLS {
 	public static String ChildElementFile;
 	public static String ChildElementGhostFolder;
 	public static String ChildElementContainer;
-	public static String ChildElementShareRelation;
-	public static String ChildElementShareFolder;
+	public static String ChildElementShareMember;
 	public static String RootElement;
 	public static String RootElementFile;
 	public static String RootElementGhostFolder;
 	public static String RootElementContainer;
-	public static String RootElementShareRelation;
-	public static String RootElementShareFolder;
+	public static String RootElementShareMember;
 	public static String NameLocalXML;
 	public static String NameShareXML;
 	public static String AttFileName;
@@ -25,10 +23,10 @@ public class XMLConstruct extends NLS {
 	public static String AttSize;
 	public static String AttType;
 	public static String AttId;
-	public static String AttShareFolderId;
 	public static String AttKey;
 	public static String AttMail;
 	public static String AttFolderName;
+	public static String AttShareRelationID;
 	public static String IdXMLContainer;
 	public static String IdLocalXMLFiles;
 	public static String IdShareXMLFiles;
@@ -36,12 +34,12 @@ public class XMLConstruct extends NLS {
 	public static String AttCloudUsername;
 	public static String ChildElementCloudAccount;
 	public static String RootElementCloudAccount;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, XMLConstruct.class);
 	}
 
-	
 
 	public static String getFileExpression() {
 		return "/" + RootElement + "/" + RootElementFile + "/"
@@ -59,13 +57,7 @@ public class XMLConstruct extends NLS {
 	}
 
 	public static String getShareRelationExpression() {
-		return "/" + RootElement + "/" + RootElementShareRelation
-				+ "/" + ChildElementShareRelation;
+		return "/" + RootElement + "/" + RootElementShareMember
+				+ "/" + ChildElementShareMember;
 	}
-
-	public static String getShareFolderExpression() {
-		return "/" + RootElement + "/" + RootElementShareFolder + "/"
-				+ ChildElementShareFolder;
-	}
-
 }

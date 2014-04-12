@@ -13,9 +13,7 @@
               <children xsi:type="menu:HandledMenuItem" xmi:id="_7KavAIdaEeO6wsyQtk52Vg" elementId="ch.droptilllate.application.handledmenuitem.Delete" label="Delete" command="_PAnvUIdZEeO6wsyQtk52Vg">
                 <visibleWhen xsi:type="ui:CoreExpression" xmi:id="_dLso0LKZEeOdJ_svOfiflg" coreExpressionId="ch.droptilllate.application.selectionset"/>
               </children>
-              <children xsi:type="menu:HandledMenuItem" xmi:id="_WAKpIJAREeOHkoJaezvPIA" elementId="ch.droptilllate.application.handledmenuitem.NewFolder" label="New Folder" command="_euHAYIN-EeOPbN9mpPOXoQ">
-                <visibleWhen xsi:type="ui:CoreExpression" xmi:id="_gSFK8LKZEeOdJ_svOfiflg" coreExpressionId="ch.droptilllate.application.selectionset"/>
-              </children>
+              <children xsi:type="menu:HandledMenuItem" xmi:id="_WAKpIJAREeOHkoJaezvPIA" elementId="ch.droptilllate.application.handledmenuitem.NewFolder" label="New Folder" command="_euHAYIN-EeOPbN9mpPOXoQ"/>
               <children xsi:type="menu:HandledMenuItem" xmi:id="_7zYdgJbyEeOHEZkAJ8XYZg" elementId="ch.droptilllate.application.handledmenuitem.ShareFiles" label="Share selected files" command="_Bi6zMJbzEeOHEZkAJ8XYZg">
                 <visibleWhen xsi:type="ui:CoreExpression" xmi:id="_hfIz8LKZEeOdJ_svOfiflg" coreExpressionId="ch.droptilllate.application.selectionset"/>
               </children>

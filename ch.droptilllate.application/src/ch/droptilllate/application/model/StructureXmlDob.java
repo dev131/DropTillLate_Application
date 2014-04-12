@@ -4,18 +4,16 @@ import java.io.File;
 import java.sql.Date;
 
 import ch.droptilllate.application.dnb.EncryptedContainer;
-import ch.droptilllate.application.dnb.ShareFolder;
 import ch.droptilllate.application.dnb.ShareRelation;
+import ch.droptilllate.application.dnb.ShareMember;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.properties.XMLConstruct;
 
 public class StructureXmlDob {
 	
 	private EncryptedFileDob encryptedFileDob;
-	private ShareFolder shareFolder;
-	private ShareRelation shareRelation;
+	private ShareMember shareRelation;
 	private EncryptedContainer encryptedContainer;
-	private String path;
 	private String fileName;
 	private Integer fileId;
 	
@@ -25,7 +23,7 @@ public class StructureXmlDob {
 	 * @param key
 	 * @param local (if set id and name from local xml)
 	 */
-	public StructureXmlDob(ShareFolder sharefolder, boolean local){
+	public StructureXmlDob(boolean local){
 			if(local){
 				this.fileName = XMLConstruct.NameLocalXML;
 				this.fileId = Integer.parseInt(XMLConstruct.IdLocalXMLFiles);
@@ -41,7 +39,7 @@ public class StructureXmlDob {
 				null,  
 				0L, 
 				Integer.parseInt(XMLConstruct.IdXMLContainer));
-		this.shareRelation = new ShareRelation(Messages.getIdSize(), Messages.OwnerMail);
+		this.shareRelation = new ShareMember(Messages.getIdSize(), Messages.OwnerMail);
 		this.encryptedContainer = new EncryptedContainer(Integer.parseInt(XMLConstruct.IdXMLContainer), Messages.getIdSize());
 		
 	}
@@ -50,7 +48,7 @@ public class StructureXmlDob {
 		return this.encryptedFileDob;
 	}
 
-	public ShareRelation getShareRelation() {
+	public ShareMember getShareRelation() {
 		return this.shareRelation;
 	}
 

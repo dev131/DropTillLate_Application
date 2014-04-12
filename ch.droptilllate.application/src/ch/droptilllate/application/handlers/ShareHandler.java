@@ -23,6 +23,8 @@ public class ShareHandler {
 		mPart.setVisible(true);		
 		ViewController viewcontroller = ViewController.getInstance();
 		 viewcontroller.openShareContext();
+			MPart importpart = partService.findPart("ch.droptilllate.application.part.Import");
+			importpart.setVisible(false);
 	}
 	
 	

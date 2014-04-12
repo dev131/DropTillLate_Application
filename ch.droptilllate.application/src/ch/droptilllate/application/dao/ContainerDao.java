@@ -46,10 +46,10 @@ public class ContainerDao extends AbstractXmlDatabase {
 			this.containerQuery = new ContainerQuery(key);		
 		return this.containerQuery.checkDatabase((List<EncryptedContainer>) obj);
 	}
-	public Object getContainerBySharedFolderId(Integer id, String key){
+	public Object getContainerByShareRelationId(Integer shareRelationId, String key){
 		if (this.containerQuery == null)
 			this.containerQuery = new ContainerQuery(key);		
-		return this.containerQuery.getContainerBySharedFolderId(id);
+		return this.containerQuery.getContainerBySharedRelationId(shareRelationId);
 	}
 
 	@Override

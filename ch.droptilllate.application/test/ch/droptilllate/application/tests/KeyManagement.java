@@ -3,11 +3,11 @@ package ch.droptilllate.application.tests;
 import org.junit.Test;
 
 import ch.droptilllate.application.dao.ContainerDao;
-import ch.droptilllate.application.dao.ShareFolderDao;
+
 import ch.droptilllate.application.dnb.EncryptedContainer;
-import ch.droptilllate.application.dnb.ShareFolder;
+import ch.droptilllate.application.dnb.ShareRelation;
 import ch.droptilllate.application.query.ContainerQuery;
-import ch.droptilllate.application.query.ShareFolderQuery;
+
 import ch.droptilllate.application.xml.AbstractXmlDatabase;
 
 public class KeyManagement {
@@ -18,7 +18,7 @@ public class KeyManagement {
 		// public ShareFolder(int id, String path, String key)
 		int anzahl = 10;
 		AbstractXmlDatabase cDao = new ContainerDao();
-		AbstractXmlDatabase sDao = new ShareFolderDao();
+	//	AbstractXmlDatabase sDao = new ShareFolderDao();
 //		ContainerQuery containerQuery = new ContainerQuery();
 //		ShareFolderQuery sharefolderQuery = new ShareFolderQuery();
 		// Create

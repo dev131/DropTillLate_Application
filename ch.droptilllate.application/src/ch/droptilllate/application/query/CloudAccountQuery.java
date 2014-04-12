@@ -9,7 +9,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import ch.droptilllate.application.dnb.CloudAccount;
-import ch.droptilllate.application.dnb.ShareRelation;
+import ch.droptilllate.application.dnb.ShareMember;
 import ch.droptilllate.application.properties.XMLConstruct;
 import ch.droptilllate.application.xml.XmlConnection;
 

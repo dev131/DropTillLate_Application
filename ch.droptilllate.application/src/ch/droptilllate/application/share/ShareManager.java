@@ -6,23 +6,20 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import ch.droptilllate.application.com.CloudDropboxCom;
 import ch.droptilllate.application.com.FileSystemCom;
 import ch.droptilllate.application.dao.ContainerDao;
 import ch.droptilllate.application.dao.EncryptedFileDao;
-import ch.droptilllate.application.dao.ShareFolderDao;
-import ch.droptilllate.application.dao.ShareRelationDao;
+import ch.droptilllate.application.dao.ShareMembersDao;
 import ch.droptilllate.application.dnb.EncryptedContainer;
-import ch.droptilllate.application.dnb.ShareFolder;
 import ch.droptilllate.application.dnb.ShareRelation;
+import ch.droptilllate.application.dnb.ShareMember;
 import ch.droptilllate.application.info.CRUDCryptedFileInfo;
+import ch.droptilllate.application.key.KeyManager;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.views.Status;
 import ch.droptilllate.application.xml.UpdateXMLGenerator;
 import ch.droptilllate.application.xml.UpdateXMLImporter;
-import ch.droptilllate.cloudprovider.error.CloudError;
-import ch.droptilllate.couldprovider.api.ICloudProviderCom;
 import ch.droptilllate.couldprovider.api.IFileSystemCom;
 
 
@@ -49,35 +46,34 @@ public class ShareManager {
 	public ShareManager(List<EncryptedFileDob> fileList,
 			String password, List<String> emailList) {
 		this.emailList = emailList;
-		
-		ShareFolder shareFolder = new ShareFolder(null, null);
-		// create HashSet with all ShareFolderId
-		HashSet<Integer> hashSet_shareFolderList = getShareFolderList(fileList);
+	
+		// create HashSet with all shareRelationID
+		HashSet<Integer> hashSet_shareRelationList = getShareRelationList(fileList);
 		// FILL Hashmap with key = sharedfolderID and filelist as value
 		HashMap<Integer, ArrayList<EncryptedFileDob>> hashmap = getHashMap(
-				fileList, hashSet_shareFolderList);
+				fileList, hashSet_shareRelationList);
 		// Check if entries available
 		// TODO cancel sharing
 		if (hashmap.isEmpty())
 			STATUS = ERROR;
 
-		// Check if All Files from one ShareFolder
+		// Check if All Files from one ShareRelation
 		if (hashmap.size() == 1) {
-			// Check if Files from same SharedFolder but not all
-			if (!checkIfMoreFilesAvailable(hashSet_shareFolderList.iterator()
+			// Check if Files from same ShareRelation but not all
+			if (!checkIfMoreFilesAvailable(hashSet_shareRelationList.iterator()
 					.next(), fileList)) {	
 					STATUS = CREATE;
 			} else {
 				if (hashmap.containsKey(Messages.getIdSize())) {
-					// All Files from SharedFolder 0
+					// All Files from ShareRelation 0
 					STATUS = CREATE;
 				} else {
-					// All Files from SharedFolder x not 0
+					// All Files from ShareRelation x not 0
 					STATUS = USEEXIST;
 				}
 			}
 		} else {
-			// From more then one ShareFolder
+			// From more then one ShareRelation
 			STATUS = CREATE;
 		}
 	}
@@ -92,22 +88,22 @@ public class ShareManager {
 		return importer.getContainerUpdateXML();
 	}
 	
-	public List<ShareRelation> getUpdateShareRelation(String key){
+	public List<ShareMember> getUpdateShareRelation(String key){
 		UpdateXMLImporter importer = new UpdateXMLImporter(key);
 		return importer.getShareRelationUpdateXML();
 	}
 	    
-	public void insertShareRelation(ShareFolder shareFolder, ArrayList<String> mailList) {
-		ShareRelationDao dao = new ShareRelationDao();
-		ShareRelation sharerelation = new ShareRelation(shareFolder.getID(), Messages.OwnerMail);
+	public void insertShareMembers(ShareRelation shareRelation, ArrayList<String> mailList) {
+		ShareMembersDao dao = new ShareMembersDao();
+		ShareMember sharerelation = new ShareMember(shareRelation.getID(), Messages.OwnerMail);
 		dao.newElement(sharerelation, null);
 		for(String mail : mailList){
-			sharerelation = new ShareRelation(shareFolder.getID(), mail);
+			sharerelation = new ShareMember(shareRelation.getID(), mail);
 			dao.newElement(sharerelation, null);
 		}	
 	}
 
-	public ShareFolder useExistingSharedFolder(List<EncryptedFileDob> fileList,
+	public ShareRelation useExistingSharedRelation(List<EncryptedFileDob> fileList,
 			String password) {
 		HashSet<Integer> hashFile = new HashSet<Integer>();
 		for(EncryptedFileDob fileDob : fileList){
@@ -118,16 +114,16 @@ public class ShareManager {
 		for(Integer id : hashFile){
 		 container = (EncryptedContainer) dao.getElementByID(id, null);			
 		}		
-		// Get existing sharefolder
-		ShareFolderDao sDao = new ShareFolderDao();		
-		return (ShareFolder) sDao.getElementByID(container.getShareFolderId(), null);
+		// Get existing ShareRelation
+		KeyManager km = KeyManager.getInstance();
+		return km.getShareRelation(container.getShareRelationId());
 	}
 
-	public ShareFolder createNewSharedFolder(
-			ArrayList<EncryptedFileDob> fileList, String password, ShareFolder shareFolder) {
+	public ShareRelation createNewSharedRelation(
+			ArrayList<EncryptedFileDob> fileList,ShareRelation shareRelation) {
 		// Move Files
 		IFileSystemCom iFile = FileSystemCom.getInstance();	
-		CRUDCryptedFileInfo result = iFile.moveFiles(fileList, shareFolder);
+		CRUDCryptedFileInfo result = iFile.moveFiles(fileList, shareRelation);
 		// Handle Error
 		for (EncryptedFileDob fileDob : result.getEncryptedFileListError()) {
 			Status status = Status.getInstance();
@@ -144,15 +140,15 @@ public class ShareManager {
 		ContainerDao containerDB = new ContainerDao();
 		for(Integer i : hashSet){
 			//TODO Delete not used container in db
-			EncryptedContainer container = new EncryptedContainer(i, shareFolder.getID());
+			EncryptedContainer container = new EncryptedContainer(i, shareRelation.getID());
 			containerDB.newElement(container, null);
 		}
-		return shareFolder;
+		return shareRelation;
 	}
 	
-	public void createUpdateFiles(ShareFolder sharedFolder) {
+	public void createUpdateFiles(ShareRelation shareRelation) {
 	ContainerDao contDao = new ContainerDao();
-	List<EncryptedContainer> contList = (List<EncryptedContainer>) contDao.getContainerBySharedFolderId(sharedFolder.getID(), null);
+	List<EncryptedContainer> contList = (List<EncryptedContainer>) contDao.getContainerByShareRelationId(shareRelation.getID(), null);
 	EncryptedFileDao fileDao = new EncryptedFileDao();
 	List<EncryptedFileDob> dobfileList = new ArrayList<EncryptedFileDob>();
 	for(EncryptedContainer container : contList){
@@ -161,29 +157,28 @@ public class ShareManager {
 			dobfileList.add(tempDob);
 		}
 	}	
-	ShareRelationDao shareDao = new ShareRelationDao();
-	List<ShareRelation> shareRelationList = (List<ShareRelation>) shareDao.getElementByID(sharedFolder.getID(), null);
-	UpdateXMLGenerator gen = new UpdateXMLGenerator(sharedFolder.getKey());
+	ShareMembersDao shareDao = new ShareMembersDao();
+	List<ShareMember> shareMemberList = (List<ShareMember>) shareDao.getElementByID(shareRelation.getID(), null);
+	UpdateXMLGenerator gen = new UpdateXMLGenerator(shareRelation.getKey());
 	gen.createContainerUpdateXML(contList);
 	gen.createFileUpdateXML(dobfileList);
-	gen.creatShareRelationUpdateXML(shareRelationList);
+	gen.creatShareMembersUpdateXML(shareMemberList);
 	//Encrypt XMLs
 	IFileSystemCom com = FileSystemCom.getInstance();	
 	//TODO use right encryptFile with right sharedFolder
-	if(com.encryptFile(sharedFolder, false)){
+	if(com.encryptFile(shareRelation, false)){
 		//TODO if true -> successfull
 	}
 	
 	
 	}
 
-	private boolean checkIfMoreFilesAvailable(Integer shareFolderId,
+	private boolean checkIfMoreFilesAvailable(Integer shareRelationID,
 			List<EncryptedFileDob> fileList) {
 		ContainerDao dao = new ContainerDao();
 		EncryptedFileDao daof = new EncryptedFileDao();
 		List<EncryptedContainer> containerlist = new ArrayList<EncryptedContainer>();
-		containerlist = (List<EncryptedContainer>) (dao)
-				.getContainerBySharedFolderId(shareFolderId, null);
+		containerlist = (List<EncryptedContainer>) (dao).getContainerByShareRelationId(shareRelationID, null);
 		List<Integer> tempList1 = new ArrayList<Integer>();
 		List<Integer> tempList2 = new ArrayList<Integer>();
 		for (EncryptedContainer container : containerlist) {
@@ -199,13 +194,13 @@ public class ShareManager {
 		return false;
 	}
 
-	private HashSet<Integer> getShareFolderList(List<EncryptedFileDob> fileList) {
+	private HashSet<Integer> getShareRelationList(List<EncryptedFileDob> fileList) {
 		ContainerDao dao = new ContainerDao();
 		HashSet<Integer> hashSet = new HashSet<Integer>();
 		for (EncryptedFileDob fileDob : fileList) {
 			EncryptedContainer container = (EncryptedContainer) dao
 					.getElementByID(fileDob.getContainerId(), null);
-			hashSet.add(container.getShareFolderId());
+			hashSet.add(container.getShareRelationId());
 		}
 		return hashSet;
 	}
@@ -214,15 +209,15 @@ public class ShareManager {
 			List<EncryptedFileDob> fileList, HashSet<Integer> hashSet) {
 		HashMap<Integer, ArrayList<EncryptedFileDob>> hashmap = new HashMap<Integer, ArrayList<EncryptedFileDob>>();
 		ContainerDao dao = new ContainerDao();
-		for (Integer sharefolderId : hashSet) {
+		for (Integer shareRelationID : hashSet) {
 			ArrayList<EncryptedFileDob> arraylist = new ArrayList<EncryptedFileDob>();
 			for (EncryptedFileDob fileDob : fileList) {
 				if (((EncryptedContainer) dao.getElementByID(fileDob
-						.getContainerId(), null)).getShareFolderId() == sharefolderId) {
+						.getContainerId(), null)).getShareRelationId() == shareRelationID) {
 					arraylist.add(fileDob);
 				}
 			}
-			hashmap.put(sharefolderId, arraylist);
+			hashmap.put(shareRelationID, arraylist);
 		}
 		return hashmap;
 	}

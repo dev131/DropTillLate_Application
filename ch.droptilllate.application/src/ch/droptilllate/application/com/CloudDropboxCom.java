@@ -39,6 +39,7 @@ public class CloudDropboxCom implements ICloudProviderCom {
 	
 	@Override
 	public CloudError shareFolderManuallyViaBrowser(Integer shareRelationID, boolean alreadyShared) {
+		iprovider = new DropboxHandler();
 		return iprovider.shareFolderManuallyViaBrowser(getDropboxPath(), shareRelationID, alreadyShared);
 	}
 	

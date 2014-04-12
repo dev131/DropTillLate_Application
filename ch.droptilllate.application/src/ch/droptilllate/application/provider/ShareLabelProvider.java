@@ -64,7 +64,7 @@ public class ShareLabelProvider implements ITableLabelProvider {
 						.getElementByID(
 								((EncryptedFileDob) element).getContainerId(),
 								null);
-				if (container.getShareFolderId() != Messages.getIdSize()) {
+				if (container.getShareRelationId() != Messages.getIdSize()) {
 					text = "yes";
 				}
 				text = "no";

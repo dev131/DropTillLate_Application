@@ -10,7 +10,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import ch.droptilllate.application.dnb.EncryptedContainer;
-import ch.droptilllate.application.dnb.ShareRelation;
+import ch.droptilllate.application.dnb.ShareMember;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.properties.XMLConstruct;
@@ -77,19 +77,19 @@ public class UpdateXMLImporter {
 		for (int idx = 0; idx < nodelist.getLength(); idx++) {
 			EncryptedContainer container = new EncryptedContainer(
 					Integer.parseInt(nodelist.item(idx).getAttributes().getNamedItem(XMLConstruct.AttId).getNodeValue()),
-					Integer.parseInt(nodelist.item(idx).getAttributes().getNamedItem(XMLConstruct.AttShareFolderId).getNodeValue())
+					Integer.parseInt(nodelist.item(idx).getAttributes().getNamedItem(XMLConstruct.AttShareRelationID).getNodeValue())
 					);
 			containerList.add(container);
 		}
 		return containerList;
 	}
 	
-	public List<ShareRelation> getShareRelationUpdateXML(){
-		NodeList nodelist = this.document.getElementsByTagName(XMLConstruct.ChildElementShareRelation);
-		List<ShareRelation> shareList = new ArrayList<ShareRelation>();
+	public List<ShareMember> getShareRelationUpdateXML(){
+		NodeList nodelist = this.document.getElementsByTagName(XMLConstruct.ChildElementShareMember);
+		List<ShareMember> shareList = new ArrayList<ShareMember>();
 		for (int idx = 0; idx < nodelist.getLength(); idx++) {
-			ShareRelation tmp = new ShareRelation(
-					Integer.parseInt(nodelist.item(idx).getAttributes().getNamedItem(XMLConstruct.AttShareFolderId).getNodeValue()),
+			ShareMember tmp = new ShareMember(
+					Integer.parseInt(nodelist.item(idx).getAttributes().getNamedItem(XMLConstruct.AttShareRelationID).getNodeValue()),
 					nodelist.item(idx).getAttributes().getNamedItem(XMLConstruct.AttMail).getNodeValue()
 					);
 			shareList.add(tmp);

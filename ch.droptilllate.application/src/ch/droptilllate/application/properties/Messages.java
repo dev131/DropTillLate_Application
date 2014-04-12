@@ -8,6 +8,7 @@ import java.io.File;
 
 
 
+
 import org.eclipse.osgi.util.NLS;
 
 import ch.droptilllate.application.provider.TableIdentifier;
@@ -26,9 +27,9 @@ public class Messages extends NLS {
 	public static String Encryptview_ID;
 	public static String LoginPassword;
 	public static String CreatePassword;
-	public static String SaltMasterPassword;
 	public static String CreateSharePasswordDialog;
 	public static String OwnerMail;
+	public static String KeyFile;
 	
 	public static String ImportDialog;
 	
@@ -42,6 +43,11 @@ public class Messages extends NLS {
 		return 100000;
 		
 	}
+	
+	public static String getApplicationpath(){
+		return System.getProperty("user.dir");
+	}
+	
 	public static String getDropboxName(){
 		File file = new File(Configuration.getPropertieDropBoxPath(false));
 		return file.getName();

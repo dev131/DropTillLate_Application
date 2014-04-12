@@ -2,27 +2,35 @@ package ch.droptilllate.application.dnb;
 
 public class ShareRelation {
 
-	private Integer sharefolderId;
-	private String mail;
-	
 
+	private Integer id;
+	private String key;
 	
-	public ShareRelation(Integer sharefolderId, String mail) {
-		this.sharefolderId = sharefolderId;
-		this.mail = mail;
-	}
-	public Integer getSharefolderId() {
-		return this.sharefolderId;
-	}
-	public void setSharefolderId(Integer sharefolderId) {
-		this.sharefolderId = sharefolderId;
-	}
-	public String getMail() {
-		return this.mail;
-	}
-	public void setMail(String mail) {
-		this.mail = mail;
+	/**
+	 * ShareFolder
+	 * @param id -> auto generate if it is null
+	 * @param path
+	 * @param key
+	 */
+	public ShareRelation(Integer id, String key){
+		this.id= id;
+		this.key= key;
 	}
 	
+	public Integer getID(){
+		return this.id;
+	}
+	
+	public void setID(Integer id){
+		this.id = id;
+	}
+	
+	public String getKey(){
+		return this.key;
+	}
+	
+	public void setKey(String key){
+		this.key = key;
+	}
 	
 }

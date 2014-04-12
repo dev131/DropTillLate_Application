@@ -3,16 +3,16 @@ package ch.droptilllate.application.dnb;
 public class EncryptedContainer {
 
 	private Integer id;
-	private Integer shareFolderId;
+	private Integer shareRelationId;
 	
 	/**
 	 * EncryptedContainer
 	 * @param id -> auto generate if it is null
 	 * @param shareFolderId
 	 */
-	public EncryptedContainer(Integer id, Integer shareFolderId){
+	public EncryptedContainer(Integer id, Integer shareRelationId){
 		this.id= id;
-		this.shareFolderId= shareFolderId;
+		this.shareRelationId= shareRelationId;
 	}
 	
 	public Integer getId(){
@@ -23,11 +23,11 @@ public class EncryptedContainer {
 		this.id = id;
 	}
 	
-	public Integer getShareFolderId(){
-		return this.shareFolderId;
+	public Integer getShareRelationId(){
+		return this.shareRelationId;
 	}
 	
-	public void setContainerID(Integer shareFolderId){
-		this.shareFolderId = shareFolderId;
+	public void setShareRelationId(Integer shareRelationId){
+		this.shareRelationId = shareRelationId;
 	}
 }

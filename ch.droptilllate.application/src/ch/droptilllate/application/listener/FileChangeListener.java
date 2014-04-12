@@ -28,7 +28,7 @@ public class FileChangeListener implements FileListener {
 //		if(dob.get(0).getId() == Integer.parseInt(XMLConstruct.getIdXMLFiles())){
 //			file.encryptFile(destinationShareFolder, local)
 //		}
-		file.encryptFile(this.dob, null);
+		file.encryptFile(this.dob, true);
 
 	}
 

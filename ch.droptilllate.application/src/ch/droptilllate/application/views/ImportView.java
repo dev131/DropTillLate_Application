@@ -25,6 +25,7 @@ import ch.droptilllate.application.controller.ViewController;
 import ch.droptilllate.application.handlers.FileHandler;
 import ch.droptilllate.application.info.ErrorMessage;
 import ch.droptilllate.application.properties.Configuration;
+
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Group;
@@ -125,7 +126,8 @@ public class ImportView implements SelectionListener{
 		MPart ownpart = partService.findPart("ch.droptilllate.application.part.decryptedview");
 		ownpart.setVisible(true);
 		MPart mPart = partService.findPart("ch.droptilllate.application.part.Import");
-		mPart.setVisible(false);		
+		mPart.setVisible(false);	
+		ShareView.getInstance().deleteUnSuccessShareFolder();
 	}
 
 	private void importShareFolder() {

@@ -62,8 +62,8 @@ public class ContainerQuery {
 		Element element = document.createElement(XMLConstruct.ChildElementContainer);
 		element.setAttribute(XMLConstruct.AttId, Integer.toString(container.getId()));
 		element.setIdAttribute(XMLConstruct.AttId, true);
-		element.setAttribute(XMLConstruct.AttShareFolderId,
-				Integer.toString(container.getShareFolderId()));
+		element.setAttribute(XMLConstruct.AttShareRelationID,
+				Integer.toString(container.getShareRelationId()));
 		node.appendChild(element);
 		this.conn.writeToXML();
 	}
@@ -86,7 +86,7 @@ public class ContainerQuery {
 		EncryptedContainer container = null;
 		if (nodes.getLength() > 0) {
 			container = new EncryptedContainer(id, Integer.parseInt(nodes.item(0)
-					.getAttributes().getNamedItem(XMLConstruct.AttShareFolderId)
+					.getAttributes().getNamedItem(XMLConstruct.AttShareRelationID)
 					.getNodeValue()));
 		}
 		return container;
@@ -106,9 +106,9 @@ public class ContainerQuery {
 		for (int idx = 0; idx < nodes.getLength(); idx++) {
 			nodes.item(idx)
 					.getAttributes()
-					.getNamedItem(XMLConstruct.AttShareFolderId)
+					.getNamedItem(XMLConstruct.AttShareRelationID)
 					.setNodeValue(
-							Integer.toString(container.getShareFolderId()));
+							Integer.toString(container.getShareRelationId()));
 		}
 		System.out.println("Everything updated.");
 		// save xml file back
@@ -155,16 +155,16 @@ public class ContainerQuery {
 		return result;
 	}
 
-	public Object getContainerBySharedFolderId(Integer id) {
+	public Object getContainerBySharedRelationId(Integer shareRelationId) {
 		conn.getXML();
 		// cast the result to a DOM NodeList
-		NodeList nodes = conn.executeQuery(XMLConstruct.getContainerExpression()+ "[@"+XMLConstruct.AttShareFolderId+"='" + id
+		NodeList nodes = conn.executeQuery(XMLConstruct.getContainerExpression()+ "[@"+XMLConstruct.AttShareRelationID+"='" + shareRelationId
 				+ "']");
 		ArrayList<EncryptedContainer> containerList = new ArrayList<EncryptedContainer>();
 		for (int idx = 0; idx < nodes.getLength(); idx++) {
 			EncryptedContainer container = new EncryptedContainer(
 					Integer.parseInt(nodes.item(idx).getAttributes().getNamedItem(XMLConstruct.AttId).getNodeValue()),
-					Integer.parseInt(nodes.item(idx).getAttributes().getNamedItem(XMLConstruct.AttShareFolderId).getNodeValue())
+					Integer.parseInt(nodes.item(idx).getAttributes().getNamedItem(XMLConstruct.AttShareRelationID).getNodeValue())
 					);
 			containerList.add(container);
 		}

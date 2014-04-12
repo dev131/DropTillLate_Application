@@ -3,61 +3,125 @@ package ch.droptilllate.application.key;
 
 import java.io.File;
 
-import ch.droptilllate.application.dao.ShareFolderDao;
-import ch.droptilllate.application.dnb.ShareFolder;
+import ch.droptilllate.application.dnb.ShareRelation;
 import ch.droptilllate.application.lifecycle.OSValidator;
 import ch.droptilllate.application.properties.Configuration;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.properties.XMLConstruct;
 import ch.droptilllate.filesystem.preferences.Constants;
+import ch.droptilllate.keyfile.api.IKeyFile;
+import ch.droptilllate.keyfile.api.KeyFileHandler;
+import ch.droptilllate.keyfile.api.KeyFileHandlingSummary;
+import ch.droptilllate.keyfile.error.KeyFileError;
+import ch.droptilllate.security.commons.KeyRelation;
 
 public class KeyManager {
+	
+	public KeyRelation keyrelation;
+	private static KeyManager instance = null;
 
+	public KeyManager(){
+	}
+	
+	 public static KeyManager getInstance() {
+	      if(instance == null) {
+	         instance = new KeyManager();
+	      }
+	      return instance;
+	   }
+	
 	/**
-	 * Init MasterPassword
-	 * @param password
+	 * Open the KeyFile and fill the KeyRelation Object
+	 * @param keyFilePath
+	 * @param passphrase
+	 * @return false if key is wrong
 	 */
-	public void initPassword(String password){
-		ShareFolderDao dao = new ShareFolderDao();
-		ShareFolder	folder = new ShareFolder(Messages.getIdSize(),password );
-		dao.newElement(folder, password);
+	public KeyFileHandlingSummary loadKeyFile(String keyFilePath,String passphrase){
+		keyFilePath = keyFilePath + OSValidator.getSlash()+Messages.KeyFile;
+		KeysGenerator gen = new KeysGenerator();
+		String key = gen.getKey(passphrase, Messages.getIdSize().toString());
+		IKeyFile iKeyFile = new KeyFileHandler();
+		return iKeyFile.loadKeyFile(keyFilePath, key);
+	}
+
+	
+	/**
+	 * Save key file
+	 * @param keyFilePath
+	 * @param passphrase
+	 * @return true = no error
+	 */
+	public KeyFileError saveKeyFile(String keyFilePath, String passphrase){
+		keyFilePath = keyFilePath + OSValidator.getSlash()+Messages.KeyFile;
+		KeysGenerator gen = new KeysGenerator();
+		String key = gen.getKey(passphrase, Messages.getIdSize().toString());
+		IKeyFile iKeyFile = new KeyFileHandler();	
+		return iKeyFile.storeKeyFile(keyFilePath, key, keyrelation);
+	}
+	
+	private String getKeyByShareRelationID(Integer shareRelationId){	
+		KeysGenerator gen = new KeysGenerator();
+		return gen.getKey(keyrelation.getKeyOfShareRelation(shareRelationId), shareRelationId.toString());
 	}
 	
 	/**
-	 * Check if master password exist
-	 * @return true if exist
+	 * Return ShareRelation with key as a hash
+	 * @param shareRelationID
+	 * @return ShareRelation
 	 */
-	public boolean checkMasterPasswordExisting(){
-		ShareFolderDao dao = new ShareFolderDao();
-		ShareFolder folder = (ShareFolder) dao.getElementByID(Messages.getIdSize(), null);
-		if(folder == null ){
+	public ShareRelation getShareRelation(Integer ShareRelationID){
+		KeysGenerator gen = new KeysGenerator();
+		ShareRelation shareRelation = new ShareRelation(ShareRelationID, gen.getKey(keyrelation.getKeyOfShareRelation(ShareRelationID), ShareRelationID.toString()));
+		return shareRelation;
+	}
+	
+	/**
+	 * Create new ShareRelation
+	 * @param passphrase
+	 * @param shareRelation if ID is set create specified shareRelation
+	 * @return
+	 */
+	public ShareRelation newShareRelation(String passphrase, Integer shareRelationID){
+		if (shareRelationID == null) {
+			shareRelationID = (int) (Math.random() * Messages.getIdSize() + 1);
+			// Check if it exist
+			while (checkIfShareFolderExist(shareRelationID)) {
+			shareRelationID = (int) (Math.random() * Messages.getIdSize() + 1);
+			}
+		}
+		ShareRelation shareRelation = new ShareRelation(shareRelationID, passphrase);
+		addKeyRelation(shareRelation.getID(), shareRelation.getKey());
+		return shareRelation;
+	}
+	
+	private boolean checkIfShareFolderExist(int shareRelationID) {
+		String i = keyrelation.getKeyOfShareRelation(shareRelationID);
+		if(i == null){
 			return false;
 		}
 		return true;
 	}
+
 	/**
-	 * Check existing password, true when it match
-	 * @param password
-	 * @return true if it match
+	 * Add keyrelation with plain password (not hash)
+	 * @param shareRelationID
+	 * @param passphrase
 	 */
-	public boolean checkPassword(String password,String salt, int shareID){
-		Boolean exist = false;
-		ShareFolderDao dao = new ShareFolderDao();
-		ShareFolder folder = (ShareFolder) dao.getElementByID(shareID, password);
-		if(folder != null){
-			if(folder.getKey().equals(password))exist= true;	
-		}	
-		return exist;
+	public void addKeyRelation(Integer shareRelationID, String passphrase){	
+		if(keyrelation == null){
+			keyrelation = new KeyRelation();
+		}
+		keyrelation.addKeyOfShareRelation(shareRelationID, passphrase);
+	}
+
+	public KeyRelation getKeyrelation() {
+		return keyrelation;
+	}
+
+	public void setKeyrelation(KeyRelation keyrelation) {
+		this.keyrelation = keyrelation;
 	}
 	
-	/**
-	 * Return true if Dropbox/100000.xml exist
-	 * @return
-	 */
-	public boolean checkIfStructureFileExist() {
-		File file = new File(Configuration.getPropertieDropBoxPath(true) + Messages.getIdSize()+ OSValidator.getSlash()+ XMLConstruct.IdXMLContainer+"."+ Constants.CONTAINER_EXTENTION);
-		return file.exists();
-	}
 	
 
 }

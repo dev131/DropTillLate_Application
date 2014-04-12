@@ -1,8 +1,6 @@
 package ch.droptilllate.application.views;
 
 
-import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 
 import javax.annotation.PostConstruct;
@@ -21,6 +19,8 @@ import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
@@ -29,19 +29,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
-import ch.droptilllate.application.com.CloudDropboxCom;
+import ch.droptilllate.application.controller.InitController;
 import ch.droptilllate.application.controller.ViewController;
-import ch.droptilllate.application.dao.CloudAccountDao;
-import ch.droptilllate.application.dnb.CloudAccount;
 import ch.droptilllate.application.info.ErrorMessage;
 import ch.droptilllate.application.info.SuccessMessage;
-import ch.droptilllate.application.key.KeyManager;
-import ch.droptilllate.application.lifecycle.OSValidator;
-import ch.droptilllate.application.properties.Configuration;
-import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.cloudprovider.error.CloudError;
-import ch.droptilllate.couldprovider.api.ICloudProviderCom;
-import ch.droptilllate.filesystem.commons.OsUtils;
 
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Label;
@@ -53,11 +45,12 @@ import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Group;
 
-public class InitialView implements SelectionListener {
+public class InitialView implements SelectionListener, ModifyListener {
 
 	@Inject EPartService partService;
 	@Inject EModelService modelService;
 	@Inject MApplication application;
+	private InitController controller;
 	private Text text_tempPath;
 	private Text text_dropboxPath;
 	private Text text_password;
@@ -65,8 +58,6 @@ public class InitialView implements SelectionListener {
 	private Button btnSearchTmpFolder;
 	private Button btnLogin;
 	private Label lblPassword;
-	private Boolean newUser = false;
-	private Boolean newConfigFile = false;
 	private Shell shell;
 	private Text text_DropboxLoginName;
 	private Text text_DropboxPassword;
@@ -75,20 +66,21 @@ public class InitialView implements SelectionListener {
 	private Label lblDropboxLoginname;
 	private Label lblDropboxFolder ;
 	private Label lblTempFolder;
-	private CloudAccount cloudaccount = null;
-	private String password;
-	private String cloudusername;
-	private String cloudpassword;
-	private String status;
 	private Button btnLogin_1;
 	private Label lbldroptilllate;
 	private Label lblDroptilllateFoldername;
 	private Text txtDroptilllate;
-	private String dropboxPath ="";
-	private String tmpPath="";
-	private Boolean dropboxaccountvalidation;
 	private Group grpDroptilllateSettings;
 	private Group grpDropboxSettings;
+	
+	//STRINGS
+	private String dropboxfoldername;
+	private String password;
+	private String dropboxLogin;
+	private String dropboxPassword;
+	private String dropboxPath;
+	private String tempPath;
+	
 	@PostConstruct
 	public void createControls(Composite parent, Shell shell, EPartService partService, EModelService modelService, MApplication application) {
 		parent.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
@@ -252,67 +244,73 @@ public class InitialView implements SelectionListener {
 		btnLogin.addSelectionListener(this);
 		sashForm.setWeights(new int[] {115, 385});
 		   //Visible config
-//			btnSearchDropFolder.setVisible(false);
-//	    	btnSearchTmpFolder.setVisible(false);
-//	    	 text_dropboxPath.setVisible(false);
-//	    	 text_tempPath.setVisible(false);
-//	    	 lblDropboxFolder.setVisible(false);
-//	    	 lblTempFolder.setVisible(false);
-//	    	btnLogin.setVisible(false);
-//	    	btnLogin_1.setVisible(true);
-//	    	txtDroptilllate.setVisible(false);
-//			lblDroptilllateFoldername.setVisible(false);
-//			
-//			 text_DropboxPassword.setVisible(false);
-//	    	 btnTestDropbox.setVisible(false);
-//	    	 text_DropboxLoginName.setVisible(false);
-//	    	 lblPassword_1.setVisible(false);
-//	    	 lblDropboxLoginname.setVisible(false); 
-//	    		btnLogin.setVisible(false);
-//		    	btnLogin_1.setVisible(true);
-//		    	grpDropboxSettings.setVisible(false);
+			btnSearchDropFolder.setVisible(false);
+	    	btnSearchTmpFolder.setVisible(false);
+	    	 text_dropboxPath.setVisible(false);
+	    	 text_tempPath.setVisible(false);
+	    	 lblDropboxFolder.setVisible(false);
+	    	 lblTempFolder.setVisible(false);
+	    	btnLogin.setVisible(false);
+	    	btnLogin_1.setVisible(true);
+	    	txtDroptilllate.setVisible(false);
+			lblDroptilllateFoldername.setVisible(false);
+			
+			 text_DropboxPassword.setVisible(false);
+	    	 btnTestDropbox.setVisible(false);
+	    	 text_DropboxLoginName.setVisible(false);
+	    	 lblPassword_1.setVisible(false);
+	    	 lblDropboxLoginname.setVisible(false); 
+	    		btnLogin.setVisible(false);
+		    	btnLogin_1.setVisible(true);
+		    	grpDropboxSettings.setVisible(false);
 			//CHECK properties
-		checkPropertiesExists();
+		init();
 	  }
 	
-
-	/**
-	 * Set newUser true if properties not existing
-	 */
-	private void checkPropertiesExists() {
-	    KeyManager km = new KeyManager();
-	    if((Configuration.getPropertieDropBoxPath(true) == null)){
-	    	//If path not defined
-	    	newConfigFile = true;
-	    	btnSearchDropFolder.setVisible(true);
-	    	btnSearchTmpFolder.setVisible(true);
-	    	 text_dropboxPath.setVisible(true);
-	    	 text_tempPath.setVisible(true);
-	    	 lblDropboxFolder.setVisible(true);
-	    	 lblTempFolder.setVisible(true);
-	    	btnLogin.setVisible(true);
-	    	btnLogin_1.setVisible(false);
-	    	txtDroptilllate.setVisible(true);
-			lblDroptilllateFoldername.setVisible(true);
-			grpDropboxSettings.setVisible(true);
-	    	
-	  	  	}
-	    if (!km.checkIfStructureFileExist()){
-	    		  //FileStructure and Masterpassword missing
-	    			lblPassword.setText("Create Password");   	    	  
-	    	    	this.newUser = true;	  
-	    	    	text_DropboxPassword.setVisible(true);
-	    	    	btnTestDropbox.setVisible(true);
-	    	    	text_DropboxLoginName.setVisible(true);
-	    	    	lblPassword_1.setVisible(true);
-	    	    	lblDropboxLoginname.setVisible(true); 
-	    	    	btnLogin.setVisible(true);
-	    		    btnLogin_1.setVisible(false);
-	    		    grpDropboxSettings.setVisible(true);
-	    	    }
+	
+	private void init(){
+		dropboxfoldername = "DropTillLate";
+		controller = new InitController(shell);
+		 //Check if config files and filestructure file are available
+		 if(!controller.checkProperties() || !controller.checkIfFileStructureAvailable()){
+			 makePathPropertiesVisible();
+		 }
+		//Check if an Exit error exist	 
+		 controller.checkExitError();	
+		 
+			text_DropboxPassword.addModifyListener(this);
+			text_DropboxLoginName.addModifyListener(this);
+			text_dropboxPath.addModifyListener(this);
+			text_tempPath.addModifyListener(this);
+			txtDroptilllate.addModifyListener(this);
+			text_password.addModifyListener(this);
 	}
 
 
+	private void makePathPropertiesVisible() {
+		// TODO Auto-generated method stub
+		//If path not defined
+		lblPassword.setText("Create Password");   	    	    
+    	text_DropboxPassword.setVisible(true);
+    	btnTestDropbox.setVisible(true);
+    	text_DropboxLoginName.setVisible(true);
+    	lblPassword_1.setVisible(true);
+    	lblDropboxLoginname.setVisible(true); 
+    	btnLogin.setVisible(true);
+	    btnLogin_1.setVisible(false);
+    	btnSearchDropFolder.setVisible(true);
+    	btnSearchTmpFolder.setVisible(true);
+    	 text_dropboxPath.setVisible(true);
+    	 text_tempPath.setVisible(true);
+    	 lblDropboxFolder.setVisible(true);
+    	 lblTempFolder.setVisible(true);
+    	btnLogin.setVisible(true);
+    	txtDroptilllate.setVisible(true);
+		lblDroptilllateFoldername.setVisible(true);
+		grpDropboxSettings.setVisible(true);
+    	
+	}
+	
 	@Focus
 	public void setFocus() {
 	}	
@@ -321,122 +319,73 @@ public class InitialView implements SelectionListener {
 			   DirectoryDialog dialog = new DirectoryDialog(shell);
 			   if(dropbox == true){
 				   dialog.setText("Choose Dropbox Directory");
-				   dropboxPath = dialog.open();
-				   dropboxPath = dropboxPath;
-				   text_dropboxPath.setText(dropboxPath);
+				   text_dropboxPath.setText(dialog.open());
 				   
 			   }
 			   else{
 				   dialog.setText("Choose Local Temp Directory");
-				   tmpPath = dialog.open();
-				   text_tempPath.setText(tmpPath);
+				   text_tempPath.setText(dialog.open());
 			   }				   
 		}
-	
-
-	/**
-	 * set Properties
-	 * @return true if it worked
-	 */
-	private boolean setProperties(){
-		if(!dropboxPath.isEmpty() && !tmpPath.isEmpty() && !txtDroptilllate.getText().isEmpty() ){
-			try {
-				// TODO check for valid dropbox path (no eding slashes)
-				dropboxPath = dropboxPath + OSValidator.getSlash() + txtDroptilllate.getText();
-				Configuration.setPropertieDropBoxPath(dropboxPath);
-				Configuration.setPropertieTempPath(tmpPath);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();				
-				return false;				
-			}
-			return true;			
-		}
-		else{
-			return false;
-		}
-
-	}
-
+		
 	/**
 	 * Check Path
-	 * @return return true if tmp-path and dropbox-path not equal
+	 * @return return true if equals
 	 */
-	private boolean checkPath() {
-			if(tmpPath.equals(dropboxPath)){
-				return false;
+	private boolean checkPathofEquals() {
+			if(tempPath.equals(dropboxPath)){
+				new ErrorMessage(shell, "Error", "Dropbox-Path and Temp-Path can not be equals");
+				return true;
 			}
-			return true;
+			return false;
 	}
 
 
 	public void loginPressed(){
-//		if(text_DropboxPassword.getVisible()){
-//			dropboxaccountvalidation = testDropboxLogin();
-//		}
-		//IF Configfile not exist, insert tmp and dropbox path	
-		if(newConfigFile){
-				if(checkPath()){
-					if(!setProperties()){
-						new ErrorMessage(shell,"Error","Propertie Error! Check Attributes" );
-						return;						
-					}
+		
+		if(controller.getNewUser()){
+			//Check if all fields are not empty
+			if(checkAllFields()){
+				if(controller.newUser(dropboxfoldername,  password,dropboxPath, tempPath, dropboxLogin, dropboxPassword)){
+					startApplication();
 				}
-				else{
-					new ErrorMessage(shell,"Error","Propertie Error! Check if Temp path and Dropbox path are equals" );
-					return;	
-				}
-			}
-			password = text_password.getText();
-			KeyManager km = new KeyManager();
+			}	
+		}
+		else{
 			if(!password.isEmpty()){
-				if(newUser){	
-					dropboxaccountvalidation = testDropboxLogin();
-					//Check if all properties are set
-					if((Configuration.getPropertieDropBoxPath(true) != null)&&
-							(Configuration.getPropertieTempPath(true) !=null)&& 
-							dropboxaccountvalidation){
-						//CreateFolder
-						createFolder();
-						km.initPassword(password);
-						//Initi CloudAccount
-						CloudAccountDao dao = new CloudAccountDao();
-						dao.newElement(cloudaccount, null);
-						startApplication();
-					}
-					else{
-						new ErrorMessage(shell,"Error","Missing argument" );		
-					}				
+				//Check if Login successful
+				if(controller.login(password)){
+					startApplication();
 				}
-				else checkPassword();
 			}
 			else{
-				new ErrorMessage(shell,"Error","Missing argument" );	
+				new ErrorMessage(shell, "Error", "No Password");
 			}
+			
+		}
+		
+		
 			
 	}
 	
-	 
-	private void createFolder() {  
-		  File dir = new File(Configuration.getPropertieDropBoxPath(true)+ Messages.getIdSize());
-		  dir.mkdir();	
+	  private boolean checkAllFields() {
+
+		 if(dropboxPassword.isEmpty() || 
+				 dropboxfoldername.isEmpty() ||
+				 dropboxPath.isEmpty() ||
+				 tempPath.isEmpty() ||
+				  dropboxLogin.isEmpty() ||
+				  password.isEmpty() ||
+				  checkPathofEquals()
+				 ){
+			 new ErrorMessage(shell, "Error", "Missing Argument");
+			 return false;
+		 }
+		return true;
 	}
-	
-	 /**
-	   * Check if Password Exist
-	   */
-	  public void checkPassword(){ 
-		  KeyManager km = new KeyManager();
-			if(!km.checkPassword(password, Messages.SaltMasterPassword, Messages.getIdSize())){
-				new ErrorMessage(shell,"Error","Wrong Password" );	
-			}
-			else{
-				//Password OK
-				startApplication();
-			}  
-	  
-	  }
-	  private void startApplication(){
+
+
+	private void startApplication(){
 		  MHandledToolItem newFolderHandler = (MHandledToolItem) modelService.find("ch.droptilllate.application.handledtoolitem.newFolder", application);
 			newFolderHandler.setVisible(true);
 			MHandledToolItem importhandler = (MHandledToolItem) modelService.find("ch.droptilllate.application.handledtoolitem.import", application);
@@ -450,32 +399,6 @@ public class InitialView implements SelectionListener {
 			ownpart.setVisible(false);	
 	  }
 	  
-/**
- * Test Dropbox Loing
- * @return true if correct
- */
-		private boolean testDropboxLogin() {
-			cloudusername=text_DropboxLoginName.getText();
-			cloudpassword =text_DropboxPassword.getText();
-			if(cloudusername.isEmpty() || cloudpassword.isEmpty()){
-				new ErrorMessage(shell, "Error", "Missing Parameters");
-				return false;
-			}
-			else{
-				//TODO Test if account correct
-				ICloudProviderCom com = new CloudDropboxCom();
-				CloudError status = com.testCloudAccount(cloudusername, cloudpassword);
-				if(status != CloudError.NONE){
-					new ErrorMessage(shell, "Error", status.getMessage());
-					return false;
-				};
-				//NO ERROR
-				//new SuccessMessage(shell,"Information", "Dropbox-Login Correct");
-				cloudaccount = new CloudAccount(cloudusername, cloudpassword);
-				return true; 
-			}
-		}
-
 
 	@Override
 	public void widgetSelected(SelectionEvent e) {
@@ -489,7 +412,7 @@ public class InitialView implements SelectionListener {
 			loginPressed();
         } 
 		if(e.getSource() == btnTestDropbox){ 
-			testDropboxLogin();
+			controller.checkDropboxAccount(dropboxLogin, dropboxPassword);			
         }
 		if(e.getSource() == btnLogin_1){ 
 			loginPressed();
@@ -501,6 +424,31 @@ public class InitialView implements SelectionListener {
 	@Override
 	public void widgetDefaultSelected(SelectionEvent e) {
 		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void modifyText(ModifyEvent e) {
+
+		if(e.getSource() == text_DropboxPassword){ 
+			dropboxPassword = text_DropboxPassword.getText();
+	        } 	
+		if(e.getSource() == text_DropboxLoginName){ 
+			dropboxLogin = text_DropboxLoginName.getText();
+        } 
+		if(e.getSource() == text_dropboxPath){ 
+			dropboxPath = text_dropboxPath.getText();
+        } 
+		if(e.getSource() == text_tempPath){ 
+			tempPath = text_tempPath.getText();
+        }
+		if(e.getSource() == txtDroptilllate){ 
+			dropboxfoldername = txtDroptilllate.getText();
+        } 	
+		if(e.getSource() == text_password){ 
+			password = text_password.getText();
+        } 	
 		
 	}
 }

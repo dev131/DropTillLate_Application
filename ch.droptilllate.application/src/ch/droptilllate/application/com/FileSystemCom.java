@@ -9,10 +9,10 @@ import javax.crypto.KeyGenerator;
 
 import ch.droptilllate.application.converter.FileInfoConverter;
 import ch.droptilllate.application.dao.ContainerDao;
-import ch.droptilllate.application.dao.ShareFolderDao;
 import ch.droptilllate.application.dnb.EncryptedContainer;
-import ch.droptilllate.application.dnb.ShareFolder;
+import ch.droptilllate.application.dnb.ShareRelation;
 import ch.droptilllate.application.info.CRUDCryptedFileInfo;
+import ch.droptilllate.application.key.KeyManager;
 import ch.droptilllate.application.key.KeysGenerator;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.StructureXmlDob;
@@ -21,10 +21,10 @@ import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.couldprovider.api.IFileSystemCom;
 import ch.droptilllate.filesystem.error.FileError;
 import ch.droptilllate.filesystem.info.*;
-import ch.droptilllate.filesystem.security.KeyRelation;
 import ch.droptilllate.filesystem.api.FileHandlingSummary;
 import ch.droptilllate.filesystem.api.FileSystemHandler;
 import ch.droptilllate.filesystem.api.IFileSystem;
+import ch.droptilllate.security.commons.KeyRelation;
 
 /**
  * FileSystemCom
@@ -47,42 +47,30 @@ public class FileSystemCom implements IFileSystemCom {
 	   }
 	   
 	@Override
-	public synchronized CRUDCryptedFileInfo encryptFile(List<EncryptedFileDob> droppedFiles, ShareFolder sharefolder) {
+	public synchronized CRUDCryptedFileInfo encryptFile(List<EncryptedFileDob> droppedFiles, Boolean exist) {
 		FileHandlingSummary filehandling_result = null;
-		List<FileInfoEncrypt> fileInfoList = new ArrayList<FileInfoEncrypt>();		
-		HashSet<Integer> hashSet = new HashSet<Integer>();
+		List<FileInfoEncrypt> fileInfoList = new ArrayList<FileInfoEncrypt>();	
+		KeyManager km = KeyManager.getInstance();
+		ShareRelation shareRelation;
+		FileInfoEncrypt fileInfo;
+		KeyRelation relation = new KeyRelation();
 		for (EncryptedFileDob fileDob : droppedFiles) {
-			//If no new sharefolder -> File is already in a sharefolder
-			if (sharefolder == null){
+			//If no new ShareRelation -> File is already in a ShareRelation
+			if (exist){
 				ContainerDao dao = new ContainerDao();
 				EncryptedContainer container = (EncryptedContainer) dao.getElementByID(fileDob.getContainerId(), null);
-				sharefolder = new ShareFolder(container.getShareFolderId(), null);
-			}								
-			FileInfoEncrypt fileInfo;		
-			//If it have a ContainerId -> it is already in a Container /UPDATE
-			if(fileDob.getContainerId() != null){
-				//Update
-				hashSet.add(fileDob.getContainerId());
-				fileInfo = new FileInfoEncrypt(fileDob.getId(), sharefolder.getID(), fileDob.getContainerId(), fileDob.getType());
-			}	
+				shareRelation = km.getShareRelation(container.getShareRelationId());
+				fileInfo = new FileInfoEncrypt(fileDob.getId(), shareRelation.getID(), fileDob.getContainerId(), fileDob.getType());
+				relation.addKeyOfShareRelation(shareRelation.getID(), shareRelation.getKey());
+			}
 			else{
-				//new	
-				fileInfo= new FileInfoEncrypt(fileDob.getId(), fileDob.getPath(), sharefolder.getID());
+				//file dropped in for the first time
+				shareRelation = km.getShareRelation(Messages.getIdSize());
+				fileInfo= new FileInfoEncrypt(fileDob.getId(), fileDob.getPath(), shareRelation.getID());
+				relation.addKeyOfShareRelation(shareRelation.getID(), shareRelation.getKey());
 			}
 			fileInfoList.add(fileInfo);
-		}
-		ShareFolderDao shareDao = new ShareFolderDao();
-		// MasterShareFolder
-		KeyRelation relation = getKeyRelation(hashSet);	
-		//if the File is not in a SharedFolder/First Drop,/Put it in master-folder local
-		if (relation == null) {
-			ShareFolder shareFolder = (ShareFolder) shareDao
-					.getElementByID(Messages.getIdSize(), null);
-			relation = new KeyRelation();
-			KeysGenerator kg = new KeysGenerator();
-			String key = kg.getKey(shareFolder.getKey(), Messages.SaltMasterPassword);
-			relation.addKeyOfShareRelation(shareFolder.getID(),key);
-		}
+		}		
 		filehandling_result =ifile.encryptFiles(fileInfoList, relation);
 	// Convert to FileCRUDResults
 		FileInfoConverter converter = new FileInfoConverter();
@@ -97,17 +85,20 @@ public class FileSystemCom implements IFileSystemCom {
 	public synchronized CRUDCryptedFileInfo decryptFile(List<EncryptedFileDob> droppedFiles) {
 		FileHandlingSummary filehandling_result = null;
 		List<FileInfoDecrypt> fileInfoList = new ArrayList<FileInfoDecrypt>();
-		HashSet<Integer> hashSet = new HashSet<Integer>();
+		KeyManager km = KeyManager.getInstance();
+		ShareRelation shareRelation;
+		KeyRelation relation = new KeyRelation();
 		for (EncryptedFileDob fileDob : droppedFiles) {
 			//Check If File Exist
 			ContainerDao cDao= new ContainerDao();
 			EncryptedContainer container =(EncryptedContainer) cDao.getElementByID(fileDob.getContainerId(), null);
-			hashSet.add(fileDob.getContainerId());
+			shareRelation = km.getShareRelation(container.getShareRelationId());
 			fileInfoList.add(new FileInfoDecrypt(fileDob.getId(), fileDob
-					.getType(), container.getShareFolderId(), fileDob
+					.getType(), container.getShareRelationId(), fileDob
 					.getContainerId()));
+			relation.addKeyOfShareRelation(shareRelation.getID(), shareRelation.getKey());
+			
 		}
-		KeyRelation relation = getKeyRelation(hashSet);
 		filehandling_result = ifile.decryptFiles(fileInfoList,relation);
 		// Convert to FileCRUDResults
 		FileInfoConverter converter = new FileInfoConverter();
@@ -121,16 +112,18 @@ public class FileSystemCom implements IFileSystemCom {
 	public synchronized CRUDCryptedFileInfo deleteFile(List<EncryptedFileDob> fileList) {
 		FileHandlingSummary filehandling_result = null;
 		List<FileInfo> fileInfoList = new ArrayList<FileInfo>();
-		HashSet<Integer> hashSet = new HashSet<Integer>();
+		KeyManager km = KeyManager.getInstance();
+		ShareRelation shareRelation;
+		KeyRelation relation = new KeyRelation();		
 		for (EncryptedFileDob fileDob : fileList) {
 			//Check If File Exist
 			ContainerDao cDao= new ContainerDao();
 			EncryptedContainer container = (EncryptedContainer) cDao.getElementByID(fileDob.getContainerId(), null);
-			hashSet.add(fileDob.getContainerId());
+			shareRelation = km.getShareRelation(container.getShareRelationId());
 			fileInfoList.add(new FileInfo(fileDob.getId(), new ContainerInfo(
-					fileDob.getContainerId(), container.getShareFolderId())));
+					fileDob.getContainerId(), container.getShareRelationId())));
+			relation.addKeyOfShareRelation(shareRelation.getID(), shareRelation.getKey());
 		}
-		KeyRelation relation = getKeyRelation(hashSet);
 		filehandling_result = ifile.deleteFiles(fileInfoList, relation);
 		// Convert to FileCRUDResults
 		FileInfoConverter converter = new FileInfoConverter(); 
@@ -142,20 +135,21 @@ public class FileSystemCom implements IFileSystemCom {
 
 	@Override
 	public synchronized CRUDCryptedFileInfo moveFiles(List<EncryptedFileDob> fileList,
-			ShareFolder sharedFolder) {
+			ShareRelation destShareRelation) {
 		List<FileInfoMove> fileInfoList = new ArrayList<FileInfoMove>();
 		FileHandlingSummary filehandling_result = null;
-		HashSet<Integer> hashSet = new HashSet<Integer>();
+		KeyManager km = KeyManager.getInstance();
+		ShareRelation oldShareRelation;
+		KeyRelation relation = new KeyRelation();		
 		for (EncryptedFileDob fileDob : fileList) {
-			hashSet.add(fileDob.getContainerId());
 			ContainerDao cDao= new ContainerDao();
 			EncryptedContainer container = (EncryptedContainer) cDao.getElementByID(fileDob.getContainerId(), null);
+			oldShareRelation = km.getShareRelation(container.getShareRelationId());
 			fileInfoList.add(new FileInfoMove(fileDob.getId(), fileDob
-					.getSize(), container.getShareFolderId(), fileDob.getContainerId(),
-					sharedFolder.getID()));
+					.getSize(), container.getShareRelationId(), fileDob.getContainerId(),
+					destShareRelation.getID()));
+			relation.addKeyOfShareRelation(oldShareRelation.getID(), oldShareRelation.getKey());
 		}
-		KeyRelation relation = getKeyRelation(hashSet);
-		relation.addKeyOfShareRelation(sharedFolder.getID(), sharedFolder.getKey());
 		filehandling_result = ifile.moveFiles(fileInfoList,relation);
 		// Convert to FileCRUDResults
 		FileInfoConverter converter = new FileInfoConverter();
@@ -168,82 +162,49 @@ public class FileSystemCom implements IFileSystemCom {
 
 
 	@Override
-	public synchronized boolean encryptFile(ShareFolder destinationShareFolder,  boolean local) {		
+	public synchronized boolean encryptFile(ShareRelation destShareRelation,  boolean local) {		
 		FileInfoEncrypt fileInfo = null;
 		//create ghost file
 		EncryptedFileDob fileDob;
 		StructureXmlDob sxml;
-		KeysGenerator kg = new KeysGenerator();
-		String key;
+		KeyManager keyManager = KeyManager.getInstance();
 		if(!local){
-			 sxml = new StructureXmlDob(destinationShareFolder, false);	
-				key = kg.getKey(destinationShareFolder.getKey(), destinationShareFolder.getID().toString());
+			 sxml = new StructureXmlDob(false);	
 		}
 		else{
-			sxml = new StructureXmlDob(destinationShareFolder, true);		
-			 key = kg.getKey(destinationShareFolder.getKey(), Messages.SaltMasterPassword);
+			sxml = new StructureXmlDob(true);		
+			
 		}
+		ShareRelation shareRelation = keyManager.getShareRelation(destShareRelation.getID());
 		fileDob = sxml.getEncryptedFileDob();
 		// encrypt file !!!!!
-		fileInfo = new FileInfoEncrypt(fileDob.getId(), destinationShareFolder.getID(), fileDob.getContainerId(), fileDob.getType());
-		fileInfo = ifile.storeFileStructure(fileInfo, key);
+		fileInfo = new FileInfoEncrypt(fileDob.getId(), destShareRelation.getID(), fileDob.getContainerId(), fileDob.getType());
+		fileInfo = ifile.storeFileStructure(fileInfo, shareRelation.getKey());
 		if(fileInfo.getError() == FileError.NONE ) return true;
 		return false;
 	}
 
 	@Override
-	public synchronized boolean decryptFile(ShareFolder sourceShareFolder,boolean local) {
+	public synchronized boolean decryptFile(ShareRelation srcShareRelation,boolean local) {
 		FileInfoDecrypt fileInfo = null;
 		EncryptedFileDob fileDob;
 		StructureXmlDob sxml;
-		String key;
-		KeysGenerator kg = new KeysGenerator();
+		KeyManager keyManager = KeyManager.getInstance();
 		if(!local){
-			sxml = new StructureXmlDob(sourceShareFolder ,false);
-			 key = kg.getKey(sourceShareFolder.getKey(), sourceShareFolder.getID().toString());
+			sxml = new StructureXmlDob(false);
 		}
 		else{
-			sxml = new StructureXmlDob(sourceShareFolder ,true);
-			 key = kg.getKey(sourceShareFolder.getKey(), Messages.SaltMasterPassword);
+			sxml = new StructureXmlDob(true);
 		}		
+		srcShareRelation = keyManager.getShareRelation(srcShareRelation.getID());
 		fileDob = sxml.getEncryptedFileDob();
 			fileInfo = new FileInfoDecrypt(fileDob.getId(), fileDob
-					.getType(), sourceShareFolder.getID(), fileDob
+					.getType(), srcShareRelation.getID(), fileDob
 					.getContainerId());	
 		
-		fileInfo = ifile.loadFileStructure(fileInfo,  key);
+		fileInfo = ifile.loadFileStructure(fileInfo,  srcShareRelation.getKey());
 		if(fileInfo.getError() == FileError.NONE) return true;
 		return false;
 	}
 	
-////private/////////////////////////////////////////////////////////////////////////////////////////////
-	/**
-	 * HashSet with ContainerIDs to KeyRelation (sharedID / key)
-	 * @param hashSet
-	 * @return KeyRelation(sharedID/key)
-	 */
-	private synchronized KeyRelation getKeyRelation(HashSet<Integer> hashSet) {
-		// KeyRelation
-		KeyRelation relation = new KeyRelation();
-		if(hashSet.isEmpty()) relation = null;
-		for (Integer ContainerId : hashSet) {
-			ContainerDao containerDao = new ContainerDao();
-			EncryptedContainer container = (EncryptedContainer) containerDao
-					.getElementByID(ContainerId, null);
-			ShareFolderDao shareFolderDao = new ShareFolderDao();
-			ShareFolder shareFolder = (ShareFolder) shareFolderDao
-					.getElementByID(container.getShareFolderId(), null);
-			//Key erzeugen
-			KeysGenerator kg = new KeysGenerator();
-			if(shareFolder.getID() == 100000){
-				String key = kg.getKey(shareFolder.getKey(), Messages.SaltMasterPassword);
-				relation.addKeyOfShareRelation(shareFolder.getID(),key);
-			}else{
-				String key = kg.getKey(shareFolder.getKey(), shareFolder.getID().toString());
-				relation.addKeyOfShareRelation(shareFolder.getID(),key);
-			}		
-		}
-		return relation;
-	}
-
 }

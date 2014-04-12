@@ -41,18 +41,18 @@ import ch.droptilllate.application.dao.CloudAccountDao;
 import ch.droptilllate.application.dao.ContainerDao;
 import ch.droptilllate.application.dao.EncryptedFileDao;
 import ch.droptilllate.application.dao.GhostFolderDao;
-import ch.droptilllate.application.dao.ShareFolderDao;
-import ch.droptilllate.application.dao.ShareRelationDao;
+import ch.droptilllate.application.dao.ShareMembersDao;
 import ch.droptilllate.application.dnb.CloudAccount;
 import ch.droptilllate.application.dnb.EncryptedContainer;
 import ch.droptilllate.application.dnb.DroppedElement;
-import ch.droptilllate.application.dnb.ShareFolder;
 import ch.droptilllate.application.dnb.ShareRelation;
+import ch.droptilllate.application.dnb.ShareMember;
 import ch.droptilllate.application.handlers.FileHandler;
 import ch.droptilllate.application.info.CRUDCryptedFileInfo;
 import ch.droptilllate.application.info.ErrorMessage;
 import ch.droptilllate.application.info.SuccessMessage;
 import ch.droptilllate.application.key.KeyManager;
+import ch.droptilllate.application.lifecycle.OSValidator;
 import ch.droptilllate.application.listener.TreeDragSourceListener;
 import ch.droptilllate.application.listener.TreeDropTargetAdapter;
 import ch.droptilllate.application.model.EncryptedFileDob;
@@ -75,7 +75,6 @@ public class ViewController {
 	private EModelService modelService;
 	private MApplication application;
 	private EPartService partService;
-	
 	private Tree tree;
 	private TreeViewer viewer;
 	private GhostFolderDob root;
@@ -86,6 +85,7 @@ public class ViewController {
 	private List<EncryptedFileDob> actualDropFiles;
 	private Shell shell;
 	private ShareManager shareManager;
+	public ShareRelation shareRelation = null;
 
 	public ViewController() {
 		// Exists only to defeat instantiation.
@@ -370,9 +370,8 @@ public class ViewController {
 
 		// Insert in Filesystem and Error handling Results
 		IFileSystemCom fileSystem = FileSystemCom.getInstance();
-		ShareFolder shareFolder = new ShareFolder(Messages.getIdSize(), null);
-		CRUDCryptedFileInfo result = fileSystem.encryptFile(actualDropFiles,
-				shareFolder);
+		ShareRelation shareFolder = new ShareRelation(Messages.getIdSize(), null);
+		CRUDCryptedFileInfo result = fileSystem.encryptFile(actualDropFiles, false);
 		// Update DB
 		EncryptedFileDao fileDB = new EncryptedFileDao();
 		for (EncryptedFileDob fileDob : result.getEncryptedFileListSuccess()) {
@@ -447,6 +446,7 @@ public class ViewController {
 		ShareView.getInstance().setInitialTree(
 				(ArrayList<EncryptedFileDob>) fileList);
 		ShareView.getInstance().setInitialInputMailList();
+		ShareView.getInstance().setInitView();
 	}
 
 	/**
@@ -458,7 +458,6 @@ public class ViewController {
 	 */
 	public boolean shareFiles(ArrayList<String> mailList,
 			ArrayList<EncryptedFileDob> fileList, String password, boolean auto) {
-		ShareFolder shareFolder = null;
 		CloudError status = CloudError.NONE;
 		shareManager = new ShareManager(fileList, password,
 				mailList);
@@ -467,32 +466,29 @@ public class ViewController {
 		}
 		if (shareManager.getSTATUS() == 1) {
 			// CREATE
-			// Create and insert newShareFolder in DB and create Id
-			ShareFolderDao shareDao = new ShareFolderDao();
-			shareFolder = new ShareFolder(null, null);
-			shareFolder = (ShareFolder) shareDao.newElement(shareFolder, null);
-			shareFolder.setKey(password);
-			shareDao.updateElement(shareFolder, null);
-			shareFolder = shareManager.createNewSharedFolder(fileList,
-					password, shareFolder);
-			shareManager.insertShareRelation(shareFolder, mailList);
-			shareManager.createUpdateFiles(shareFolder);
+			// Create and insert newShareRelation
+			KeyManager km = KeyManager.getInstance();			
+			shareRelation = new ShareRelation(null, null);
+			shareRelation = km.newShareRelation(password, null);
+			//Create new ShareRelation on filesystem
+			shareRelation = shareManager.createNewSharedRelation(fileList, shareRelation);
+			shareManager.insertShareMembers(shareRelation, mailList);
+			shareManager.createUpdateFiles(shareRelation);
 			//Share file Automatically
 			if(!auto){
-				status = shareFileToCloudManually(shareFolder, mailList, false);
+				status = shareFileToCloudManually(shareRelation, mailList, false);
 			}
 			else{
-				status = shareFileToCloudAutomatically(shareFolder, mailList);
+				status = shareFileToCloudAutomatically(shareRelation, mailList);
 			}
 		
 		}
 		if (shareManager.getSTATUS() == 2) {
-			// USING EXISTING
-			shareFolder = shareManager.useExistingSharedFolder(fileList,
-					password);
+			// USING EXISTING			
+			shareRelation = shareManager.useExistingSharedRelation(fileList, password);
 			new SuccessMessage(shell, "MESSAGE", "Shared ->  password = "
-					+ shareFolder.getKey());
-			status = shareFileToCloudManually(shareFolder, mailList, false);
+					+ shareRelation.getKey());
+			status = shareFileToCloudManually(shareRelation, mailList, false);
 		}
 			// TODO ERROR sharing
 		if (status == CloudError.NONE) {
@@ -501,8 +497,7 @@ public class ViewController {
 				FileHandler fileHandler = new FileHandler();
 				File source = new File(Configuration.getPropertieTempPath(true)
 						+ XMLConstruct.NameShareXML);
-				File dest = new File(Configuration.getPropertieTempPath(true)
-						+ XMLConstruct.NameShareXML);
+				File dest = new File(Messages.getApplicationpath()+ OSValidator.getSlash());
 				try {
 					fileHandler.copyFile(source, dest);
 					fileHandler.delete(source);
@@ -525,7 +520,7 @@ public class ViewController {
 	 * @param mailList
 	 * @return
 	 */
-	private CloudError shareFileToCloudAutomatically(ShareFolder shareFolder, ArrayList<String> mailList) {
+	private CloudError shareFileToCloudAutomatically(ShareRelation shareFolder, ArrayList<String> mailList) {
 		ICloudProviderCom com = new CloudDropboxCom();
 		CloudError status = com.shareFolder(shareFolder.getID(), mailList);
 		int i = 0;
@@ -541,7 +536,7 @@ public class ViewController {
 	 * @param alreadyShared
 	 * @return
 	 */
-	private CloudError shareFileToCloudManually(ShareFolder shareFolder, ArrayList<String> mailList, boolean alreadyShared){
+	private CloudError shareFileToCloudManually(ShareRelation shareFolder, ArrayList<String> mailList, boolean alreadyShared){
 		ICloudProviderCom com = new CloudDropboxCom();
 		return com.shareFolderManuallyViaBrowser(shareFolder.getID(), alreadyShared);
 	}
@@ -578,17 +573,15 @@ public class ViewController {
 			e.printStackTrace();
 		}
 		// Create ShareFolder
-		ShareFolderDao shareFolderDao = new ShareFolderDao();
-		ShareFolder sharefolder = new ShareFolder(Integer.parseInt(source
-				.getName()), password);
-
+		KeyManager km = KeyManager.getInstance();
+		ShareRelation shareRelation = km.newShareRelation(password, Integer.parseInt(source.getName()));
 		// Create GhostFolder
 		GhostFolderDob ghostFolderDob = new GhostFolderDob(null, foldername,
 				root);
 		GhostFolderDao ghostfolderDao = new GhostFolderDao();
 		// Encrypt UploadFile
 		IFileSystemCom com = FileSystemCom.getInstance();
-		if (!com.decryptFile(sharefolder, false)) {
+		if (!com.decryptFile(shareRelation, false)) {
 			Status status = Status.getInstance();
 			status.setMessage("Wrong Password");
 
@@ -602,17 +595,16 @@ public class ViewController {
 				e.printStackTrace();
 			}
 			// Insert DB
-			shareFolderDao.newElement(sharefolder, null);
 			ghostFolderDob = (GhostFolderDob) ghostfolderDao.newElement(
 					ghostFolderDob, null);
 			// UpdateFile Import
 			ShareManager shareManager = new ShareManager();
 			List<EncryptedFileDob> fileDobList = shareManager
-					.getUpdateFiles(sharefolder.getKey());
+					.getUpdateFiles(shareRelation.getKey());
 			List<EncryptedContainer> containerDobList = shareManager
-					.getUpdateContainers(sharefolder.getKey());
-			List<ShareRelation> shareRelationDobList = shareManager
-					.getUpdateShareRelation(sharefolder.getKey());
+					.getUpdateContainers(shareRelation.getKey());
+			List<ShareMember> shareRelationDobList = shareManager
+					.getUpdateShareRelation(shareRelation.getKey());
 			// Update/Insert fileList
 			EncryptedFileDao fileDao = new EncryptedFileDao();
 			for (int i = 0; i < fileDobList.size(); i++) {
@@ -620,8 +612,8 @@ public class ViewController {
 				fileDao.newElement(fileDobList.get(i), null);
 			}
 			// Insert ShareRelations
-			ShareRelationDao shareDao = new ShareRelationDao();
-			for (ShareRelation relation : shareRelationDobList) {
+			ShareMembersDao shareDao = new ShareMembersDao();
+			for (ShareMember relation : shareRelationDobList) {
 				shareDao.newElement(relation, null);
 			}
 			// Insert Containers
@@ -636,4 +628,11 @@ public class ViewController {
 		}
 
 	}
+
+	
+	public ShareRelation getLastShareRelation() {
+		return shareRelation;
+	}
+
+	
 }
