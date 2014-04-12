@@ -25,19 +25,9 @@
         </children>
         <children xsi:type="basic:Part" xmi:id="_HqCZwLM_EeOKAbjRxitV7w" elementId="ch.droptilllate.application.part.sharepart" visible="false" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.views.ShareView" label="Share Part" closeable="true"/>
         <children xsi:type="basic:Part" xmi:id="_Yht8ALNUEeOKo9xObYES1g" elementId="ch.droptilllate.application.part.Import" visible="false" contributionURI="bundleclass://ch.droptilllate.application/ch.droptilllate.application.views.ImportView" label="Import View" closeable="true"/>
-        <children xsi:type="basic:Part" xmi:id="_c90XELNYEeOKo9xObYES1g" elementId="ch.droptilllate.application.part.0" visible="false"/>
       </children>
     </children>
-    <mainMenu xmi:id="_pupeDYNwEeOZSfPuT6ZnVQ" elementId="menu:org.eclipse.ui.main.menu">
-      <children xsi:type="menu:Menu" xmi:id="_puqFEINwEeOZSfPuT6ZnVQ" label="File">
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_puqFEYNwEeOZSfPuT6ZnVQ" label="Open" iconURI="platform:/plugin/ch.droptilllate.application/icons/sample.png"/>
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_puqFEoNwEeOZSfPuT6ZnVQ" label="Save" iconURI="platform:/plugin/ch.droptilllate.application/icons/save_edit.png" command="_pupeB4NwEeOZSfPuT6ZnVQ"/>
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_puqFE4NwEeOZSfPuT6ZnVQ" label="Quit" iconURI="" command="_pupeAINwEeOZSfPuT6ZnVQ"/>
-      </children>
-      <children xsi:type="menu:Menu" xmi:id="_puqFFINwEeOZSfPuT6ZnVQ" label="Help">
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_puqFFYNwEeOZSfPuT6ZnVQ" label="About"/>
-      </children>
-    </mainMenu>
+    <mainMenu xmi:id="_pupeDYNwEeOZSfPuT6ZnVQ" elementId="menu:org.eclipse.ui.main.menu"/>
     <trimBars xmi:id="_puqsIYNwEeOZSfPuT6ZnVQ">
       <children xsi:type="menu:ToolBar" xmi:id="_puqsIoNwEeOZSfPuT6ZnVQ" elementId="toolbar:org.eclipse.ui.main.toolbar">
         <children xsi:type="menu:HandledToolItem" xmi:id="_t-CHMIN-EeOPbN9mpPOXoQ" elementId="ch.droptilllate.application.handledtoolitem.newFolder" visible="false" iconURI="platform:/plugin/ch.droptilllate.application/icons/folder_add.png" command="_euHAYIN-EeOPbN9mpPOXoQ"/>

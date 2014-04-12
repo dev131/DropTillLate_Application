@@ -22,7 +22,7 @@ public class LifeCycleManager {
     final Shell shell = new Shell(SWT.TOOL | SWT.NO_TRIM);
 
     //PasswordDialog dialog = new PasswordDialog(shell);
-
+    
     // close the static splash screen
     appContext.applicationRunning();
     // position the shell

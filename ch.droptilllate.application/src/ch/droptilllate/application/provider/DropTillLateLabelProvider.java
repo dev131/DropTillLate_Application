@@ -17,7 +17,6 @@ import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.views.TreeView;
-import ch.droptilllate.application.views.TableIdentifier;
 
 public class DropTillLateLabelProvider implements ITableLabelProvider {
 

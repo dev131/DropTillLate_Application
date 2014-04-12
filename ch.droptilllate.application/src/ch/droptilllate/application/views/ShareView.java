@@ -39,7 +39,15 @@ import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.provider.DropTillLateContentProvider;
 import ch.droptilllate.application.provider.DropTillLateLabelProvider;
+import ch.droptilllate.application.provider.ShareContentProvider;
+import ch.droptilllate.application.provider.ShareLabelProvider;
+import ch.droptilllate.application.provider.TableIdentifier;
+import ch.droptilllate.application.provider.TableIdentifierShare;
+
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.layout.GridData;
 
 public class ShareView implements SelectionListener {
 	@Inject EPartService partService;
@@ -56,8 +64,9 @@ public class ShareView implements SelectionListener {
 	private Button btnDelete;
 	private List maillist;
 	private Combo combo_mail;
-	private Button btnShareManually;
 	private ArrayList<EncryptedFileDob> fileList;
+	private Group grpShareSettings;
+	private Group grpSelectedFiles;
 	public ShareView() {
 		instance = this;
 	}
@@ -78,73 +87,97 @@ public class ShareView implements SelectionListener {
 		this.shell = shell;
 		this.partService = partService;
 		SashForm sashForm = new SashForm(parent, SWT.NONE);
+		sashForm.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		sashForm.setBounds(0, 0, 725, 437);
 		
 		Composite composite = new Composite(sashForm, SWT.NONE);
-		
-		treeViewer = new TreeViewer(composite, SWT.BORDER);
-		tree = treeViewer.getTree();
-		tree.setBounds(10, 30, 390, 431);
-		
-		Label lblSharedFiles = new Label(composite, SWT.NONE);
-		lblSharedFiles.setFont(SWTResourceManager.getFont("Lucida Grande", 13, SWT.NORMAL));
-		lblSharedFiles.setBounds(10, 10, 146, 14);
-		lblSharedFiles.setText("Shared Files:");
+		composite.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		composite.setLayout(new GridLayout(1, false));
+		   
+		   grpSelectedFiles = new Group(composite, SWT.NONE);
+		   grpSelectedFiles.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+		   grpSelectedFiles.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		   grpSelectedFiles.setFont(SWTResourceManager.getFont("Arial", 14, SWT.BOLD));
+		   grpSelectedFiles.setText("Selected Files");
+		   GridData gd_grpSelectedFiles = new GridData(SWT.CENTER, SWT.TOP, false, false, 1, 1);
+		   gd_grpSelectedFiles.heightHint = 377;
+		   gd_grpSelectedFiles.widthHint = 280;
+		   grpSelectedFiles.setLayoutData(gd_grpSelectedFiles);
+		   
+		   treeViewer = new TreeViewer(grpSelectedFiles, SWT.BORDER);
+		   tree = treeViewer.getTree();
+		   tree.setLocation(10, 10);
+		   tree.setSize(270, 361);
 		
 		Composite composite_1 = new Composite(sashForm, SWT.NONE);
+		composite_1.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		composite_1.setLayout(new GridLayout(2, false));
 		
-		Label lblPassword = new Label(composite_1, SWT.NONE);
-		lblPassword.setFont(SWTResourceManager.getFont("Lucida Grande", 14, SWT.NORMAL));
-		lblPassword.setBounds(35, 39, 79, 19);
-		lblPassword.setText("Password");
+		grpShareSettings = new Group(composite_1, SWT.NONE);
+		GridData gd_grpShareSettings = new GridData(SWT.CENTER, SWT.TOP, true, true, 2, 1);
+		gd_grpShareSettings.heightHint = 381;
+		grpShareSettings.setLayoutData(gd_grpShareSettings);
+		grpShareSettings.setFont(SWTResourceManager.getFont("Arial", 14, SWT.BOLD));
+		grpShareSettings.setLayout(new GridLayout(3, false));
+		grpShareSettings.setText("Share Settings");
 		
-		text_password = new Text(composite_1,SWT.PASSWORD| SWT.BORDER);
-		text_password.setBounds(120, 39, 145, 19);
-		
-		Label lblEmail = new Label(composite_1, SWT.NONE);
+		Label lblEmail = new Label(grpShareSettings, SWT.NONE);
 		lblEmail.setFont(SWTResourceManager.getFont("Lucida Grande", 14, SWT.NORMAL));
-		lblEmail.setBounds(35, 73, 59, 19);
 		lblEmail.setText("E-Mail");
 		
-		 btnAdd = new Button(composite_1, SWT.NONE);
-		btnAdd.setBounds(291, 69, 62, 28);
-		btnAdd.setText("Add");
-		btnAdd.addSelectionListener(this);
-		
-		btnShare = new Button(composite_1, SWT.NONE);
-		btnShare.setBounds(191, 431, 94, 28);
-		btnShare.setText("Share");
-		btnShare.addSelectionListener(this);
-		
-		 btnCancel = new Button(composite_1, SWT.NONE);
-		btnCancel.setBounds(35, 431, 94, 28);
-		btnCancel.setText("cancel");
-		btnCancel.addSelectionListener(this);
-		
-		comboViewer = new ComboViewer(composite_1, SWT.NONE);
+		comboViewer = new ComboViewer(grpShareSettings, SWT.NONE);
 		combo_mail = comboViewer.getCombo();
-		combo_mail.setBounds(91, 72, 194, 22);
-		
-		ListViewer listViewer = new ListViewer(composite_1, SWT.BORDER | SWT.V_SCROLL);
-		 maillist = listViewer.getList();
-		maillist.setBounds(39, 143, 246, 240);
-		
-		btnDelete= new Button(composite_1, SWT.NONE);
-		btnDelete.setBounds(291, 143, 62, 28);
-		btnDelete.setText("Delete");
-		
-		Label lblShareEmailList = new Label(composite_1, SWT.NONE);
-		lblShareEmailList.setBounds(37, 128, 127, 14);
-		lblShareEmailList.setText("Share e-mail list:");
-		
-		 btnShareManually = new Button(composite_1, SWT.NONE);
-		btnShareManually.setBounds(290, 431, 117, 28);
-		btnShareManually.setText("Share manually");
-		btnShareManually.setVisible(false);
-		btnShareManually.addSelectionListener(this);
-		btnDelete.addSelectionListener(this);
-		
-		sashForm.setWeights(new int[] {1, 1});
+		GridData gd_combo_mail = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_combo_mail.widthHint = 185;
+		combo_mail.setLayoutData(gd_combo_mail);
+		 
+		  btnAdd = new Button(grpShareSettings, SWT.NONE);
+		  btnAdd.setText("Add");
+		  
+		  Label lblShareEmailList = new Label(grpShareSettings, SWT.NONE);
+		  lblShareEmailList.setText("Share e-mail list:");
+		  new Label(grpShareSettings, SWT.NONE);
+		  new Label(grpShareSettings, SWT.NONE);
+		  
+		  ListViewer listViewer = new ListViewer(grpShareSettings, SWT.BORDER | SWT.V_SCROLL);
+		  maillist = listViewer.getList();
+		  GridData gd_maillist = new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1);
+		  gd_maillist.heightHint = 221;
+		  gd_maillist.widthHint = 263;
+		  maillist.setLayoutData(gd_maillist);
+		  
+		  btnDelete= new Button(grpShareSettings, SWT.NONE);
+		  btnDelete.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
+		  btnDelete.setText("Delete");
+		  new Label(grpShareSettings, SWT.NONE);
+		  new Label(grpShareSettings, SWT.NONE);
+		  new Label(grpShareSettings, SWT.NONE);
+		  
+		  Label lblPassword = new Label(grpShareSettings, SWT.NONE);
+		  lblPassword.setFont(SWTResourceManager.getFont("Lucida Grande", 14, SWT.NORMAL));
+		  lblPassword.setText("Password");
+		  
+		  text_password = new Text(grpShareSettings,SWT.PASSWORD| SWT.BORDER);
+		  GridData gd_text_password = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		  gd_text_password.widthHint = 186;
+		  text_password.setLayoutData(gd_text_password);
+		  new Label(grpShareSettings, SWT.NONE);
+		  new Label(grpShareSettings, SWT.NONE);
+		  new Label(grpShareSettings, SWT.NONE);
+		   new Label(grpShareSettings, SWT.NONE);
+		   new Label(grpShareSettings, SWT.NONE);
+		  
+		   btnCancel = new Button(grpShareSettings, SWT.NONE);
+		   btnCancel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		   btnCancel.setText("cancel");
+		   btnCancel.addSelectionListener(this);
+		  
+		  btnShare = new Button(grpShareSettings, SWT.NONE);
+		  btnShare.setText("Share");
+		  sashForm.setWeights(new int[] {317, 580});
+		  btnShare.addSelectionListener(this);
+		  btnDelete.addSelectionListener(this);
+		  btnAdd.addSelectionListener(this);
 		getInitialTree();
 	}
 
@@ -172,8 +205,9 @@ public class ShareView implements SelectionListener {
 	
 	//*********** private METHODS**************////
 	private void getInitialTree(){
-		treeViewer.setContentProvider(new DropTillLateContentProvider());
-		treeViewer.setLabelProvider(new DropTillLateLabelProvider());
+		treeViewer.setContentProvider(new ShareContentProvider());
+		treeViewer.setLabelProvider(new ShareLabelProvider());
+
 		// Expand the tree
 		treeViewer.setAutoExpandLevel(2);
 		// Change TreeTable
@@ -181,12 +215,8 @@ public class ShareView implements SelectionListener {
 		// Tree table specific code starts fill labels
 		tree.setHeaderVisible(true);
 		tree.setLinesVisible(true);
-		for (TableIdentifier identifier : TableIdentifier.values()) {
-			if(identifier.name().equals("NAME")){
-				identifier.columnWidth = 150;
-			}
-			new TreeColumn(tree, SWT.NONE).setText(Messages
-					.getTableColumnTitle(identifier));
+		for (TableIdentifierShare identifier : TableIdentifierShare.values()) {
+			new TreeColumn(tree, SWT.NONE).setText(Messages.getTableColumnTitleShare(identifier));
 			tree.getColumn(identifier.ordinal()).setWidth(
 					identifier.columnWidth);
 		}
@@ -208,35 +238,6 @@ public class ShareView implements SelectionListener {
 		
 	}
 
-	private void share(boolean auto) {
-		//CHECK if all data are available
-		boolean state;
-		if(text_password.equals("") || maillist.getItems().length == 0 || this.fileList.isEmpty()  ){
-			new ErrorMessage(shell, "Error", "Missing Argument");
-		}
-		else{
-			ArrayList<String> emailList = new ArrayList<String>();
-			for(String temp : maillist.getItems()){
-				emailList.add(temp);
-			  }
-			if(auto){
-				state = ViewController.getInstance().shareFiles(emailList ,fileList, text_password.getText(), true);
-			}
-			else{
-				state = ViewController.getInstance().shareFiles(emailList ,fileList, text_password.getText(), false);
-			}
-			if(state){
-				MPart ownpart = partService.findPart("ch.droptilllate.application.part.decryptedview");
-				ownpart.setVisible(true);
-				MPart mPart = partService.findPart("ch.droptilllate.application.part.sharepart");
-				mPart.setVisible(false);
-			}
-			else{
-				btnShareManually.setVisible(true);
-			}
-		}		
-	}
-
 	private void addMail() {
 		maillist.add(combo_mail.getText());		
 	}
@@ -256,19 +257,13 @@ public class ShareView implements SelectionListener {
 	public void widgetSelected(SelectionEvent e) {
 		if(e.getSource() == btnAdd){ 
 			addMail();
-	        } 	
-		if(e.getSource() == btnShare){ 
-			share(true);
-        } 
+	        }
 		if(e.getSource() == btnCancel){ 
 			cancel();
         } 
 		if(e.getSource() == btnDelete){ 
 			deleteMail();
-        } 
-		if(e.getSource() == btnShareManually){ 		
-			share(false);
-        } 
+        }
 	
 	}
 

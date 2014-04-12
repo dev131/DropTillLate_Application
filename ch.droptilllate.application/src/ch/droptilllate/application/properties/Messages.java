@@ -6,10 +6,12 @@ import java.io.File;
 
 
 
+
+
 import org.eclipse.osgi.util.NLS;
 
-
-import ch.droptilllate.application.views.TableIdentifier;
+import ch.droptilllate.application.provider.TableIdentifier;
+import ch.droptilllate.application.provider.TableIdentifierShare;
 
 public class Messages extends NLS {
 	// =========================================================================
@@ -17,6 +19,7 @@ public class Messages extends NLS {
 	public static String FilesTableIdentifier_TYPE;
 	public static String FilesTableIdentifier_SIZE;
 	public static String FilesTableIdentifier_DATE;
+	public static String FileTableIdentifier_Shared;
 	public static String BUNDLE_NAME = "ch.droptilllate.application.properties.messages";
 	public static String DATE_FORMAT;
 	public static String FILE;
@@ -61,6 +64,23 @@ public class Messages extends NLS {
 			title = FilesTableIdentifier_TYPE;
 			break;
 
+		default:
+			assert false : identifier + " is not a legal identifier!"; //$NON-NLS-1$
+		}
+
+		return title;
+	}
+	
+	public static String getTableColumnTitleShare(TableIdentifierShare identifier) {
+		String title = null;
+		switch (identifier) {
+
+		case NAME:
+			title = FilesTableIdentifier_NAME;
+			break;
+		case SHARE:
+			title = FileTableIdentifier_Shared;
+			break;	
 		default:
 			assert false : identifier + " is not a legal identifier!"; //$NON-NLS-1$
 		}
