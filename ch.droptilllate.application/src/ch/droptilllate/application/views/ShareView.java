@@ -253,6 +253,7 @@ public class ShareView implements SelectionListener {
 	public void deleteUnSuccessShareFolder(){
 		//DELETE FOLDER
 		if(!success){
+		System.out.println("Delete unsuccess sharefolder");
 		ViewController.getInstance().getLastShareRelation();
 		FileHandler filehandler = new FileHandler();
 		File file = new File(Configuration.getPropertieDropBoxPath(true) + ViewController.getInstance().getLastShareRelation().getID());
