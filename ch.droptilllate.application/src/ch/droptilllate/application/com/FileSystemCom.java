@@ -9,6 +9,7 @@ import java.util.List;
 import javax.crypto.KeyGenerator;
 
 import ch.droptilllate.application.converter.FileInfoConverter;
+import ch.droptilllate.application.converter.FileIntegryConverter;
 import ch.droptilllate.application.dao.ContainerDao;
 import ch.droptilllate.application.dnb.EncryptedContainer;
 import ch.droptilllate.application.dnb.ShareRelation;
@@ -208,10 +209,9 @@ public class FileSystemCom implements IFileSystemCom {
 		return false;
 	}
 	
+	@Override
 	public HashMap<Integer, List<EncryptedFileDob>>  fileIntegryCheck(){
-		HashMap<Integer, List<FileInfo>> hashmap = ifile.getFilesPerRelation(KeyManager.getInstance().getKeyrelationWithHash());
-			
-		return null;
+		return new FileIntegryConverter().convert(ifile.getFilesPerRelation(KeyManager.getInstance().getKeyrelationWithHash()));
 	}
 	
 }

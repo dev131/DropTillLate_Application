@@ -12,6 +12,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import ch.droptilllate.application.dnb.ShareMember;
 import ch.droptilllate.application.info.CRUDCryptedFileInfo;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
@@ -32,39 +33,43 @@ public class FileQuery {
 	 * @param encryptedFile
 	 * @return
 	 */
-	public EncryptedFileDob newFile(EncryptedFileDob encryptedFileDob) {
+	public List<EncryptedFileDob> newFile(List<EncryptedFileDob> encryptedFileDobList) {
 		// Id generate
-		String parentID = "";
-		if (encryptedFileDob.getId() == null) {
-			int id = (int) (Math.random() * Messages.getIdSize() + 1);
-			// Check if it exist
-			while (checkExist(id)) {
-				id = (int) (Math.random() * Messages.getIdSize() + 1);
+		List<EncryptedFileDob> returnFileDobList = new ArrayList<EncryptedFileDob>();
+		for(EncryptedFileDob encryptedFileDob : encryptedFileDobList){
+			String parentID = "";
+			if (encryptedFileDob.getId() == null) {
+				int id = (int) (Math.random() * Messages.getIdSize() + 1);
+				// Check if it exist
+				while (checkExist(id)) {
+					id = (int) (Math.random() * Messages.getIdSize() + 1);
+				}
+				encryptedFileDob.setId(id);
 			}
-			encryptedFileDob.setId(id);
-		}
-		Document document = conn.getXML();
-		NodeList nodelist = document.getElementsByTagName(XMLConstruct.RootElementFile);
-		Node node = nodelist.item(0);
-		Element file = document.createElement(XMLConstruct.ChildElementFile);
-		// Generate xml entry with ID
-		file.setAttribute(XMLConstruct.AttId, Integer.toString(encryptedFileDob.getId()));
-		if(encryptedFileDob.getParent() != null){
-		parentID = Integer.toString(encryptedFileDob.getParent().getId());
-		}
-		String containerID ="0";
-		if(encryptedFileDob.getContainerId() != null){
-			containerID = encryptedFileDob.getContainerId().toString();
-		}
-		file.setAttribute(XMLConstruct.AttFileName, encryptedFileDob.getName());
-		file.setAttribute(XMLConstruct.AttDate, encryptedFileDob.getDate().toString());
-		file.setAttribute(XMLConstruct.AttSize, encryptedFileDob.getSize().toString());
-		file.setAttribute(XMLConstruct.AttType, encryptedFileDob.getType());
-		file.setAttribute(XMLConstruct.AttParentId, parentID);
-		file.setAttribute(XMLConstruct.AttContainerId, containerID);
-		node.appendChild(file);
+			Document document = conn.getXML();
+			NodeList nodelist = document.getElementsByTagName(XMLConstruct.RootElementFile);
+			Node node = nodelist.item(0);
+			Element file = document.createElement(XMLConstruct.ChildElementFile);
+			// Generate xml entry with ID
+			file.setAttribute(XMLConstruct.AttId, Integer.toString(encryptedFileDob.getId()));
+			if(encryptedFileDob.getParent() != null){
+			parentID = Integer.toString(encryptedFileDob.getParent().getId());
+			}
+			String containerID ="0";
+			if(encryptedFileDob.getContainerId() != null){
+				containerID = encryptedFileDob.getContainerId().toString();
+			}
+			file.setAttribute(XMLConstruct.AttFileName, encryptedFileDob.getName());
+			file.setAttribute(XMLConstruct.AttDate, encryptedFileDob.getDate().toString());
+			file.setAttribute(XMLConstruct.AttSize, encryptedFileDob.getSize().toString());
+			file.setAttribute(XMLConstruct.AttType, encryptedFileDob.getType());
+			file.setAttribute(XMLConstruct.AttParentId, parentID);
+			file.setAttribute(XMLConstruct.AttContainerId, containerID);
+			node.appendChild(file);
+			returnFileDobList.add(encryptedFileDob);
+		}	
 		conn.writeToXML();
-		return encryptedFileDob;
+		return returnFileDobList;
 	}
 
 	/**
@@ -281,5 +286,44 @@ public class FileQuery {
 			files.add(fileDob);
 		}
 		return files;		
+	}
+
+	public Object getFilesAll() {
+		Document document = conn.getXML();
+		NodeList nodes = document.getElementsByTagName(XMLConstruct.ChildElementFile);
+		List<EncryptedFileDob> encrytpedFileDobList = new ArrayList<EncryptedFileDob>();
+		for (int i = 0; i < nodes.getLength(); i++) {
+			String date1 = nodes.item(i).getAttributes().getNamedItem(XMLConstruct.AttDate)
+					.getNodeValue().toString();
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			Date parsed = null;
+			try {
+				parsed = format.parse(date1);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			java.sql.Date sqlDate = new java.sql.Date(parsed.getTime());
+			long size = Long.parseLong(nodes.item(i).getAttributes()
+					.getNamedItem(XMLConstruct.AttSize).getNodeValue());
+			//Integer id, String name, Date date, String path, GhostFolderDob parent, String type, Long size, Integer containerId
+			EncryptedFileDob fileDob = new EncryptedFileDob(
+					Integer.parseInt(nodes.item(i).getAttributes().getNamedItem(XMLConstruct.AttId).getNodeValue()), 
+					nodes.item(i).getAttributes().getNamedItem(XMLConstruct.AttFileName).getNodeValue(), 
+					sqlDate, 
+					"", 
+					null, 
+					size, 
+					Integer.parseInt(nodes.item(i).getAttributes().getNamedItem(XMLConstruct.AttContainerId).getNodeValue()));
+			encrytpedFileDobList.add(fileDob);
+		}
+		return encrytpedFileDobList;
+	}
+
+	public void deleteFilesAll() {
+		Document document = conn.getXML();
+		NodeList nodes = document.getElementsByTagName(XMLConstruct.ChildElementFile);
+		for (int i = 0; i < nodes.getLength(); i++) {
+			nodes.item(i).getParentNode().removeChild(nodes.item(i));
+		}
 	}
 }

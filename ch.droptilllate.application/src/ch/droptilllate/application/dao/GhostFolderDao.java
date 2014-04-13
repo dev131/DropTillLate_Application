@@ -61,4 +61,10 @@ public class GhostFolderDao extends AbstractXmlDatabase {
 		return null;
 	}
 
+	@Override
+	public void deleteElementAll(String key) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

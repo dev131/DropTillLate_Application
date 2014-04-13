@@ -11,13 +11,44 @@
  *******************************************************************************/
 package ch.droptilllate.application.handlers;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
 
+import ch.droptilllate.application.lifecycle.OSValidator;
+import ch.droptilllate.application.properties.Messages;
+
 public class ExportHandler {
+	private String path;
+	
 	@Execute
 	public void execute(Shell shell) {
-		MessageDialog.openInformation(shell, "About", "DropTillLate");
+		chooseDestionation(shell);
+		if(!path.isEmpty()){
+			FileHandler fileHandler = new FileHandler();
+			File srcFile = new File(Messages.getApplicationpath() + OSValidator.getSlash()	+ Messages.KeyFile);
+			File destFile = new File(path + OSValidator.getSlash()	+ Messages.KeyFile);
+			try {
+				fileHandler.copyDirectory(srcFile, destFile);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private void chooseDestionation(Shell shell){
+		DirectoryDialog dirDialog = new DirectoryDialog(shell);
+	    dirDialog.setText("Select your home directory");   	
+	    try {
+	    	path = dirDialog.open();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
