@@ -28,9 +28,12 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
+
 import ch.droptilllate.application.controller.InitController;
 import ch.droptilllate.application.controller.ViewController;
+import ch.droptilllate.application.error.ParamInitException;
 import ch.droptilllate.application.info.ErrorMessage;
+
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.layout.GridLayout;
@@ -81,18 +84,19 @@ public class InitialView implements SelectionListener, ModifyListener
 	private Composite parent;
 
 	// STRINGS
-	private String dropboxfoldername;
-	private String password;
-	private String dropboxLogin;
-	private String dropboxPassword;
-	private String dropboxPath;
-	private String tempPath;
+	private String dropboxfoldername = "";
+	private String password = "";
+	private String dropboxLogin = "";
+	private String dropboxPassword = "";
+	private String dropboxPath = "";
+	private String tempPath = "";
 
 	// Integer
 	private int initialFormHeight;
 
 	// Boolean
 	private boolean cloudAccountProvided = false;
+	private boolean cloudAccountAccepted= false;
 
 	// Constants
 	private static int FORM_WIDTH = 800;
@@ -315,27 +319,13 @@ public class InitialView implements SelectionListener, ModifyListener
 		}
 	}
 
-	/**
-	 * Check Path
-	 * 
-	 * @return return true if equals
-	 */
-	private boolean checkPathofEquals()
-	{
-		if (tempPath.equals(dropboxPath))
-		{
-			new ErrorMessage(shell, "Error", "Dropbox-Path and Temp-Path can not be equals");
-			return true;
-		}
-		return false;
-	}
 
 	public void loginPressed()
 	{
 
 		if (controller.isNewUser())
 		{
-				// Check if all fields are not empty
+				// Check if all parameters are valid
 				if (checkAllFields(cbCloudProvider.getSelection()))
 				{
 					if (controller.newUser(dropboxfoldername, password, dropboxPath, tempPath, dropboxLogin, dropboxPassword,checkAllFields(cbCloudProvider.getSelection())))
@@ -360,6 +350,7 @@ public class InitialView implements SelectionListener, ModifyListener
 		}
 
 	}
+	
 
 	public void cbCloudProviderPressed()
 	{
@@ -376,26 +367,7 @@ public class InitialView implements SelectionListener, ModifyListener
 
 	}
 
-	private boolean checkAllFields(Boolean withCloudAccount)
-	{
-		if(withCloudAccount){
-			if (dropboxPassword.isEmpty() || dropboxfoldername.isEmpty() || dropboxPath.isEmpty() || tempPath.isEmpty()
-					|| dropboxLogin.isEmpty() || password.isEmpty() || checkPathofEquals())
-			{
-				new ErrorMessage(shell, "Error", "Missing Argument");
-				return false;
-			}
-		}
-		else{
-			if ( dropboxfoldername.isEmpty() || dropboxPath.isEmpty() || tempPath.isEmpty()
-					 || password.isEmpty() || checkPathofEquals())
-			{
-				new ErrorMessage(shell, "Error", "Missing Argument");
-				return false;
-			}
-		}
-		return true;
-	}
+	
 
 	private void startApplication()
 	{
@@ -449,7 +421,8 @@ public class InitialView implements SelectionListener, ModifyListener
 		}
 		if (e.getSource() == btnTestDropbox)
 		{
-			controller.checkDropboxAccount(dropboxLogin, dropboxPassword);
+			testDropboxAccount();
+			
 		}
 		if (e.getSource() == btnLogin_1)
 		{
@@ -497,6 +470,51 @@ public class InitialView implements SelectionListener, ModifyListener
 		{
 			password = text_password.getText();
 		}
+	}
+	
+	private void testDropboxAccount() {
+		try
+		{
+			InitalViewHelper.checkDropboxLoginName(dropboxLogin);
+			InitalViewHelper.checkDropboxPassword(dropboxPassword);
+			cloudAccountAccepted = controller.checkDropboxAccount(dropboxLogin, dropboxPassword);
+		} catch (ParamInitException e)
+		{
+			new ErrorMessage(shell, e.getCategory(), e.getMessage()); 
+		}
+	}
+
+	private boolean checkAllFields(Boolean withCloudAccount)
+	{	
+		// Fetch content
+		dropboxPath = text_dropboxPath.getText();
+		tempPath = text_tempPath.getText();
+		dropboxfoldername = txtDroptilllate.getText();
+		password = text_password.getText();
+		
+		if(withCloudAccount){
+			if (!cloudAccountAccepted) {
+				new ErrorMessage(shell, "Dropbox Account Error", "Please verifiy your Dropbox account first.");
+				return false;
+			}
+		}
+		
+		try
+		{
+			InitalViewHelper.checkDropboxFolderName(dropboxfoldername);
+			InitalViewHelper.checkDTLPassword(password);
+			InitalViewHelper.checkDropboxPath(dropboxPath);			
+			InitalViewHelper.checkTempPath(tempPath);
+			
+			if (InitalViewHelper.checkForSamePath(dropboxPath, tempPath)) {
+				new ParamInitException("Conflict", "Dropbox path and temporary file path can not be the same!");				
+			}
+			return true;
+		} catch (ParamInitException e)
+		{
+			new ErrorMessage(shell, e.getCategory(), e.getMessage()); 
+		}			
+		return withCloudAccount;
 	}
 
 	private Label initLabel(Composite parent, String font, int fontSize, String text, boolean fillAvailableSpace)
