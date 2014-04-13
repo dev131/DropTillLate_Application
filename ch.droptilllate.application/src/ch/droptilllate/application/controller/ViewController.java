@@ -135,18 +135,6 @@ public class ViewController {
 		
 	}
 
-	private void checkCloudAccount() {
-		CloudAccountDao dao = new CloudAccountDao();
-		CloudAccount account = (CloudAccount) dao.getElementAll(null);
-		ICloudProviderCom com = new CloudDropboxCom();
-		CloudError status = com.testCloudAccount(account.getUsername(), account.getPassword());
-		if(status != CloudError.NONE){
-			new ErrorMessage(shell, "Error", status.getMessage());
-			  MHandledToolItem newFolderHandler = (MHandledToolItem) modelService.find("ch.droptilllate.application.handledmenuitem.ShareFiles", application);
-				newFolderHandler.setVisible(false);		
-		}		
-	}
-
 	/**
 	 * Register DragDropAdapter
 	 */

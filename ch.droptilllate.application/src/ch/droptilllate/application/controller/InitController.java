@@ -83,7 +83,7 @@ public class InitController {
 			return CANCEL;
 		}
 		//WIthout CloudAccount
-		if(withSharing)return CANCEL;
+		if(!withSharing)return CANCEL;
 		//Check Dropboxaccount
 		if(!checkDropboxAccount( dropboxLogin, dropboxpassword)){
 			return CANCEL;

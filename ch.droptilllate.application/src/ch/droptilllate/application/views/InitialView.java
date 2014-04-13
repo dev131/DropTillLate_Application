@@ -28,13 +28,9 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
-
 import ch.droptilllate.application.controller.InitController;
 import ch.droptilllate.application.controller.ViewController;
 import ch.droptilllate.application.info.ErrorMessage;
-import ch.droptilllate.application.info.SuccessMessage;
-import ch.droptilllate.cloudprovider.error.CloudError;
-
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.layout.GridLayout;
