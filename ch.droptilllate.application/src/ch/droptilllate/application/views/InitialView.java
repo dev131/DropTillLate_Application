@@ -245,9 +245,10 @@ public class InitialView implements SelectionListener, ModifyListener
 	{
 		dropboxfoldername = "DropTillLate";
 		controller = new InitController(shell);
+
 		// Check if config files and filestructure file are not available
-		// if (!controller.checkProperties() || !controller.checkIfFileStructureAvailable())
-		if (true)
+		if (!controller.checkProperties() || !controller.checkIfFileStructureAvailable())
+		// if (true)
 		{
 			togglePathPropertiesVisible(true);
 			lblPassword.setText("Enter password");
@@ -300,16 +301,21 @@ public class InitialView implements SelectionListener, ModifyListener
 	// ********************** OPEN Folder Diaolg "*****************************************
 	private void openFolderDialog(boolean dropbox)
 	{
-		DirectoryDialog dialog = new DirectoryDialog(shell);
-		if (dropbox == true)
+		try
 		{
-			dialog.setText("Choose Dropbox Directory");
-			text_dropboxPath.setText(dialog.open());
+			DirectoryDialog dialog = new DirectoryDialog(shell);
+			if (dropbox == true)
+			{
+				dialog.setText("Choose Dropbox Directory");
+				text_dropboxPath.setText(dialog.open());
 
-		} else
+			} else
+			{
+				dialog.setText("Choose Local Temp Directory");
+				text_tempPath.setText(dialog.open());
+			}
+		} catch (Exception e)
 		{
-			dialog.setText("Choose Local Temp Directory");
-			text_tempPath.setText(dialog.open());
 		}
 	}
 
@@ -331,7 +337,7 @@ public class InitialView implements SelectionListener, ModifyListener
 	public void loginPressed()
 	{
 
-		if (controller.getNewUser())
+		if (controller.isNewUser())
 		{
 			// Check if all fields are not empty
 			if (checkAllFields())

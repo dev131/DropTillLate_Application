@@ -162,7 +162,7 @@ public class InitController {
 	 * return true if the user use the applicatio for the first time
 	 * @return
 	 */
-	public Boolean getNewUser() {
+	public Boolean isNewUser() {
 		return newUser;
 	}
 
