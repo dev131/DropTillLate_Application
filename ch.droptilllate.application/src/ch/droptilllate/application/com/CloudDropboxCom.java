@@ -7,10 +7,9 @@ import ch.droptilllate.application.dnb.CloudAccount;
 import ch.droptilllate.application.lifecycle.OSValidator;
 import ch.droptilllate.application.properties.Configuration;
 import ch.droptilllate.cloudprovider.api.ICloudProvider;
+import ch.droptilllate.cloudprovider.api.ICloudProviderCom;
 import ch.droptilllate.cloudprovider.dropbox.DropboxHandler;
 import ch.droptilllate.cloudprovider.error.CloudError;
-import ch.droptilllate.couldprovider.api.ICloudProviderCom;
-import ch.droptilllate.filesystem.api.IFileSystem;
 
 public class CloudDropboxCom implements ICloudProviderCom {
 	private ICloudProvider iprovider;

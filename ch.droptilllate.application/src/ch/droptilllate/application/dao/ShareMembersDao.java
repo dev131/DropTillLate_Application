@@ -3,9 +3,7 @@ package ch.droptilllate.application.dao;
 
 import java.util.List;
 
-
 import ch.droptilllate.application.dnb.ShareMember;
-
 import ch.droptilllate.application.query.ShareMemberQuery;
 import ch.droptilllate.application.xml.AbstractXmlDatabase;
 
@@ -53,6 +51,12 @@ public class ShareMembersDao extends AbstractXmlDatabase {
 		if (this.shareMemberQuery == null)
 			this.shareMemberQuery = new ShareMemberQuery(key);		
 		return this.shareMemberQuery.getAll();
+	}
+
+	@Override
+	public void deleteElementAll(String key) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

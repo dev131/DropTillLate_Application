@@ -25,6 +25,11 @@ public abstract class AbstractXmlDatabase {
 	 */
 	public abstract Object getElementAll(String key);
 
+	/**
+	 * Delete Alle Elements
+	 * @param key
+	 */
+	public abstract void deleteElementAll(String key);
 
 	/**
 	 * Update Element Data

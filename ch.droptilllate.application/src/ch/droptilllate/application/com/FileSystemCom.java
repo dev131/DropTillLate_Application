@@ -2,12 +2,14 @@ package ch.droptilllate.application.com;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
 import javax.crypto.KeyGenerator;
 
 import ch.droptilllate.application.converter.FileInfoConverter;
+import ch.droptilllate.application.converter.FileIntegryConverter;
 import ch.droptilllate.application.dao.ContainerDao;
 import ch.droptilllate.application.dnb.EncryptedContainer;
 import ch.droptilllate.application.dnb.ShareRelation;
@@ -18,7 +20,7 @@ import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.StructureXmlDob;
 import ch.droptilllate.application.properties.Configuration;
 import ch.droptilllate.application.properties.Messages;
-import ch.droptilllate.couldprovider.api.IFileSystemCom;
+import ch.droptilllate.cloudprovider.api.IFileSystemCom;
 import ch.droptilllate.filesystem.error.FileError;
 import ch.droptilllate.filesystem.info.*;
 import ch.droptilllate.filesystem.api.FileHandlingSummary;
@@ -205,6 +207,11 @@ public class FileSystemCom implements IFileSystemCom {
 		fileInfo = ifile.loadFileStructure(fileInfo,  srcShareRelation.getKey());
 		if(fileInfo.getError() == FileError.NONE) return true;
 		return false;
+	}
+	
+	@Override
+	public HashMap<Integer, List<EncryptedFileDob>>  fileIntegryCheck(){
+		return new FileIntegryConverter().convert(ifile.getFilesPerRelation(KeyManager.getInstance().getKeyrelationWithHash()));
 	}
 	
 }

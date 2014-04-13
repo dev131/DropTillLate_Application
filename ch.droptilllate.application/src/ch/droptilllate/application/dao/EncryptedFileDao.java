@@ -5,7 +5,6 @@ import java.util.List;
 
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
-
 import ch.droptilllate.application.query.FileQuery;
 import ch.droptilllate.application.xml.AbstractXmlDatabase;
 
@@ -24,11 +23,15 @@ public class EncryptedFileDao extends AbstractXmlDatabase {
 	}
 
 	@Override
-	public Object newElement(Object obj, String key) {
+	public Object newElement(Object obj, String key) {	
 		if (this.filequery == null)
 			this.filequery = new FileQuery(key);
-
-		return this.filequery.newFile((EncryptedFileDob) obj);
+		if(obj instanceof EncryptedFileDob){
+			List<EncryptedFileDob> doblist = new ArrayList<EncryptedFileDob>();
+			doblist.add((EncryptedFileDob) obj);		
+			return this.filequery.newFile(doblist).get(0);
+		}
+		return this.filequery.newFile((List<EncryptedFileDob>) obj);
 	}
 
 	@Override
@@ -75,8 +78,17 @@ public class EncryptedFileDao extends AbstractXmlDatabase {
 
 	@Override
 	public Object getElementAll(String key) {
-		// TODO Auto-generated method stub
-		return null;
+		if (filequery == null)
+			filequery = new FileQuery(key);	
+		return filequery.getFilesAll();
+	}
+
+	@Override
+	public void deleteElementAll(String key) {
+		if (filequery == null)
+			filequery = new FileQuery(key);	
+		 filequery.deleteFilesAll();
+		
 	}
 
 }

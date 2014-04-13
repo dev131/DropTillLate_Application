@@ -46,7 +46,7 @@ import ch.droptilllate.application.model.StructureXmlDob;
 import ch.droptilllate.application.properties.Configuration;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.properties.XMLConstruct;
-import ch.droptilllate.couldprovider.api.IFileSystemCom;
+import ch.droptilllate.cloudprovider.api.IFileSystemCom;
 import ch.droptilllate.filesystem.preferences.Constants;
 
 public class XmlConnection {

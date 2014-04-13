@@ -65,10 +65,9 @@ import ch.droptilllate.application.provider.DropTillLateLabelProvider;
 import ch.droptilllate.application.provider.TableIdentifier;
 import ch.droptilllate.application.share.ShareManager;
 import ch.droptilllate.application.views.Status;
-import ch.droptilllate.cloudprovider.dropbox.DropboxFolderSharer;
+import ch.droptilllate.cloudprovider.api.ICloudProviderCom;
+import ch.droptilllate.cloudprovider.api.IFileSystemCom;
 import ch.droptilllate.cloudprovider.error.CloudError;
-import ch.droptilllate.couldprovider.api.ICloudProviderCom;
-import ch.droptilllate.couldprovider.api.IFileSystemCom;
 import ch.droptilllate.application.views.ShareView;
 
 public class ViewController {
