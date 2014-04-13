@@ -339,14 +339,14 @@ public class InitialView implements SelectionListener, ModifyListener
 
 		if (controller.isNewUser())
 		{
-			// Check if all fields are not empty
-			if (checkAllFields())
-			{
-				if (controller.newUser(dropboxfoldername, password, dropboxPath, tempPath, dropboxLogin, dropboxPassword))
+				// Check if all fields are not empty
+				if (checkAllFields(cbCloudProvider.getSelection()))
 				{
-					startApplication();
+					if (controller.newUser(dropboxfoldername, password, dropboxPath, tempPath, dropboxLogin, dropboxPassword,checkAllFields(cbCloudProvider.getSelection())))
+					{
+						startApplication();
+					}
 				}
-			}
 		} else
 		{
 			if (!password.isEmpty())
@@ -380,19 +380,45 @@ public class InitialView implements SelectionListener, ModifyListener
 
 	}
 
-	private boolean checkAllFields()
+	private boolean checkAllFields(Boolean withCloudAccount)
 	{
-		if (dropboxPassword.isEmpty() || dropboxfoldername.isEmpty() || dropboxPath.isEmpty() || tempPath.isEmpty()
-				|| dropboxLogin.isEmpty() || password.isEmpty() || checkPathofEquals())
-		{
-			new ErrorMessage(shell, "Error", "Missing Argument");
-			return false;
+		if(withCloudAccount){
+			if (dropboxPassword.isEmpty() || dropboxfoldername.isEmpty() || dropboxPath.isEmpty() || tempPath.isEmpty()
+					|| dropboxLogin.isEmpty() || password.isEmpty() || checkPathofEquals())
+			{
+				new ErrorMessage(shell, "Error", "Missing Argument");
+				return false;
+			}
+		}
+		else{
+			if ( dropboxfoldername.isEmpty() || dropboxPath.isEmpty() || tempPath.isEmpty()
+					 || password.isEmpty() || checkPathofEquals())
+			{
+				new ErrorMessage(shell, "Error", "Missing Argument");
+				return false;
+			}
 		}
 		return true;
 	}
 
 	private void startApplication()
 	{
+		if(!cbCloudProvider.getSelection()){			
+			MHandledToolItem shareHandler = (MHandledToolItem) modelService.find("ch.droptilllate.application.handledmenuitem.ShareFiles",
+					application);
+			shareHandler.setVisible(false);	
+		}
+		
+		MHandledToolItem aboutHandler = (MHandledToolItem) modelService.find("ch.droptilllate.application.handledtoolitem.about",
+				application);
+		aboutHandler.setVisible(true);	
+		MHandledToolItem exportHandler = (MHandledToolItem) modelService.find("ch.droptilllate.application.handledtoolitem.export",
+				application);
+		exportHandler.setVisible(true);
+		MHandledToolItem integryHandler = (MHandledToolItem) modelService.find("ch.droptilllate.application.handledtoolitem.integrycheck",
+				application);
+		integryHandler.setVisible(true);
+		
 		MHandledToolItem newFolderHandler = (MHandledToolItem) modelService.find("ch.droptilllate.application.handledtoolitem.newFolder",
 				application);
 		newFolderHandler.setVisible(true);

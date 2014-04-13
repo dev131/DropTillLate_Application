@@ -27,6 +27,8 @@ public class InitController {
 	private CloudAccount cloudaccount;
 	private KeyManager keyManager;
 	private Shell shell;
+	private static Boolean SUCCESS = true;
+	private static Boolean CANCEL = false;
 	
 	public InitController(Shell shell){
 		this.shell = shell;
@@ -69,7 +71,7 @@ public class InitController {
 	 * @param temppath
 	 * @return
 	 */
-	public boolean newUser(String dropTillLateName, String password, String dropboxpath, String temppath, String dropboxLogin, String dropboxpassword){
+	public boolean newUser(String dropTillLateName, String password, String dropboxpath, String temppath, String dropboxLogin, String dropboxpassword, boolean withSharing){
 		if(!setProperties(dropboxpath,temppath,dropTillLateName)) return false;
 		//Create 100000 folder on Dropbox
 		createFolder();
@@ -78,25 +80,26 @@ public class InitController {
 		keyManager.addKeyRelation(Messages.getIdSize(), password);
 		if(keyManager.saveKeyFile(Messages.getApplicationpath(), password) != KeyFileError.NONE){
 			
-			return false;
+			return CANCEL;
 		}
-		//init filestructure	
+		//WIthout CloudAccount
+		if(withSharing)return CANCEL;
 		//Check Dropboxaccount
 		if(!checkDropboxAccount( dropboxLogin, dropboxpassword)){
-			return false;
+			return CANCEL;
 		}
 		//init cloudaccount
 		CloudAccountDao dao = new CloudAccountDao();
 		if(dao.newElement(cloudaccount, keyManager.getShareRelation(Messages.getIdSize()).getKey())== null){
-			return false;
+			return CANCEL;
 		}
 		//Everything OK
-		return true;
+		return SUCCESS;
 		
 	}
 	
 	public boolean checkExitError(){
-		return false;
+		return SUCCESS;
 	}
 
 	/**
