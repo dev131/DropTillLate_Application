@@ -80,6 +80,9 @@ public class InitialView implements SelectionListener, ModifyListener
 	private Text txtDroptilllate;
 	private Group grpDroptilllateSettings;
 	private Group grpDropboxSettings;
+	private Button cbCloudProvider;
+	private Composite compositeContent;
+	private Composite parent;
 
 	// STRINGS
 	private String dropboxfoldername;
@@ -89,55 +92,58 @@ public class InitialView implements SelectionListener, ModifyListener
 	private String dropboxPath;
 	private String tempPath;
 
+	// Integer
+	private int initialFormHeight;
+
+	// Boolean
+	private boolean cloudAccountProvided = false;
+
 	// Constants
-	private static int LOGO_HEIGHT = 300;
 	private static int FORM_WIDTH = 800;
-	private static int BUTTON_HEIGHT1 = 60;
+	private static int HEIGHT_OFFSET = 20;
+	private static int B_STARTUP_HEIGHT = 60;
 
 	@PostConstruct
 	public void createControls(Composite parent, Shell shell, EPartService partService, EModelService modelService, MApplication application)
 	{
 		parent.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		this.parent = parent;
 
 		this.shell = shell;
 		Bundle bundle = FrameworkUtil.getBundle(TreeView.class);
 		// URL url = FileLocator.find(bundle, new Path("icons/icon_128x128.png"), null);
 		URL url = FileLocator.find(bundle, new Path("icons/LOGO_BIG_V1.png"), null);
 		ImageDescriptor image = ImageDescriptor.createFromURL(url);
+		parent.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		parent.setLayout(new GridLayout(1, true));
 
-		SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
-		sashForm.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		sashForm.setLocation(0, 0);
-		// shell.layout(true, true);
-
-		// ******************************************* Composite *******************************************
-		Composite composite_1 = new Composite(sashForm, SWT.NONE);
-		composite_1.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		composite_1.setLayout(new GridLayout(1, false));
+		// ******************************************* Composite 1 *******************************************
+		Composite compositeLogo = new Composite(parent, SWT.NONE);
+		compositeLogo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		compositeLogo.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		compositeLogo.setLayout(new GridLayout(1, false));
 
 		// ******************************************* LOGO *******************************************
-		CLabel lblDroptilllate = new CLabel(composite_1, SWT.CENTER);
-		// gd_lblDroptilllate.widthHint = 686;
-		GridData logoGD = new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1);
-		logoGD.heightHint = LOGO_HEIGHT;
-		lblDroptilllate.setLayoutData(logoGD);
+		CLabel lblDroptilllate = new CLabel(compositeLogo, SWT.CENTER);
+		lblDroptilllate.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
 		lblDroptilllate.setTopMargin(20);
 		lblDroptilllate.setText("");
 		lblDroptilllate.setImage(image.createImage());
 
-		// ******************************************* Composite *******************************************
-		Composite composite = new Composite(sashForm, SWT.NONE);
-		composite.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		composite.setFont(SWTResourceManager.getFont("Arial", 18, SWT.BOLD | SWT.ITALIC));
+		// ******************************************* Composite 2 *******************************************
+		compositeContent = new Composite(parent, SWT.NONE);
+		compositeContent.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		compositeContent.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		compositeContent.setFont(SWTResourceManager.getFont("Arial", 18, SWT.BOLD | SWT.ITALIC));
 		GridLayout gl_composite = new GridLayout(1, false);
 		gl_composite.verticalSpacing = 20;
 		gl_composite.marginHeight = 20;
 		gl_composite.marginWidth = 20;
 		gl_composite.horizontalSpacing = 20;
-		composite.setLayout(gl_composite);
+		compositeContent.setLayout(gl_composite);
 
 		// ******************************************* DROPTILLLATE SETTINGS *******************************************
-		grpDroptilllateSettings = new Group(composite, SWT.NONE);
+		grpDroptilllateSettings = new Group(compositeContent, SWT.NONE);
 		grpDroptilllateSettings.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		grpDroptilllateSettings.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		grpDroptilllateSettings.setFont(SWTResourceManager.getFont("Arial", 18, SWT.NORMAL));
@@ -157,7 +163,7 @@ public class InitialView implements SelectionListener, ModifyListener
 		new Label(grpDroptilllateSettings, SWT.NONE); // 3. slot
 
 		// ------------- Row 2 ---------------
-		lblPassword = initLabel(grpDroptilllateSettings, "Arial", 14, "Password", false);
+		lblPassword = initLabel(grpDroptilllateSettings, "Arial", 14, "Create Password", false);
 
 		text_password = initTextField(grpDroptilllateSettings, "Arial", 14, "", true);
 
@@ -178,11 +184,24 @@ public class InitialView implements SelectionListener, ModifyListener
 		text_tempPath = initTextField(grpDroptilllateSettings, "Arial", 14, "", true);
 
 		btnSearchTmpFolder = initButton(grpDroptilllateSettings, "Arial", 12, "search ...", false);
-		btnSearchTmpFolder.addSelectionListener(this);		
-		
+		btnSearchTmpFolder.addSelectionListener(this);
+
+		// ******************************************* Startup Button *******************************************
+
+		btnLogin = initButton(compositeContent, "Arial", 12, "Startup DropTillLate", true);
+		GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+		gd.heightHint = B_STARTUP_HEIGHT;
+		btnLogin.setLayoutData(gd);
+		btnLogin.addSelectionListener(this);
+
+		// ******************************************* CloudPovider Selector *******************************************
+		cbCloudProvider = new Button(compositeContent, SWT.CHECK);
+		cbCloudProvider.setFont(SWTResourceManager.getFont("Arial", 12, SWT.NORMAL));
+		cbCloudProvider.setText("Add Dropbox Account");
+		cbCloudProvider.addSelectionListener(this);
 
 		// ******************************************* DROPBOX SETTINGS *******************************************
-		grpDropboxSettings = new Group(composite, SWT.NONE);
+		grpDropboxSettings = new Group(compositeContent, SWT.NONE);
 		grpDropboxSettings.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, true, false, 1, 1));
 		grpDropboxSettings.setFont(SWTResourceManager.getFont("Arial", 18, SWT.NORMAL));
 		grpDropboxSettings.setText("Dropbox Settings");
@@ -210,47 +229,15 @@ public class InitialView implements SelectionListener, ModifyListener
 		btnTestDropbox.setText("Test Dropbox Account");
 		btnTestDropbox.addSelectionListener(this);
 
-		// ******************************************* PARENT COMPOSIT *******************************************
-		
-		btnLogin = initButton(composite, "Arial", 12, "Startup DropTillLate", true);
-		GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
-		gd.heightHint = BUTTON_HEIGHT1;
-		btnLogin.setLayoutData(gd);
-		btnLogin.addSelectionListener(this);
-
 		// ******************************************* Visibilities *******************************************
 		// Visible config
-		btnSearchDropFolder.setVisible(false);
-		btnSearchTmpFolder.setVisible(false);
-		text_dropboxPath.setVisible(false);
-		text_tempPath.setVisible(false);
-		lblDropboxFolder.setVisible(false);
-		lblTempFolder.setVisible(false);
-		btnLogin.setVisible(false);
-		btnLogin_1.setVisible(true);
-		txtDroptilllate.setVisible(false);
-		lblDroptilllateFoldername.setVisible(false);
-
-		text_DropboxPassword.setVisible(false);
-		btnTestDropbox.setVisible(false);
-		text_DropboxLoginName.setVisible(false);
-		lblPassword_1.setVisible(false);
-		lblDropboxLoginname.setVisible(false);
-		btnLogin.setVisible(false);
-		btnLogin_1.setVisible(true);
-		grpDropboxSettings.setVisible(false);
+		togglePathPropertiesVisible(false);
+		toggleDropboxSettingVisibility(false);
 		// CHECK properties
 
 		// ******************************************* Form Sizes *******************************************
-		
-		sashForm.setWeights(new int[]
-		{ 15, 85 });
 
-		Point sizeComp2 = composite.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-		int x = FORM_WIDTH;
-		int y = LOGO_HEIGHT + sizeComp2.y;
-		shell.setSize(x, y);
-
+		initialFormHeight = shell.getSize().y;
 		init();
 	}
 
@@ -258,10 +245,13 @@ public class InitialView implements SelectionListener, ModifyListener
 	{
 		dropboxfoldername = "DropTillLate";
 		controller = new InitController(shell);
-		// Check if config files and filestructure file are available
-		if (!controller.checkProperties() || !controller.checkIfFileStructureAvailable())
+		// Check if config files and filestructure file are not available
+		// if (!controller.checkProperties() || !controller.checkIfFileStructureAvailable())
+		if (true)
 		{
-			makePathPropertiesVisible();
+			togglePathPropertiesVisible(true);
+			lblPassword.setText("Enter password");
+			// toggleDropboxSettingVisibility(true);
 		}
 		// Check if an Exit error exist
 		controller.checkExitError();
@@ -274,28 +264,32 @@ public class InitialView implements SelectionListener, ModifyListener
 		text_password.addModifyListener(this);
 	}
 
-	private void makePathPropertiesVisible()
+	private void togglePathPropertiesVisible(boolean visible)
 	{
 		// TODO Auto-generated method stub
 		// If path not defined
-		lblPassword.setText("Create Password");
-		text_DropboxPassword.setVisible(true);
-		btnTestDropbox.setVisible(true);
-		text_DropboxLoginName.setVisible(true);
-		lblPassword_1.setVisible(true);
-		lblDropboxLoginname.setVisible(true);
-		btnLogin.setVisible(true);
-		btnLogin_1.setVisible(false);
-		btnSearchDropFolder.setVisible(true);
-		btnSearchTmpFolder.setVisible(true);
-		text_dropboxPath.setVisible(true);
-		text_tempPath.setVisible(true);
-		lblDropboxFolder.setVisible(true);
-		lblTempFolder.setVisible(true);
-		btnLogin.setVisible(true);
-		txtDroptilllate.setVisible(true);
-		lblDroptilllateFoldername.setVisible(true);
-		grpDropboxSettings.setVisible(true);
+		cbCloudProvider.setVisible(visible);
+		btnLogin.setVisible(visible);
+		btnLogin_1.setVisible(!visible);
+		btnSearchDropFolder.setVisible(visible);
+		btnSearchTmpFolder.setVisible(visible);
+		text_dropboxPath.setVisible(visible);
+		text_tempPath.setVisible(visible);
+		lblDropboxFolder.setVisible(visible);
+		lblTempFolder.setVisible(visible);
+		btnLogin.setVisible(visible);
+		txtDroptilllate.setVisible(visible);
+		lblDroptilllateFoldername.setVisible(visible);
+	}
+
+	private void toggleDropboxSettingVisibility(boolean visible)
+	{
+		grpDropboxSettings.setVisible(visible);
+		lblPassword_1.setVisible(visible);
+		text_DropboxPassword.setVisible(visible);
+		btnTestDropbox.setVisible(visible);
+		text_DropboxLoginName.setVisible(visible);
+		lblDropboxLoginname.setVisible(visible);
 	}
 
 	@Focus
@@ -365,9 +359,23 @@ public class InitialView implements SelectionListener, ModifyListener
 
 	}
 
+	public void cbCloudProviderPressed()
+	{
+		boolean checked = cbCloudProvider.getSelection();
+		toggleDropboxSettingVisibility(checked);
+		int x = shell.getSize().x;
+		int y = initialFormHeight;
+		if (checked)
+		{
+			Point sizeFrame = grpDropboxSettings.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+			y += sizeFrame.y;
+		}
+		shell.setSize(x, y);
+
+	}
+
 	private boolean checkAllFields()
 	{
-
 		if (dropboxPassword.isEmpty() || dropboxfoldername.isEmpty() || dropboxPath.isEmpty() || tempPath.isEmpty()
 				|| dropboxLogin.isEmpty() || password.isEmpty() || checkPathofEquals())
 		{
@@ -406,6 +414,7 @@ public class InitialView implements SelectionListener, ModifyListener
 		{
 			openFolderDialog(false);
 		}
+		// Startup
 		if (e.getSource() == btnLogin)
 		{
 			loginPressed();
@@ -417,6 +426,10 @@ public class InitialView implements SelectionListener, ModifyListener
 		if (e.getSource() == btnLogin_1)
 		{
 			loginPressed();
+		}
+		if (e.getSource() == cbCloudProvider)
+		{
+			cbCloudProviderPressed();
 		}
 
 	}
@@ -456,7 +469,6 @@ public class InitialView implements SelectionListener, ModifyListener
 		{
 			password = text_password.getText();
 		}
-
 	}
 
 	private Label initLabel(Composite parent, String font, int fontSize, String text, boolean fillAvailableSpace)
@@ -521,8 +533,5 @@ public class InitialView implements SelectionListener, ModifyListener
 		button.setLayoutData(gd);
 		return button;
 	}
-	
 
-
-	
 }
