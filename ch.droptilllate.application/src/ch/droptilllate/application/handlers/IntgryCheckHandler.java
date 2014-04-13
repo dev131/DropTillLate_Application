@@ -1,14 +1,4 @@
-/*******************************************************************************
- * Copyright (c) 2010 - 2013 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *     Lars Vogel <lars.Vogel@gmail.com> - Bug 419770
- *******************************************************************************/
+
 package ch.droptilllate.application.handlers;
 
 import java.util.ArrayList;
@@ -27,7 +17,7 @@ import ch.droptilllate.application.dao.ContainerDao;
 import ch.droptilllate.application.dao.EncryptedFileDao;
 import ch.droptilllate.application.dnb.EncryptedContainer;
 import ch.droptilllate.application.model.EncryptedFileDob;
-import ch.droptilllate.couldprovider.api.IFileSystemCom;
+import ch.droptilllate.cloudprovider.api.IFileSystemCom;
 import ch.droptilllate.filesystem.info.FileInfo;
 
 public class IntgryCheckHandler {

@@ -20,8 +20,8 @@ Require-Bundle: javax.inject;bundle-version="1.0.0",
  org.eclipse.e4.core.commands;bundle-version="0.10.2",
  org.eclipse.ui,
  org.eclipse.core.resources,
- ch.droptilllate.cloudprovider;bundle-version="0.5.0",
- ch.droptilllate.filesystem;bundle-version="0.5.0"
+ ch.droptilllate.filesystem;bundle-version="0.5.0",
+ ch.droptilllate.cloudprovider;bundle-version="0.5.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: javax.annotation;version="1.0.0"
 Bundle-ClassPath: .,

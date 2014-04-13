@@ -20,7 +20,7 @@ import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.views.Status;
 import ch.droptilllate.application.xml.UpdateXMLGenerator;
 import ch.droptilllate.application.xml.UpdateXMLImporter;
-import ch.droptilllate.couldprovider.api.IFileSystemCom;
+import ch.droptilllate.cloudprovider.api.IFileSystemCom;
 
 
 public class ShareManager {

@@ -28,12 +28,12 @@
     <mainMenu xmi:id="_pupeDYNwEeOZSfPuT6ZnVQ" elementId="menu:org.eclipse.ui.main.menu"/>
     <trimBars xmi:id="_puqsIYNwEeOZSfPuT6ZnVQ">
       <children xsi:type="menu:ToolBar" xmi:id="_puqsIoNwEeOZSfPuT6ZnVQ" elementId="toolbar:org.eclipse.ui.main.toolbar">
-        <children xsi:type="menu:HandledToolItem" xmi:id="_3qAC8MMIEeOJt9OHbQTDCA" elementId="ch.droptilllate.application.handledtoolitem.about" visible="false" iconURI="platform:/plugin/ch.droptilllate.application/icons/about.png" command="_m26DwMMJEeOJt9OHbQTDCA"/>
-        <children xsi:type="menu:HandledToolItem" xmi:id="_t-CHMIN-EeOPbN9mpPOXoQ" elementId="ch.droptilllate.application.handledtoolitem.newFolder" visible="false" iconURI="platform:/plugin/ch.droptilllate.application/icons/newfolder.png" command="_euHAYIN-EeOPbN9mpPOXoQ"/>
-        <children xsi:type="menu:HandledToolItem" xmi:id="_Ryo0UJWZEeOV_sbJE0cJGg" elementId="ch.droptilllate.application.handledtoolitem.import" visible="false" iconURI="platform:/plugin/ch.droptilllate.application/icons/import.png" command="_CUji4KFkEeO6qtPvj5SoMA"/>
-        <children xsi:type="menu:HandledToolItem" xmi:id="_b2jKIMMIEeOJt9OHbQTDCA" elementId="ch.droptilllate.application.handledtoolitem.integrycheck" visible="false" iconURI="platform:/plugin/ch.droptilllate.application/icons/integrycheck.png" command="_TqwNYMMIEeOJt9OHbQTDCA"/>
-        <children xsi:type="menu:HandledToolItem" xmi:id="_cvmSAMMIEeOJt9OHbQTDCA" elementId="ch.droptilllate.application.handledtoolitem.export" visible="false" iconURI="platform:/plugin/ch.droptilllate.application/icons/export.png" command="_f6zpwMMIEeOJt9OHbQTDCA"/>
-        <children xsi:type="menu:HandledToolItem" xmi:id="_3YWesLNkEeOt2tTK8381Eg" elementId="ch.droptilllate.application.handledtoolitem.logview" visible="false" iconURI="platform:/plugin/ch.droptilllate.application/icons/console.png" command="__pJQMLNkEeOt2tTK8381Eg"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_3qAC8MMIEeOJt9OHbQTDCA" elementId="ch.droptilllate.application.handledtoolitem.about" iconURI="platform:/plugin/ch.droptilllate.application/icons/about.png" command="_m26DwMMJEeOJt9OHbQTDCA"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_t-CHMIN-EeOPbN9mpPOXoQ" elementId="ch.droptilllate.application.handledtoolitem.newFolder" iconURI="platform:/plugin/ch.droptilllate.application/icons/newfolder.png" command="_euHAYIN-EeOPbN9mpPOXoQ"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_Ryo0UJWZEeOV_sbJE0cJGg" elementId="ch.droptilllate.application.handledtoolitem.import" iconURI="platform:/plugin/ch.droptilllate.application/icons/import.png" command="_CUji4KFkEeO6qtPvj5SoMA"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_b2jKIMMIEeOJt9OHbQTDCA" elementId="ch.droptilllate.application.handledtoolitem.integrycheck" iconURI="platform:/plugin/ch.droptilllate.application/icons/integrycheck.png" command="_TqwNYMMIEeOJt9OHbQTDCA"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_cvmSAMMIEeOJt9OHbQTDCA" elementId="ch.droptilllate.application.handledtoolitem.export" iconURI="platform:/plugin/ch.droptilllate.application/icons/export.png" command="_f6zpwMMIEeOJt9OHbQTDCA"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_3YWesLNkEeOt2tTK8381Eg" elementId="ch.droptilllate.application.handledtoolitem.logview" iconURI="platform:/plugin/ch.droptilllate.application/icons/console.png" command="__pJQMLNkEeOt2tTK8381Eg"/>
       </children>
     </trimBars>
     <trimBars xmi:id="_qv72YITlEeOE5pTDi_Agfw" elementId="ch.droptilllate.application.trimbar.0" side="Bottom">

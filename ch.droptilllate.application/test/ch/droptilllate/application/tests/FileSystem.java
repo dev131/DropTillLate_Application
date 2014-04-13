@@ -16,7 +16,7 @@ import org.junit.Test;
 
 import ch.droptilllate.application.com.FileSystemCom;
 import ch.droptilllate.application.model.EncryptedFileDob;
-import ch.droptilllate.couldprovider.api.IFileSystemCom;
+import ch.droptilllate.cloudprovider.api.IFileSystemCom;
 
 public class FileSystem {
 
