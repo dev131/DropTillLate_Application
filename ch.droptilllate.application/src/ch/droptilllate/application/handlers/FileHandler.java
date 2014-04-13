@@ -74,7 +74,6 @@ public class FileHandler {
 						
 		}
 		return resource.delete();
-		
 	}
 	
 	public void setFileListener(File file, EncryptedFileDob dob){
