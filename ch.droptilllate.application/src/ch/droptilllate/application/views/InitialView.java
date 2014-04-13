@@ -90,7 +90,7 @@ public class InitialView implements SelectionListener, ModifyListener
 	private String tempPath;
 
 	// Constants
-	private static int LOGO_HEIGHT = 200;
+	private static int LOGO_HEIGHT = 300;
 	private static int FORM_WIDTH = 800;
 	private static int BUTTON_HEIGHT1 = 60;
 
@@ -144,6 +144,7 @@ public class InitialView implements SelectionListener, ModifyListener
 		grpDroptilllateSettings.setText("DropTillLate Settings");
 		GridLayout gl_grpDroptilllateSettings = new GridLayout(3, false);
 		gl_grpDroptilllateSettings.marginTop = 10;
+		gl_grpDroptilllateSettings.marginBottom = 10;
 		gl_grpDroptilllateSettings.verticalSpacing = 10;
 		gl_grpDroptilllateSettings.horizontalSpacing = 10;
 		grpDroptilllateSettings.setLayout(gl_grpDroptilllateSettings);
@@ -189,6 +190,7 @@ public class InitialView implements SelectionListener, ModifyListener
 		gl_grpDropboxSettings.verticalSpacing = 10;
 		gl_grpDropboxSettings.horizontalSpacing = 10;
 		gl_grpDropboxSettings.marginTop = 10;
+		gl_grpDropboxSettings.marginBottom = 10;
 		grpDropboxSettings.setLayout(gl_grpDropboxSettings);
 
 		// ------------- Row 1 ---------------
@@ -236,14 +238,7 @@ public class InitialView implements SelectionListener, ModifyListener
 		lblDropboxLoginname.setVisible(false);
 		btnLogin.setVisible(false);
 		btnLogin_1.setVisible(true);
-		new Label(grpDroptilllateSettings, SWT.NONE);
-		new Label(grpDroptilllateSettings, SWT.NONE);
-		new Label(grpDroptilllateSettings, SWT.NONE);
-		new Label(grpDroptilllateSettings, SWT.NONE);
-		new Label(grpDroptilllateSettings, SWT.NONE);
 		grpDropboxSettings.setVisible(false);
-		new Label(grpDropboxSettings, SWT.NONE);
-		new Label(grpDropboxSettings, SWT.NONE);
 		// CHECK properties
 
 		// ******************************************* Form Sizes *******************************************
@@ -301,7 +296,6 @@ public class InitialView implements SelectionListener, ModifyListener
 		txtDroptilllate.setVisible(true);
 		lblDroptilllateFoldername.setVisible(true);
 		grpDropboxSettings.setVisible(true);
-
 	}
 
 	@Focus
