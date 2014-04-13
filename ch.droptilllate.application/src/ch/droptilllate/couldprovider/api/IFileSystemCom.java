@@ -1,5 +1,6 @@
 package ch.droptilllate.couldprovider.api;
 
+import java.util.HashMap;
 import java.util.List;
 
 import ch.droptilllate.application.dnb.ShareRelation;
@@ -55,5 +56,9 @@ public interface IFileSystemCom {
 	 */
 	public boolean decryptFile(ShareRelation srcShareRelation, boolean local);
 	
-	
+	/**
+	 * Return Hashmap with ShareId and List of EncryptedFileDob as value
+	 * @return
+	 */
+	public HashMap<Integer, List<EncryptedFileDob>>  fileIntegryCheck();
 }

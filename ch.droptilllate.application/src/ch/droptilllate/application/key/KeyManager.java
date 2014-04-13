@@ -117,6 +117,16 @@ public class KeyManager {
 	public KeyRelation getKeyrelation() {
 		return keyrelation;
 	}
+	
+	public KeyRelation getKeyrelationWithHash(){
+		KeyRelation hashKeyrelation = new KeyRelation();
+		for(Integer i : keyrelation.getKeyShareMap().keySet()){
+			ShareRelation shareRelation = getShareRelation(i);
+			hashKeyrelation.addKeyOfShareRelation(shareRelation.getID(), shareRelation.getKey());
+		}
+		return hashKeyrelation;	
+	}
+	
 
 	public void setKeyrelation(KeyRelation keyrelation) {
 		this.keyrelation = keyrelation;

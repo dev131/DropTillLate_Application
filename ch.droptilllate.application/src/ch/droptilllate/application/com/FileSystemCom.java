@@ -2,6 +2,7 @@ package ch.droptilllate.application.com;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -205,6 +206,12 @@ public class FileSystemCom implements IFileSystemCom {
 		fileInfo = ifile.loadFileStructure(fileInfo,  srcShareRelation.getKey());
 		if(fileInfo.getError() == FileError.NONE) return true;
 		return false;
+	}
+	
+	public HashMap<Integer, List<EncryptedFileDob>>  fileIntegryCheck(){
+		HashMap<Integer, List<FileInfo>> hashmap = ifile.getFilesPerRelation(KeyManager.getInstance().getKeyrelationWithHash());
+			
+		return null;
 	}
 	
 }
