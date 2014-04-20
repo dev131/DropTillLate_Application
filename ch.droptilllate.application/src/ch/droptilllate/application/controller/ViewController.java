@@ -671,6 +671,13 @@ public class ViewController {
 		for(EncryptedFileDob dob :fileDecryptList ){
 			System.out.println(dob.getPath());
 		}
+		IFileSystemCom iFileSystem = FileSystemCom.getInstance();
+		CRUDCryptedFileInfo result = iFileSystem.exportFiles(fileDecryptList);
+		for (EncryptedFileDob fileDob : result.getEncryptedFileListError()) {
+			Status status = Status.getInstance();
+			status.setMessage(fileDob.getName() + " -> decryption not worked");
+		}
+		
 		
 	}
 	

@@ -25,7 +25,7 @@ public class FileStructureDB {
 
 	@Test
 	public void test() {
-//		GhostFolderDob root = new GhostFolderDob(0, "Root-Folder", new Date(System.currentTimeMillis()), "");
+//		GhostFolderDob root = new GhostFolderDob(0, "Root-Folder", null);
 //		//GhostFolderDob child = new GhostFolderDob(1, "First-Folder", new Date(System.currentTimeMillis()), "");
 //		File folder = new File("TestFolder");
 //		//Create Temp File
@@ -75,7 +75,7 @@ public class FileStructureDB {
 //		//DeleteFile
 //		folderDao.deleteElement(folderlist);
 //		fileDao.deleteElement(filelist);
-////		
+//		
 	}
 
 }
