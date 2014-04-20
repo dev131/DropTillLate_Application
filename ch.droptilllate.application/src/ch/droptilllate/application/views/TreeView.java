@@ -23,6 +23,8 @@ import java.io.IOException;
 
 
 
+
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
@@ -36,6 +38,7 @@ import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.e4.ui.workbench.swt.modeling.EMenuService;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -46,6 +49,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 
 import ch.droptilllate.application.controller.ViewController;
@@ -71,6 +75,7 @@ public class TreeView{
 		this.viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		menuService.registerContextMenu(this.viewer.getControl(),
 				"ch.droptilllate.application.popupmenu.table");
+		
 		this.shell = shell;
 		this.parent = parent;
 		this.controller = ViewController.getInstance();
@@ -86,6 +91,7 @@ public class TreeView{
 			@Override
 			public void widgetDisposed(DisposeEvent e) {
 				// TODO Auto-generated method stub
+				//TODO delete temp folder
 				File file = new File(Configuration.getPropertieTempPath(true));
 //				try {
 //					FileUtils.cleanDirectory(file);

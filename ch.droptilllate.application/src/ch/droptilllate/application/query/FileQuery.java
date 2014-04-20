@@ -323,7 +323,10 @@ public class FileQuery {
 		Document document = conn.getXML();
 		NodeList nodes = document.getElementsByTagName(XMLConstruct.ChildElementFile);
 		for (int i = 0; i < nodes.getLength(); i++) {
-			nodes.item(i).getParentNode().removeChild(nodes.item(i));
+			if(Integer.parseInt(nodes.item(i).getAttributes().getNamedItem(XMLConstruct.AttId).getNodeValue()) != Messages.getIdSize()){
+				nodes.item(i).getParentNode().removeChild(nodes.item(i));	
+			}			
 		}
+		conn.writeToXML();
 	}
 }
