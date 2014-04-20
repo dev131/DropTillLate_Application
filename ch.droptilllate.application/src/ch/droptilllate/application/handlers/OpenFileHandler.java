@@ -10,6 +10,6 @@ public class OpenFileHandler {
 	@Execute
 	public void execute(Shell shell) {
 		 ViewController viewcontroller = ViewController.getInstance();
-		 viewcontroller.decrypteFile();
+		 viewcontroller.openFiles();
 	}
 }

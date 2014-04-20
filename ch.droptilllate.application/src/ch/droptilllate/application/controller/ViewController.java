@@ -11,6 +11,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledToolItem;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
@@ -131,7 +132,6 @@ public class ViewController {
 		// Register Drag&Drop Listener
 		registerDragDrop();
 		
-		//checkCloudAccount();
 		
 	}
 
@@ -201,26 +201,8 @@ public class ViewController {
 	 * Delete File
 	 */
 	public void deleteFile() {
-		fileList = new ArrayList<EncryptedFileDob>();
-		folderList = new ArrayList<GhostFolderDob>();
-		// List inserts and prepare for delete
-		TreeSelection currentSelection = (TreeSelection) viewer.getSelection();
-		// FIll selection in lists
-		EncryptedFileDob fileToDelete = null;
-		GhostFolderDob folderToDelete = null;
-		Iterator<DroppedElement> droppedElementsIterator = currentSelection
-				.iterator();
-		while (droppedElementsIterator.hasNext()) {
-			DroppedElement element = droppedElementsIterator.next();
-			if (element instanceof GhostFolderDob) {
-				folderToDelete = (GhostFolderDob) element;
-				folderList.add(folderToDelete);
-			}
-			if (element instanceof EncryptedFileDob) {
-				fileToDelete = (EncryptedFileDob) element;
-				fileList.add(fileToDelete);
-			}
-		}
+		fileList = getSelectedFileList();
+		folderList = getSelectedFolderList();
 		// Insert subfolder/files
 		getEntriesInFolders();
 		// Delete on Filesystem
@@ -278,9 +260,9 @@ public class ViewController {
 	}
 
 	/**
-	 * Decrypt selectedFile
+	 * Open selectedFile
 	 */
-	public void decrypteFile() {
+	public void openFiles() {
 		// TODO Statusline
 		List<EncryptedFileDob> fileList = getSelectedFileList();
 
@@ -327,6 +309,30 @@ public class ViewController {
 		return fileList;
 	}
 
+	/**
+	 * Get selectedFolder
+	 * @return
+	 */
+	private List<GhostFolderDob> getSelectedFolderList() {
+		List<GhostFolderDob> folderList = new ArrayList<GhostFolderDob>();
+		TreeItem[] treeItems = tree.getSelection();
+		if (treeItems != null) {
+			for (int i = 0; i < treeItems.length; i++) {
+				Object obj = treeItems[i].getData();
+				// IF selection a Folder
+				if (obj.getClass() == GhostFolderDob.class) {
+					// TODO fill with file in ordner entries
+					GhostFolderDob f2 = (GhostFolderDob) obj;
+					folderList.add(f2);
+				}
+				// IF selection a File
+				if (obj.getClass() == EncryptedFileDob.class) {
+					//
+				}
+			}
+		}
+		return folderList;
+	}
 	/**
 	 * Insert new Folder
 	 * 
@@ -445,6 +451,12 @@ public class ViewController {
 	 */
 	public boolean shareFiles(ArrayList<String> mailList,
 			ArrayList<EncryptedFileDob> fileList, String password, boolean auto) {
+		//Check valid account
+		CloudAccountDao dao = new CloudAccountDao();
+		CloudAccount account = (CloudAccount) dao.getElementAll(null);
+		if(account == null){
+			return false;
+		}	
 		CloudError status = CloudError.NONE;
 		shareManager = new ShareManager(fileList, password,
 				mailList);
@@ -621,5 +633,53 @@ public class ViewController {
 		return shareRelation;
 	}
 
+	public void decryptFiles(String dest){
+
+		fileList = getSelectedFileList();
+		List<EncryptedFileDob> fileDecryptList = new ArrayList<EncryptedFileDob>();
+		folderList = getSelectedFolderList();
+		//all files in filelist goes to root
+		for(EncryptedFileDob dob : fileList){
+			dob.setPath(dest+ OSValidator.getSlash() +dob.getName());
+			fileDecryptList.add(dob);
+		}
+		//iterator through all
+		fileList.clear();
+		GhostFolderDob old = null;
+		for(GhostFolderDob dob : folderList){	
+			if(old == null){
+				ghostFolderInGhostfolder(dob, dest);
+			}
+			else{
+				if(dob.getParent() == old.getParent()){
+					ghostFolderInGhostfolder(dob, dest);
+				}		
+			}			
+			old = dob;
+		}
+		
+		//Fill fileList
+		fileDecryptList.addAll(fileList);
+		//Decrypt
+		for(EncryptedFileDob dob :fileDecryptList ){
+			System.out.println(dob.getPath());
+		}
+		
+	}
+	
+	private void ghostFolderInGhostfolder(GhostFolderDob dob, String path){
+		List<GhostFolderDob> childFolders = dob.getFolders();
+		path = path + OSValidator.getSlash() + dob.getName();
+		for(EncryptedFileDob tempDob : dob.getFiles()){	
+			tempDob.setPath(path + OSValidator.getSlash()+ tempDob.getName());
+			fileList.add(tempDob);
+		}				
+		if (childFolders != null && childFolders.size() > 0) {
+			for (GhostFolderDob childFolder : childFolders) {
+				
+				ghostFolderInGhostfolder(childFolder, path);
+			}
+		}
+	}
 	
 }

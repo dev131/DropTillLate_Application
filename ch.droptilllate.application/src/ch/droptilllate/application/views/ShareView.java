@@ -258,14 +258,17 @@ public class ShareView implements SelectionListener {
 		ViewController.getInstance().getLastShareRelation();
 		FileHandler filehandler = new FileHandler();
 		ShareRelation shareRleation = ViewController.getInstance().getLastShareRelation();
-		File file = new File(Configuration.getPropertieDropBoxPath(true) + ViewController.getInstance().getLastShareRelation().getID());
-		try {
-			filehandler.delete(file);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if(shareRleation !=null){
+			File file = new File(Configuration.getPropertieDropBoxPath(true) + ViewController.getInstance().getLastShareRelation().getID());
+			try {
+				filehandler.delete(file);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			}
 		}
-		}
+		
 	}
 
 	private void addMail() {
