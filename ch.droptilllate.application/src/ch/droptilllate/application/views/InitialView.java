@@ -164,7 +164,7 @@ public class InitialView implements SelectionListener, ModifyListener
 		new Label(grpDroptilllateSettings, SWT.NONE); // 3. slot
 
 		// ------------- Row 2 ---------------
-		lblPassword = initLabel(grpDroptilllateSettings, "Arial", 14, "Create Password", false);
+		lblPassword = initLabel(grpDroptilllateSettings, "Arial", 14, "Login Password", false);
 
 		text_password = initTextField(grpDroptilllateSettings, "Arial", 14, "", true);
 
@@ -249,10 +249,10 @@ public class InitialView implements SelectionListener, ModifyListener
 
 		// Check if config files and filestructure file are not available
 		if (!controller.checkProperties() || !controller.checkIfFileStructureAvailable())
-		// if (true)
 		{
 			togglePathPropertiesVisible(true);
 			lblPassword.setText("Enter password");
+			lblPassword.setText("Create password");
 			// toggleDropboxSettingVisibility(true);
 		}
 		// Check if an Exit error exist
@@ -399,11 +399,11 @@ public class InitialView implements SelectionListener, ModifyListener
 		MPart ownpart = partService.findPart("ch.droptilllate.application.part.InitialView");
 		ownpart.setVisible(false);
 		
-//		if(!cloudAccountAccepted){	
+		if(!cloudAccountAccepted){	
 //			MHandledMenuItem shareHandler = (MHandledMenuItem) modelService.find("ch.droptilllate.application.handledmenuitem.ShareFiles",
 //					application);
 //			shareHandler.setVisible(false);	
-//		}
+		}
 	}
 
 	@Override

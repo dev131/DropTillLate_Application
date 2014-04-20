@@ -17,6 +17,7 @@ import ch.droptilllate.application.dao.ContainerDao;
 import ch.droptilllate.application.dao.EncryptedFileDao;
 import ch.droptilllate.application.dnb.EncryptedContainer;
 import ch.droptilllate.application.model.EncryptedFileDob;
+import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.cloudprovider.api.IFileSystemCom;
 import ch.droptilllate.filesystem.info.FileInfo;
 
@@ -26,43 +27,52 @@ public class IntgryCheckHandler {
 		IFileSystemCom com = FileSystemCom.getInstance();
 		HashMap<Integer, List<EncryptedFileDob>> hashmap = com.fileIntegryCheck();
 		List<EncryptedFileDob> fileListDB = getFileListDB();
-		List<EncryptedFileDob> updateListDB = getUpdateFileList(fileListDB, hashmap);
-		if(!updateListDB.isEmpty()){
+		List<EncryptedFileDob> fileListFS = getFileListFS(hashmap);
+		List<EncryptedFileDob> upgradeListDB = getUpgradeFileList(fileListDB, fileListFS);
+		if(!upgradeListDB.isEmpty()){
 			EncryptedFileDao dao = new EncryptedFileDao();
 			dao.deleteElementAll(null);
-			dao.newElement(updateListDB, null);
+			dao.newElement(upgradeListDB, null);
 			ViewController.getInstance().getInitialInput();
 		}
 	}
 
-	private List<EncryptedFileDob> getUpdateFileList(
-			List<EncryptedFileDob> fileListDB,
-			HashMap<Integer, List<EncryptedFileDob>> hashmap) {
-		Set<Integer> idset = hashmap.keySet();
-		List<EncryptedFileDob> updateListDB = new ArrayList<EncryptedFileDob>();
-		for(Integer id : idset){			
-			for(EncryptedFileDob fsDob : hashmap.get(id)){
-				for(EncryptedFileDob dbDob : fileListDB){
-					if(fsDob.getId() == dbDob.getId()){
-						dbDob.setContainerId(fsDob.getContainerId());
-						updateListDB.add(dbDob);
-						//Remove udpatedfile from list
-						hashmap.get(id).remove(fsDob);
+	private List<EncryptedFileDob> getUpgradeFileList(List<EncryptedFileDob> fileListDB, List<EncryptedFileDob> fileListFS) {
+		List<EncryptedFileDob> upgradeListDB = new ArrayList<EncryptedFileDob>();
+		int mDobId = Messages.getIdSize();
+		for(EncryptedFileDob fsDob : fileListFS){
+			boolean available = false;
+			int fsDobId = fsDob.getId();
+			for(EncryptedFileDob dbDob : fileListDB){
+				//Available in both site			
+				int dbDobId = dbDob.getId();
+				if(fsDobId == dbDobId){
+					//ContainerInfo from Fileystem
+					dbDob.setContainerId(fsDob.getContainerId());
+					//MainFile not update
+				
+					if(fsDobId!= mDobId){
+						upgradeListDB.add(dbDob);
+						available = true;
 					}
 				}
 			}
-			//Check if container available on db
-			for(EncryptedFileDob fsDob : hashmap.get(id)){
-				ContainerDao dao = new ContainerDao();
-				EncryptedContainer container = (EncryptedContainer) dao.getElementByID(fsDob.getContainerId(), null);
-				if(container== null){
-					hashmap.get(id).remove(fsDob);
-				}	
+			if(!available && mDobId != fsDobId){
+				upgradeListDB.add(fsDob);
 			}
-			//the rest of the files are not available on the datalayer insert on root
-			updateListDB.addAll(hashmap.get(id));
 		}
-			return updateListDB;
+		return upgradeListDB;
+	}
+
+	private List<EncryptedFileDob> getFileListFS(HashMap<Integer, List<EncryptedFileDob>> hashmap) {
+		List<EncryptedFileDob> fileListFS = new ArrayList<EncryptedFileDob>();
+		Set<Integer> idset = hashmap.keySet();
+		for(Integer id : idset){
+			for(EncryptedFileDob fsDob : hashmap.get(id)){
+				fileListFS.add(fsDob);
+			}
+		}
+		return fileListFS;
 	}
 
 	private List<EncryptedFileDob> getFileListDB() {
