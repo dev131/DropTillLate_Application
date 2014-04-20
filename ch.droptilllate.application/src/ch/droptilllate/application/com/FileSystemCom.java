@@ -215,4 +215,33 @@ public class FileSystemCom implements IFileSystemCom {
 		return new FileIntegryConverter().convert(ifile.getFilesPerRelation(keyRelation));
 	}
 	
+	@Override
+	public synchronized CRUDCryptedFileInfo exportFiles(List<EncryptedFileDob> fileList){
+		FileHandlingSummary filehandling_result = null;
+		List<FileInfoDecrypt> fileInfoList = new ArrayList<FileInfoDecrypt>();
+		KeyManager km = KeyManager.getInstance();
+		ShareRelation shareRelation;
+		KeyRelation relation = new KeyRelation();
+		for (EncryptedFileDob fileDob : fileList) {
+			//Check If File Exist
+			ContainerDao cDao= new ContainerDao();
+			EncryptedContainer container =(EncryptedContainer) cDao.getElementByID(fileDob.getContainerId(), null);
+			shareRelation = km.getShareRelation(container.getShareRelationId());
+			fileInfoList.add(new FileInfoDecrypt(
+					fileDob.getId(), 
+					container.getShareRelationId(), 
+					fileDob.getContainerId(), 
+					fileDob.getPath()));
+			relation.addKeyOfShareRelation(shareRelation.getID(), shareRelation.getKey());
+			
+		}
+		filehandling_result = ifile.decryptFiles(fileInfoList,relation);
+		// Convert to FileCRUDResults
+		FileInfoConverter converter = new FileInfoConverter();
+		CRUDCryptedFileInfo result = converter.convertFileInfoList(
+				filehandling_result.getFileInfoSuccessList(),
+				filehandling_result.getFileInfoErrorList(), fileList);
+		return result;
+	}
+	
 }

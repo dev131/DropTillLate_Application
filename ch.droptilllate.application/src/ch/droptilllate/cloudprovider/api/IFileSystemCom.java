@@ -61,4 +61,11 @@ public interface IFileSystemCom {
 	 * @return
 	 */
 	public HashMap<Integer, List<EncryptedFileDob>>  fileIntegryCheck();
+	
+	/**
+	 * Encrypt and Export fileList
+	 * @param fileList
+	 * @return
+	 */
+	public  CRUDCryptedFileInfo exportFiles(List<EncryptedFileDob> fileList);
 }
