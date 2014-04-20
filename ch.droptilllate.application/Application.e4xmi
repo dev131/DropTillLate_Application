@@ -18,9 +18,7 @@
               <children xsi:type="menu:MenuSeparator" xmi:id="_CGmicMigEeOKDJEZUpPZCA" elementId="ch.droptilllate.application.menuseparator.2"/>
               <children xsi:type="menu:HandledMenuItem" xmi:id="_WAKpIJAREeOHkoJaezvPIA" elementId="ch.droptilllate.application.handledmenuitem.NewFolder" label="new Folder" iconURI="platform:/plugin/ch.droptilllate.application/icons/add-folder-16.png" tooltip="insert new folder" command="_euHAYIN-EeOPbN9mpPOXoQ"/>
               <children xsi:type="menu:MenuSeparator" xmi:id="_CiQjsMigEeOKDJEZUpPZCA" elementId="ch.droptilllate.application.menuseparator.3"/>
-              <children xsi:type="menu:HandledMenuItem" xmi:id="_7zYdgJbyEeOHEZkAJ8XYZg" elementId="ch.droptilllate.application.handledmenuitem.ShareFiles" label="share selected files" iconURI="platform:/plugin/ch.droptilllate.application/icons/sharethis-16.png" tooltip="open share dialog" command="_Bi6zMJbzEeOHEZkAJ8XYZg">
-                <visibleWhen xsi:type="ui:CoreExpression" xmi:id="_hfIz8LKZEeOdJ_svOfiflg" coreExpressionId="ch.droptilllate.application.selectionset"/>
-              </children>
+              <children xsi:type="menu:HandledMenuItem" xmi:id="_7zYdgJbyEeOHEZkAJ8XYZg" elementId="ch.droptilllate.application.handledmenuitem.ShareFiles" label="share selected files" iconURI="platform:/plugin/ch.droptilllate.application/icons/sharethis-16.png" tooltip="open share dialog" command="_Bi6zMJbzEeOHEZkAJ8XYZg"/>
               <children xsi:type="menu:MenuSeparator" xmi:id="_izFfYMijEeOKDJEZUpPZCA" elementId="ch.droptilllate.application.menuseparator.4"/>
               <children xsi:type="menu:HandledMenuItem" xmi:id="_ZBmXMMijEeOKDJEZUpPZCA" elementId="ch.droptilllate.application.handledmenuitem.decrypt" label="decrypt" iconURI="platform:/plugin/ch.droptilllate.application/icons/send-file-16.png" tooltip="decrypt and export files" command="_eTiK4MijEeOKDJEZUpPZCA">
                 <visibleWhen xsi:type="ui:CoreExpression" xmi:id="_pEsnYMijEeOKDJEZUpPZCA" coreExpressionId="ch.droptilllate.application.selectionset"/>

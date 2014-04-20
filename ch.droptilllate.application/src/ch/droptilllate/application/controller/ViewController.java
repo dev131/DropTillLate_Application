@@ -132,14 +132,7 @@ public class ViewController {
 		viewer.setInput(root);
 		viewer.expandToLevel(1);
 		// Register Drag&Drop Listener
-		registerDragDrop();
-		
-		MenuItem[] menuItems = viewer.getControl().getMenu().getItems();
-		for (MenuItem item : menuItems) {
-			if (item.getText().contains("share")) {
-				item.setText("quark");
-			}
-		}
+		registerDragDrop();		
 	}
 
 	/**

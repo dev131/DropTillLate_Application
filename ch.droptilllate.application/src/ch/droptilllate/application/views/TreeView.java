@@ -27,6 +27,7 @@ import java.io.IOException;
 
 
 
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
@@ -87,6 +88,7 @@ public class TreeView{
 		this.controller.initViewController(this.viewer, shell, partService, modelService, application);
 		addListeners();
 		addCloseListener(parent);
+		
 	}
 	
 
