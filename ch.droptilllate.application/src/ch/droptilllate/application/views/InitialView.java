@@ -9,7 +9,9 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledToolItem;
 import org.eclipse.e4.ui.workbench.UIEvents.Part;
@@ -26,6 +28,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
@@ -399,15 +402,19 @@ public class InitialView implements SelectionListener, ModifyListener
 		logviewhandler.setVisible(true);
 		MPart part = partService.findPart("ch.droptilllate.application.part.decryptedview");
 		part.setVisible(true);
-		ViewController.getInstance().initController();
-		MPart ownpart = partService.findPart("ch.droptilllate.application.part.InitialView");
-		ownpart.setVisible(false);
 		
-		if(!cloudAccountAccepted){	
+		MPart ownpart = partService.findPart("ch.droptilllate.application.part.InitialView");
+		ownpart.setVisible(false);		
+		
+		ViewController.getInstance().initController();
+		
+//		MUIElement share = null;
+//		if(!cloudAccountAccepted){				
 //			MHandledMenuItem shareHandler = (MHandledMenuItem) modelService.find("ch.droptilllate.application.handledmenuitem.ShareFiles",
 //					application);
 //			shareHandler.setVisible(false);	
-		}
+//		}
+//		System.out.println();
 	}
 
 	@Override

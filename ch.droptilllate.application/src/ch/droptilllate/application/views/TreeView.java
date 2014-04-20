@@ -26,6 +26,7 @@ import java.io.IOException;
 
 
 
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
@@ -52,6 +53,7 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
 import ch.droptilllate.application.controller.ViewController;
@@ -76,7 +78,7 @@ public class TreeView{
 		// Treeviewer
 		this.viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		menuService.registerContextMenu(this.viewer.getControl(),
-				"ch.droptilllate.application.popupmenu.table");
+				"ch.droptilllate.application.popupmenu.table");		
 		
 		
 		this.shell = shell;

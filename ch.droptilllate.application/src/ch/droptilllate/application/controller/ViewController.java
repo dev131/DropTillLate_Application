@@ -31,10 +31,12 @@ import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.swt.widgets.Widget;
 
 import ch.droptilllate.application.com.CloudDropboxCom;
 import ch.droptilllate.application.com.FileSystemCom;
@@ -132,7 +134,12 @@ public class ViewController {
 		// Register Drag&Drop Listener
 		registerDragDrop();
 		
-		
+		MenuItem[] menuItems = viewer.getControl().getMenu().getItems();
+		for (MenuItem item : menuItems) {
+			if (item.getText().contains("share")) {
+				item.setText("quark");
+			}
+		}
 	}
 
 	/**
