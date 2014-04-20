@@ -211,7 +211,8 @@ public class FileSystemCom implements IFileSystemCom {
 	
 	@Override
 	public HashMap<Integer, List<EncryptedFileDob>>  fileIntegryCheck(){
-		return new FileIntegryConverter().convert(ifile.getFilesPerRelation(KeyManager.getInstance().getKeyrelationWithHash()));
+		KeyRelation keyRelation = KeyManager.getInstance().getKeyrelationWithHash();
+		return new FileIntegryConverter().convert(ifile.getFilesPerRelation(keyRelation));
 	}
 	
 }

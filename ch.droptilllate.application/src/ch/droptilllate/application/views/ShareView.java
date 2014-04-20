@@ -35,6 +35,7 @@ import org.eclipse.jface.viewers.ListViewer;
 import ch.droptilllate.application.controller.ViewController;
 import ch.droptilllate.application.dao.ShareMembersDao;
 import ch.droptilllate.application.dnb.ShareMember;
+import ch.droptilllate.application.dnb.ShareRelation;
 import ch.droptilllate.application.handlers.FileHandler;
 import ch.droptilllate.application.info.ErrorMessage;
 import ch.droptilllate.application.model.EncryptedFileDob;
@@ -56,7 +57,7 @@ import org.eclipse.swt.layout.GridData;
 public class ShareView implements SelectionListener {
 	@Inject EPartService partService;
 	private Shell shell;
-	private Boolean success = false;
+	private Boolean success = true;
 	private static ShareView instance = null;
 	private Text text_password;
 	private ComboViewer comboViewer;
@@ -256,6 +257,7 @@ public class ShareView implements SelectionListener {
 		System.out.println("Delete unsuccess sharefolder");
 		ViewController.getInstance().getLastShareRelation();
 		FileHandler filehandler = new FileHandler();
+		ShareRelation shareRleation = ViewController.getInstance().getLastShareRelation();
 		File file = new File(Configuration.getPropertieDropBoxPath(true) + ViewController.getInstance().getLastShareRelation().getID());
 		try {
 			filehandler.delete(file);

@@ -43,7 +43,6 @@ public class TreeDragSourceListener implements DragSourceListener {
 			TreeDragSourceListener.draggedDroppedElements
 					.add((DroppedElement) currentDragSourceItem.getData());
 		}
-
 	}
 
 	@Override
@@ -54,6 +53,10 @@ public class TreeDragSourceListener implements DragSourceListener {
 			}
 		}
 		this.dragSourceItems.clear();
+	}
+	
+	public void dragExit(DragSourceEvent event) {
+		System.out.println("Exiting drop target #1");
 	}
 
 }
