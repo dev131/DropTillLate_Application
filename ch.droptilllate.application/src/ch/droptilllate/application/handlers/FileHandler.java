@@ -45,6 +45,39 @@ public class FileHandler {
         
 	}
 	
+	public void moveFile(File source, File dest){
+			 
+    	InputStream inStream = null;
+	OutputStream outStream = null;
+ 
+    	try{
+ 
+  
+    	    inStream = new FileInputStream(source);
+    	    outStream = new FileOutputStream(dest);
+ 
+    	    byte[] buffer = new byte[1024];
+ 
+    	    int length;
+    	    //copy the file content in bytes 
+    	    while ((length = inStream.read(buffer)) > 0){
+ 
+    	    	outStream.write(buffer, 0, length); 
+    	    }
+ 
+    	    inStream.close();
+    	    outStream.close();
+ 
+    	    //delete the original file
+    	//    afile.delete();
+ 
+    	    System.out.println("File is copied successful!");
+ 
+    	}catch(IOException e){
+    	    e.printStackTrace();
+    	}
+	}
+	
 	public void copyDirectory(File sourceDir, File destDir) throws IOException {
 		
 		if(!destDir.exists()) {

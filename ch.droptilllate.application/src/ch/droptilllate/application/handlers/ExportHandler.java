@@ -28,16 +28,12 @@ public class ExportHandler {
 	@Execute
 	public void execute(Shell shell) {
 		chooseDestionation(shell);
-		if(!path.isEmpty()){
+		if(path != null){
 			FileHandler fileHandler = new FileHandler();
 			File srcFile = new File(Messages.getApplicationpath() + OSValidator.getSlash()	+ Messages.KeyFile);
-			File destFile = new File(path + OSValidator.getSlash()	+ Messages.KeyFile);
-			try {
-				fileHandler.copyDirectory(srcFile, destFile);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			File destFile = new File(path + OSValidator.getSlash()+ Messages.KeyFile);
+			fileHandler.moveFile(srcFile, destFile);
+	
 		}
 	}
 	

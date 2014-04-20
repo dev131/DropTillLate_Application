@@ -66,7 +66,7 @@ public class TreeDropTargetAdapter extends DropTargetAdapter {
 		}
 
 	}
-
+	
 	@Override
 	public void drop(DropTargetEvent event) {
 		EncryptedFileDao encryptedFileDao = new EncryptedFileDao();
@@ -158,4 +158,6 @@ public class TreeDropTargetAdapter extends DropTargetAdapter {
 		TreeDragSourceListener.draggedDroppedElements.clear();
 		this.treeViewer.refresh();
 	}
+	
+
 }
