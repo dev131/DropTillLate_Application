@@ -82,9 +82,8 @@ public class InitController {
 			
 			return CANCEL;
 		}
-		// TODO is this neccessary?
 		//WIthout CloudAccount
-		if(!withSharing)return CANCEL;
+		if(!withSharing) return SUCCESS;
 		//init cloudaccount
 		CloudAccountDao dao = new CloudAccountDao();
 		if(dao.newElement(cloudaccount, keyManager.getShareRelation(Messages.getIdSize()).getKey())== null){

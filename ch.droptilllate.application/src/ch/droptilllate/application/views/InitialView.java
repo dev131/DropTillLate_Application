@@ -10,6 +10,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledToolItem;
 import org.eclipse.e4.ui.workbench.UIEvents.Part;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
@@ -328,7 +329,7 @@ public class InitialView implements SelectionListener, ModifyListener
 				// Check if all parameters are valid
 				if (checkAllFields(cbCloudProvider.getSelection()))
 				{
-					if (controller.newUser(dropboxfoldername, password, dropboxPath, tempPath, dropboxLogin, dropboxPassword,checkAllFields(cbCloudProvider.getSelection())))
+					if (controller.newUser(dropboxfoldername, password, dropboxPath, tempPath, dropboxLogin, dropboxPassword,cloudAccountAccepted))
 					{
 						startApplication();
 					}
@@ -371,11 +372,7 @@ public class InitialView implements SelectionListener, ModifyListener
 
 	private void startApplication()
 	{
-		if(!cbCloudProvider.getSelection()){			
-			MHandledToolItem shareHandler = (MHandledToolItem) modelService.find("ch.droptilllate.application.handledmenuitem.ShareFiles",
-					application);
-			shareHandler.setVisible(false);	
-		}
+		
 		
 		MHandledToolItem aboutHandler = (MHandledToolItem) modelService.find("ch.droptilllate.application.handledtoolitem.about",
 				application);
@@ -401,6 +398,12 @@ public class InitialView implements SelectionListener, ModifyListener
 		ViewController.getInstance().initController();
 		MPart ownpart = partService.findPart("ch.droptilllate.application.part.InitialView");
 		ownpart.setVisible(false);
+		
+//		if(!cloudAccountAccepted){	
+//			MHandledMenuItem shareHandler = (MHandledMenuItem) modelService.find("ch.droptilllate.application.handledmenuitem.ShareFiles",
+//					application);
+//			shareHandler.setVisible(false);	
+//		}
 	}
 
 	@Override
