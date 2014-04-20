@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Shell;
 import ch.droptilllate.application.lifecycle.OSValidator;
 import ch.droptilllate.application.properties.Messages;
 
-public class ExportHandler {
+public class KeyFileExportHandler {
 	private String path;
 	
 	@Execute

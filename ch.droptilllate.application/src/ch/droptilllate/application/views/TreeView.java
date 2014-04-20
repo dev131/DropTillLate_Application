@@ -25,6 +25,7 @@ import java.io.IOException;
 
 
 
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
@@ -33,6 +34,7 @@ import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.advanced.MPerspective;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
@@ -75,6 +77,7 @@ public class TreeView{
 		this.viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		menuService.registerContextMenu(this.viewer.getControl(),
 				"ch.droptilllate.application.popupmenu.table");
+		
 		
 		this.shell = shell;
 		this.parent = parent;

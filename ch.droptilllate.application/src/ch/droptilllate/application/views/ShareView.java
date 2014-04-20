@@ -304,23 +304,21 @@ public class ShareView implements SelectionListener
 
 	}
 
-	public void deleteUnSuccessShareFolder()
-	{
-		// DELETE FOLDER
-		if (!success)
-		{
-			System.out.println("Delete unsuccess sharefolder");
-			ViewController.getInstance().getLastShareRelation();
-			FileHandler filehandler = new FileHandler();
-			ShareRelation shareRleation = ViewController.getInstance().getLastShareRelation();
+	public void deleteUnSuccessShareFolder(){
+		//DELETE FOLDER
+		if(!success){
+		System.out.println("Delete unsuccess sharefolder");
+		ViewController.getInstance().getLastShareRelation();
+		FileHandler filehandler = new FileHandler();
+		ShareRelation shareRleation = ViewController.getInstance().getLastShareRelation();
+		if(shareRleation !=null){
 			File file = new File(Configuration.getPropertieDropBoxPath(true) + ViewController.getInstance().getLastShareRelation().getID());
-			try
-			{
+			try {
 				filehandler.delete(file);
-			} catch (IOException e)
-			{
+			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}
 			}
 		}
 	}

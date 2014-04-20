@@ -377,9 +377,13 @@ public class InitialView implements SelectionListener, ModifyListener
 		MHandledToolItem aboutHandler = (MHandledToolItem) modelService.find("ch.droptilllate.application.handledtoolitem.about",
 				application);
 		aboutHandler.setVisible(true);	
-		MHandledToolItem exportHandler = (MHandledToolItem) modelService.find("ch.droptilllate.application.handledtoolitem.export",
+		MHandledToolItem exportHandler = (MHandledToolItem) modelService.find("ch.droptilllate.application.handledtoolitem.exportkeyfile",
 				application);
 		exportHandler.setVisible(true);
+		
+		MHandledToolItem openkeyfileHanlder = (MHandledToolItem) modelService.find("ch.droptilllate.application.handledtoolitem.openkey",
+				application);
+		openkeyfileHanlder.setVisible(true);
 		MHandledToolItem integryHandler = (MHandledToolItem) modelService.find("ch.droptilllate.application.handledtoolitem.integrycheck",
 				application);
 		integryHandler.setVisible(true);
