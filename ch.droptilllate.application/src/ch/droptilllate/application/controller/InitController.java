@@ -82,12 +82,9 @@ public class InitController {
 			
 			return CANCEL;
 		}
+		// TODO is this neccessary?
 		//WIthout CloudAccount
 		if(!withSharing)return CANCEL;
-		//Check Dropboxaccount
-		if(!checkDropboxAccount( dropboxLogin, dropboxpassword)){
-			return CANCEL;
-		}
 		//init cloudaccount
 		CloudAccountDao dao = new CloudAccountDao();
 		if(dao.newElement(cloudaccount, keyManager.getShareRelation(Messages.getIdSize()).getKey())== null){
@@ -137,10 +134,10 @@ public class InitController {
 			CloudError status = com.testCloudAccount(username, password);
 			cloudaccount = new CloudAccount(username, password);			
 			if(status != CloudError.NONE){
-				new ErrorMessage(shell, "Error", status.getMessage());
+				new ErrorMessage(shell, "Error", "Could not verifiy your Dropbox account\nError message: " + status.getMessage());
 				return false;
 			}
-				new SuccessMessage(shell, "Success", "Test Successfull");
+				new SuccessMessage(shell, "Success", "Your Dropbox Account is valid, please proceed!");
 			
 			return true; 
 		}
