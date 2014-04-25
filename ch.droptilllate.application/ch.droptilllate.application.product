@@ -20,11 +20,12 @@
 
    <windowImages i16="/icons/icon_16x16.png" i32="/icons/icon_32x32.png" i48="/icons/icon_32x32.png" i64="/icons/icon_32x32.png" i128="/icons/icon_128x128.png"/>
 
+
    <launcher name="DropTillLate">
-      <macosx icon="/icons/icon_osx.icns"/>
+      <macosx icon="/icons/Logo.icns"/>
       <solaris/>
       <win useIco="true">
-         <ico path="/icons/icon_windows.ico"/>
+         <ico path="/icons/Logo.ico"/>
          <bmp/>
       </win>
    </launcher>
