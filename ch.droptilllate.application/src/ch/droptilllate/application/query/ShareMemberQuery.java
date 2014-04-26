@@ -145,4 +145,22 @@ public class ShareMemberQuery {
 		return shareList;
 	}
 
+	public Object getElementByName(String email) {
+		List<ShareMember> shareRelations = new ArrayList<ShareMember>();
+		this.document = this.conn.getXML();
+		// cast the result to a DOM NodeList
+		NodeList nodes = this.conn.executeQuery(XMLConstruct.getShareRelationExpression()+"[@"
+				+ XMLConstruct.AttMail + "='" + email + "']");
+		for (int i = 0; i < nodes.getLength(); i++) {
+			//Integer sharefolderId, String mail
+			ShareMember tmp = new ShareMember(Integer.parseInt(nodes.item(i).getAttributes()
+					.getNamedItem(XMLConstruct.AttShareRelationID).getNodeValue()),
+					nodes.item(i).getAttributes()
+					.getNamedItem(XMLConstruct.AttMail).getNodeValue()
+					);
+			shareRelations.add(tmp);
+		}
+		return shareRelations;
+	}
+
 }

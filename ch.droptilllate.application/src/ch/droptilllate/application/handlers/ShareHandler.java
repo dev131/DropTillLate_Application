@@ -2,6 +2,7 @@ package ch.droptilllate.application.handlers;
 
 import javax.inject.Inject;
 
+import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -25,6 +26,11 @@ public class ShareHandler {
 		 viewcontroller.openShareContext();
 			MPart importpart = partService.findPart("ch.droptilllate.application.part.Import");
 			importpart.setVisible(false);
+	}
+	@CanExecute
+	public boolean canExecute() {
+		boolean status = ViewController.getInstance().isSharefunction();
+	 return  status;
 	}
 	
 	

@@ -29,7 +29,7 @@
          </property>
          <property
                name="windowImages"
-               value="/icons/icon_16x16.png,/icons/icon_32x32.png,/icons/icon_32x32.png,/icons/icon_32x32.png,/icons/icon_128x128.png">
+               value="/icons/icon_16x16.png,/icons/icon_32x32.png,/icons/icon_48x48.png,/icons/icon_64x64.png,/icons/icon_128x128.png">
          </property>
       </product>
    </extension>

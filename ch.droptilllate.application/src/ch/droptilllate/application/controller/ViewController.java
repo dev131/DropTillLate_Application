@@ -88,6 +88,7 @@ public class ViewController {
 	private Shell shell;
 	private ShareManager shareManager;
 	public ShareRelation shareRelation = null;
+	public boolean sharefunction = false;
 
 	public ViewController() {
 		// Exists only to defeat instantiation.
@@ -489,21 +490,26 @@ public class ViewController {
 					+ shareRelation.getKey());
 			status = shareFileToCloudManually(shareRelation, mailList, false);
 		}
+		if(shareManager.getSTATUS()==3){
+			//ALL MEMBERS ARE IN THE SAME SHARERELATION
+			status = CloudError.FOLDER_ALREADY_SHARED;
+			
+		}
 			// TODO ERROR sharing
 		if (status == CloudError.NONE) {
 				// NO ERROR OCCURED
 				// TODO JUST FOR TESTS
-				FileHandler fileHandler = new FileHandler();
-				File source = new File(Configuration.getPropertieTempPath(true)
-						+ XMLConstruct.NameShareXML);
-				File dest = new File(Messages.getApplicationpath()+ OSValidator.getSlash());
-				try {
-					fileHandler.copyFile(source, dest);
-					fileHandler.delete(source);
-					// fileHandler.delete(file);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+//				FileHandler fileHandler = new FileHandler();
+//				File source = new File(Configuration.getPropertieTempPath(true)
+//						+ XMLConstruct.NameShareXML);
+//				File dest = new File(Messages.getApplicationpath()+ OSValidator.getSlash());
+//				try {
+//					fileHandler.copyFile(source, dest);
+//					fileHandler.delete(source);
+//					// fileHandler.delete(file);
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
 				new SuccessMessage(shell, "Success", "shared");
 				return true;
 			} else {
@@ -688,5 +694,15 @@ public class ViewController {
 			}
 		}
 	}
+
+	public boolean isSharefunction() {
+		return sharefunction;
+	}
+
+	public void setSharefunction(boolean sharefunction) {
+		this.sharefunction = sharefunction;
+	}
+	
+	
 	
 }

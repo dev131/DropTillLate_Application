@@ -59,4 +59,10 @@ public class ShareMembersDao extends AbstractXmlDatabase {
 		
 	}
 
+	@Override
+	public Object getElementbyName(String name, String key) {
+		if (this.shareMemberQuery == null)
+			this.shareMemberQuery = new ShareMemberQuery(key);		
+		return this.shareMemberQuery.getElementByName(name);	}
+
 }

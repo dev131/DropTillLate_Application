@@ -2,6 +2,7 @@ package ch.droptilllate.application.share;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -29,6 +30,7 @@ public class ShareManager {
 	private int CREATE = 1;
 	private int USEEXIST = 2;
 	private int STATUS = 0;
+	private int ShareExist = 3;
 	
 	private List<String> emailList;
 	/**
@@ -46,7 +48,9 @@ public class ShareManager {
 	public ShareManager(List<EncryptedFileDob> fileList,
 			String password, List<String> emailList) {
 		this.emailList = emailList;
-	
+		checkShareMembers(emailList);
+		STATUS = 0;
+		if(STATUS != ShareExist){
 		// create HashSet with all shareRelationID
 		HashSet<Integer> hashSet_shareRelationList = getShareRelationList(fileList);
 		// FILL Hashmap with key = sharedfolderID and filelist as value
@@ -56,7 +60,6 @@ public class ShareManager {
 		// TODO cancel sharing
 		if (hashmap.isEmpty())
 			STATUS = ERROR;
-
 		// Check if All Files from one ShareRelation
 		if (hashmap.size() == 1) {
 			// Check if Files from same ShareRelation but not all
@@ -76,8 +79,31 @@ public class ShareManager {
 			// From more then one ShareRelation
 			STATUS = CREATE;
 		}
+		}
 	}
 
+	/**
+	 * Check if All ShareMember share already a sharefolder
+	 * @param emailList2
+	 */
+	private void checkShareMembers(List<String> emailList2) {
+		ShareMembersDao dao = new ShareMembersDao();
+		List<ShareMember> list = new ArrayList<ShareMember>();
+		for(String mail : emailList2){
+			list.addAll((List<ShareMember>) dao.getElementbyName(mail, null));
+		}
+		if(!list.isEmpty()){
+			for(ShareMember sharemember: list){
+				List<ShareMember> tmp = (List<ShareMember>) dao.getElementByID(sharemember.getShareRelationId(), null);
+				if(tmp.size() == list.size()){
+					//Sharefolder contains just the sharemembers, share file into existing sharefolder
+					STATUS = ShareExist;
+				}
+			}
+		}
+	
+		
+	}
 	public  List<EncryptedFileDob> getUpdateFiles(String key){
 		UpdateXMLImporter importer = new UpdateXMLImporter(key);
 		return importer.getFileUpdateXML();	

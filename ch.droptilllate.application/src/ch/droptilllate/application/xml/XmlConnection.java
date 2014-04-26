@@ -1,5 +1,6 @@
 package ch.droptilllate.application.xml;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
@@ -28,6 +29,7 @@ import org.apache.commons.vfs2.impl.DefaultFileMonitor;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import ch.droptilllate.application.com.FileSystemCom;
@@ -207,9 +209,12 @@ public class XmlConnection {
 		factory.setNamespaceAware(true);
 		builder = null;
 		document = null;
+		
 		try {
 			builder = factory.newDocumentBuilder();
-			document = builder.parse(path);
+			String source = path;
+			System.out.println(source);
+			document = builder.parse(source);
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
 		} catch (SAXException e) {

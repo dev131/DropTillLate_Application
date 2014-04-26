@@ -55,4 +55,12 @@ public abstract class AbstractXmlDatabase {
 	 */
 	public abstract Object checkDatabase(Object obj, String key);
 	
+	/**
+	 * Get Element by Name
+	 * @param name
+	 * @param key
+	 * @return ShareMember List
+	 */
+	public abstract Object getElementbyName(String name, String key);
+	
 }

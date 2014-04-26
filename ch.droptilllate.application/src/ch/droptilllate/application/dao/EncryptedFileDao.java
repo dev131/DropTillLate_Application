@@ -91,4 +91,10 @@ public class EncryptedFileDao extends AbstractXmlDatabase {
 		
 	}
 
+	@Override
+	public Object getElementbyName(String name, String key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

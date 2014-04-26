@@ -35,6 +35,8 @@ import org.osgi.framework.FrameworkUtil;
 
 import ch.droptilllate.application.controller.InitController;
 import ch.droptilllate.application.controller.ViewController;
+import ch.droptilllate.application.dao.CloudAccountDao;
+import ch.droptilllate.application.dnb.CloudAccount;
 import ch.droptilllate.application.error.ParamInitException;
 import ch.droptilllate.application.info.ErrorMessage;
 
@@ -162,14 +164,14 @@ public class InitialView implements SelectionListener, ModifyListener
 		// ------------- Row 1 ---------------
 		lblDroptilllateFoldername = initLabel(grpDroptilllateSettings, "Arial", 14, "Foldername", false);
 
-		txtDroptilllate = initTextField(grpDroptilllateSettings, "Arial", 14, "DropTillLate", true);
+		txtDroptilllate = initTextField(grpDroptilllateSettings, "Arial", 14, "DropTillLate", true, false);
 
 		new Label(grpDroptilllateSettings, SWT.NONE); // 3. slot
 
 		// ------------- Row 2 ---------------
 		lblPassword = initLabel(grpDroptilllateSettings, "Arial", 14, "Login Password", false);
 
-		text_password = initTextField(grpDroptilllateSettings, "Arial", 14, "", true);
+		text_password = initTextField(grpDroptilllateSettings, "Arial", 14, "", true, true);
 
 		btnLogin_1 = initButton(grpDroptilllateSettings, "Arial", 12, "login", false);
 		btnLogin_1.addSelectionListener(this);
@@ -177,7 +179,7 @@ public class InitialView implements SelectionListener, ModifyListener
 		// ------------- Row 3 ---------------
 		lblDropboxFolder = initLabel(grpDroptilllateSettings, "Arial", 14, "Dropbox path ", false);
 
-		text_dropboxPath = initTextField(grpDroptilllateSettings, "Arial", 14, "", true);
+		text_dropboxPath = initTextField(grpDroptilllateSettings, "Arial", 14, "", true, false);
 
 		btnSearchDropFolder = initButton(grpDroptilllateSettings, "Arial", 12, "search ...", false);
 		btnSearchDropFolder.addSelectionListener(this);
@@ -185,7 +187,7 @@ public class InitialView implements SelectionListener, ModifyListener
 		// ------------- Row 4 ---------------
 		lblTempFolder = initLabel(grpDroptilllateSettings, "Arial", 14, "Temporary file path ", false);
 
-		text_tempPath = initTextField(grpDroptilllateSettings, "Arial", 14, "", true);
+		text_tempPath = initTextField(grpDroptilllateSettings, "Arial", 14, "", true, false);
 
 		btnSearchTmpFolder = initButton(grpDroptilllateSettings, "Arial", 12, "search ...", false);
 		btnSearchTmpFolder.addSelectionListener(this);
@@ -219,12 +221,12 @@ public class InitialView implements SelectionListener, ModifyListener
 		// ------------- Row 1 ---------------
 		lblDropboxLoginname = initLabel(grpDropboxSettings, "Arial", 14, "Dropbox Login ", false);
 
-		text_DropboxLoginName = initTextField(grpDropboxSettings, "Arial", 14, "", 300);
+		text_DropboxLoginName = initTextField(grpDropboxSettings, "Arial", 14, "", 300, false);
 
 		// ------------- Row 2 ---------------
 		lblPassword_1 = initLabel(grpDropboxSettings, "Arial", 14, "Password ", false);
 
-		text_DropboxPassword = initTextField(grpDropboxSettings, "Arial", 14, "", 300);
+		text_DropboxPassword = initTextField(grpDropboxSettings, "Arial", 14, "", 300, true);
 
 		// ------------- Row 3 ---------------
 		btnTestDropbox = new Button(grpDropboxSettings, SWT.PUSH);
@@ -399,7 +401,7 @@ public class InitialView implements SelectionListener, ModifyListener
 		importhandler.setVisible(true);
 		MHandledToolItem logviewhandler = (MHandledToolItem) modelService.find("ch.droptilllate.application.handledtoolitem.logview",
 				application);
-		logviewhandler.setVisible(true);
+	//	logviewhandler.setVisible(true);
 		MPart part = partService.findPart("ch.droptilllate.application.part.decryptedview");
 		part.setVisible(true);
 		
@@ -407,7 +409,13 @@ public class InitialView implements SelectionListener, ModifyListener
 		ownpart.setVisible(false);		
 		
 		ViewController.getInstance().initController();
-		
+		ViewController.getInstance().setSharefunction(cbCloudProvider.getSelection());
+		CloudAccountDao dao = new CloudAccountDao();
+		CloudAccount account = (CloudAccount) dao.getElementAll(null);
+		if(account != null){
+			ViewController.getInstance().setSharefunction(true);
+		}
+	
 //		MUIElement share = null;
 //		if(!cloudAccountAccepted){				
 //			MHandledMenuItem shareHandler = (MHandledMenuItem) modelService.find("ch.droptilllate.application.handledmenuitem.ShareFiles",
@@ -552,9 +560,14 @@ public class InitialView implements SelectionListener, ModifyListener
 		return Label;
 	}
 
-	private Text initTextField(Composite parent, String font, int fontSize, String text, boolean fillAvailableSpace)
-	{
-		Text textBox = new Text(parent, SWT.BORDER);
+	private Text initTextField(Composite parent, String font, int fontSize, String text, boolean fillAvailableSpace, boolean password)
+	{	Text textBox ;
+		if(password){
+			 textBox = new Text(parent,SWT.PASSWORD | SWT.BORDER);
+		}
+		else{
+			 textBox = new Text(parent, SWT.BORDER);
+		}		
 		textBox.setFont(SWTResourceManager.getFont(font, fontSize, SWT.NORMAL));
 		textBox.setText(text);
 		if (fillAvailableSpace)
@@ -564,9 +577,9 @@ public class InitialView implements SelectionListener, ModifyListener
 		return textBox;
 	}
 
-	private Text initTextField(Composite parent, String font, int fontSize, String text, int width)
+	private Text initTextField(Composite parent, String font, int fontSize, String text, int width, boolean password)
 	{
-		Text textBox = initTextField(parent, font, fontSize, text, false);
+		Text textBox = initTextField(parent, font, fontSize, text, false, password);
 		GridData gd = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
 		gd.widthHint = width;
 		textBox.setLayoutData(gd);

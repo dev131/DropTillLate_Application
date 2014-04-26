@@ -142,7 +142,8 @@ public class FileSystemCom implements IFileSystemCom {
 		FileHandlingSummary filehandling_result = null;
 		KeyManager km = KeyManager.getInstance();
 		ShareRelation oldShareRelation;
-		KeyRelation relation = new KeyRelation();		
+		KeyRelation relation = new KeyRelation();	
+		relation.addKeyOfShareRelation(destShareRelation.getID(), km.getShareRelation(destShareRelation.getID()).getKey());
 		for (EncryptedFileDob fileDob : fileList) {
 			ContainerDao cDao= new ContainerDao();
 			EncryptedContainer container = (EncryptedContainer) cDao.getElementByID(fileDob.getContainerId(), null);
