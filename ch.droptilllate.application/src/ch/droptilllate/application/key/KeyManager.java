@@ -65,13 +65,19 @@ public class KeyManager {
 	}
 	
 	/**
-	 * Return ShareRelation with key as a hash
+	 * Return ShareRelation with key as a hash if true/ without if false
 	 * @param shareRelationID
 	 * @return ShareRelation
 	 */
-	public ShareRelation getShareRelation(Integer ShareRelationID){
+	public ShareRelation getShareRelation(Integer ShareRelationID, boolean withhash){
+		ShareRelation shareRelation;
+		if(withhash){
 		KeysGenerator gen = new KeysGenerator();
-		ShareRelation shareRelation = new ShareRelation(ShareRelationID, gen.getKey(keyrelation.getKeyOfShareRelation(ShareRelationID), ShareRelationID.toString()));
+		 shareRelation = new ShareRelation(ShareRelationID, gen.getKey(keyrelation.getKeyOfShareRelation(ShareRelationID), ShareRelationID.toString()));
+		}
+		else{
+		shareRelation = new ShareRelation(ShareRelationID, keyrelation.getKeyOfShareRelation(ShareRelationID));
+		}
 		return shareRelation;
 	}
 	
@@ -121,7 +127,7 @@ public class KeyManager {
 	public KeyRelation getKeyrelationWithHash(){
 		KeyRelation hashKeyrelation = new KeyRelation();
 		for(Integer i : keyrelation.getKeyShareMap().keySet()){
-			ShareRelation shareRelation = getShareRelation(i);
+			ShareRelation shareRelation = getShareRelation(i, true);
 			hashKeyrelation.addKeyOfShareRelation(shareRelation.getID(), shareRelation.getKey());
 		}
 		return hashKeyrelation;	

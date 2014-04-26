@@ -61,13 +61,13 @@ public class FileSystemCom implements IFileSystemCom {
 			if (exist){
 				ContainerDao dao = new ContainerDao();
 				EncryptedContainer container = (EncryptedContainer) dao.getElementByID(fileDob.getContainerId(), null);
-				shareRelation = km.getShareRelation(container.getShareRelationId());
+				shareRelation = km.getShareRelation(container.getShareRelationId(),true);
 				fileInfo = new FileInfoEncrypt(fileDob.getId(), shareRelation.getID(), fileDob.getContainerId(), fileDob.getType());
 				relation.addKeyOfShareRelation(shareRelation.getID(), shareRelation.getKey());
 			}
 			else{
 				//file dropped in for the first time
-				shareRelation = km.getShareRelation(Messages.getIdSize());
+				shareRelation = km.getShareRelation(Messages.getIdSize(),true);
 				fileInfo= new FileInfoEncrypt(fileDob.getId(), fileDob.getPath(), shareRelation.getID());
 				relation.addKeyOfShareRelation(shareRelation.getID(), shareRelation.getKey());
 			}
@@ -94,7 +94,7 @@ public class FileSystemCom implements IFileSystemCom {
 			//Check If File Exist
 			ContainerDao cDao= new ContainerDao();
 			EncryptedContainer container =(EncryptedContainer) cDao.getElementByID(fileDob.getContainerId(), null);
-			shareRelation = km.getShareRelation(container.getShareRelationId());
+			shareRelation = km.getShareRelation(container.getShareRelationId(),true);
 			fileInfoList.add(new FileInfoDecrypt(fileDob.getId(), fileDob
 					.getType(), container.getShareRelationId(), fileDob
 					.getContainerId()));
@@ -121,7 +121,7 @@ public class FileSystemCom implements IFileSystemCom {
 			//Check If File Exist
 			ContainerDao cDao= new ContainerDao();
 			EncryptedContainer container = (EncryptedContainer) cDao.getElementByID(fileDob.getContainerId(), null);
-			shareRelation = km.getShareRelation(container.getShareRelationId());
+			shareRelation = km.getShareRelation(container.getShareRelationId(),true);
 			fileInfoList.add(new FileInfo(fileDob.getId(), new ContainerInfo(
 					fileDob.getContainerId(), container.getShareRelationId())));
 			relation.addKeyOfShareRelation(shareRelation.getID(), shareRelation.getKey());
@@ -143,11 +143,11 @@ public class FileSystemCom implements IFileSystemCom {
 		KeyManager km = KeyManager.getInstance();
 		ShareRelation oldShareRelation;
 		KeyRelation relation = new KeyRelation();	
-		relation.addKeyOfShareRelation(destShareRelation.getID(), km.getShareRelation(destShareRelation.getID()).getKey());
+		relation.addKeyOfShareRelation(destShareRelation.getID(), km.getShareRelation(destShareRelation.getID(),true).getKey());
 		for (EncryptedFileDob fileDob : fileList) {
 			ContainerDao cDao= new ContainerDao();
 			EncryptedContainer container = (EncryptedContainer) cDao.getElementByID(fileDob.getContainerId(), null);
-			oldShareRelation = km.getShareRelation(container.getShareRelationId());
+			oldShareRelation = km.getShareRelation(container.getShareRelationId(),true);
 			fileInfoList.add(new FileInfoMove(fileDob.getId(), fileDob
 					.getSize(), container.getShareRelationId(), fileDob.getContainerId(),
 					destShareRelation.getID()));
@@ -178,7 +178,7 @@ public class FileSystemCom implements IFileSystemCom {
 			sxml = new StructureXmlDob(true);		
 			
 		}
-		ShareRelation shareRelation = keyManager.getShareRelation(destShareRelation.getID());
+		ShareRelation shareRelation = keyManager.getShareRelation(destShareRelation.getID(),true);
 		fileDob = sxml.getEncryptedFileDob();
 		// encrypt file !!!!!
 		fileInfo = new FileInfoEncrypt(fileDob.getId(), destShareRelation.getID(), fileDob.getContainerId(), fileDob.getType());
@@ -199,7 +199,7 @@ public class FileSystemCom implements IFileSystemCom {
 		else{
 			sxml = new StructureXmlDob(true);
 		}		
-		srcShareRelation = keyManager.getShareRelation(srcShareRelation.getID());
+		srcShareRelation = keyManager.getShareRelation(srcShareRelation.getID(),true);
 		fileDob = sxml.getEncryptedFileDob();
 			fileInfo = new FileInfoDecrypt(fileDob.getId(), fileDob
 					.getType(), srcShareRelation.getID(), fileDob
@@ -227,7 +227,7 @@ public class FileSystemCom implements IFileSystemCom {
 			//Check If File Exist
 			ContainerDao cDao= new ContainerDao();
 			EncryptedContainer container =(EncryptedContainer) cDao.getElementByID(fileDob.getContainerId(), null);
-			shareRelation = km.getShareRelation(container.getShareRelationId());
+			shareRelation = km.getShareRelation(container.getShareRelationId(),true);
 			fileInfoList.add(new FileInfoDecrypt(
 					fileDob.getId(), 
 					container.getShareRelationId(), 

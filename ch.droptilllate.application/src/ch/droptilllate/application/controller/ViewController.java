@@ -498,18 +498,8 @@ public class ViewController {
 			// TODO ERROR sharing
 		if (status == CloudError.NONE) {
 				// NO ERROR OCCURED
-				// TODO JUST FOR TESTS
-//				FileHandler fileHandler = new FileHandler();
-//				File source = new File(Configuration.getPropertieTempPath(true)
-//						+ XMLConstruct.NameShareXML);
-//				File dest = new File(Messages.getApplicationpath()+ OSValidator.getSlash());
-//				try {
-//					fileHandler.copyFile(source, dest);
-//					fileHandler.delete(source);
-//					// fileHandler.delete(file);
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				}
+				KeyManager keyManager = KeyManager.getInstance();
+				keyManager.addKeyRelation(shareRelation.getID(), shareRelation.getKey());
 				new SuccessMessage(shell, "Success", "shared");
 				return true;
 			} else {

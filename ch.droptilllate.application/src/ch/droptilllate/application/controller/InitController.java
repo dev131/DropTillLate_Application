@@ -86,7 +86,7 @@ public class InitController {
 		if(!withSharing) return SUCCESS;
 		//init cloudaccount
 		CloudAccountDao dao = new CloudAccountDao();
-		if(dao.newElement(cloudaccount, keyManager.getShareRelation(Messages.getIdSize()).getKey())== null){
+		if(dao.newElement(cloudaccount, keyManager.getShareRelation(Messages.getIdSize(),true).getKey()) == null){
 			return CANCEL;
 		}
 		//Everything OK

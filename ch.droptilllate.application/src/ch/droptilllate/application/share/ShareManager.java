@@ -142,7 +142,7 @@ public class ShareManager {
 		}		
 		// Get existing ShareRelation
 		KeyManager km = KeyManager.getInstance();
-		return km.getShareRelation(container.getShareRelationId());
+		return km.getShareRelation(container.getShareRelationId(), false);
 	}
 
 	public ShareRelation createNewSharedRelation(
