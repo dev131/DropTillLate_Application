@@ -12,7 +12,7 @@ import ch.droptilllate.application.properties.XMLConstruct;
 public class StructureXmlDob {
 	
 	private EncryptedFileDob encryptedFileDob;
-	private ShareMember shareRelation;
+	private ShareMember shareMember;
 	private EncryptedContainer encryptedContainer;
 	private String fileName;
 	private Integer fileId;
@@ -39,7 +39,7 @@ public class StructureXmlDob {
 				null,  
 				0L, 
 				Integer.parseInt(XMLConstruct.IdXMLContainer));
-		this.shareRelation = new ShareMember(Messages.getIdSize(), Messages.OwnerMail);
+		this.shareMember = new ShareMember(Messages.getIdSize(), Messages.OwnerMail);
 		this.encryptedContainer = new EncryptedContainer(Integer.parseInt(XMLConstruct.IdXMLContainer), Messages.getIdSize());
 		
 	}
@@ -48,8 +48,8 @@ public class StructureXmlDob {
 		return this.encryptedFileDob;
 	}
 
-	public ShareMember getShareRelation() {
-		return this.shareRelation;
+	public ShareMember getShareMember() {
+		return this.shareMember;
 	}
 
 	public EncryptedContainer getEncryptedContainer() {

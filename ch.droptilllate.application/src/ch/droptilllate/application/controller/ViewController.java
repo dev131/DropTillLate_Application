@@ -273,7 +273,7 @@ public class ViewController {
 		for (EncryptedFileDob fileDob : result.getEncryptedFileListSuccess()) {
 			Status status = Status.getInstance();
 			status.setMessage(fileDob.getName() + " -> decryption worked");
-			File file = new File(Configuration.getPropertieTempPath(true)
+			File file = new File(Configuration.getPropertieTempPath("",true)
 					+ fileDob.getId() + "." + fileDob.getType());
 			FileHandler fileHanlder = new FileHandler();
 			fileHanlder.setFileListener(file, fileDob);
@@ -559,7 +559,7 @@ public class ViewController {
 			fileHandler = new FileHandler();
 			source = new File(path);
 			sharefolderName = source.getName();
-			destinationPath = Configuration.getPropertieDropBoxPath(true)
+			destinationPath = Configuration.getPropertieDropBoxPath("",true)
 					+ source.getName();
 			File destination = new File(destinationPath);
 			fileHandler.copyDirectory(source, destination);

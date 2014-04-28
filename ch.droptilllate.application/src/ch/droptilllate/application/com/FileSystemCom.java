@@ -38,7 +38,7 @@ public class FileSystemCom implements IFileSystemCom {
 	private static FileSystemCom instance = null;
 	private IFileSystem ifile;
 	private FileSystemCom(){
-        ifile = new FileSystemHandler(Configuration.getPropertieDropBoxPath(false), Configuration.getPropertieTempPath(false));
+        ifile = new FileSystemHandler(Configuration.getPropertieDropBoxPath("",false), Configuration.getPropertieTempPath("",false));
 	}
 	/* Static 'instance' method */
 	   public static FileSystemCom getInstance( ) {
@@ -171,13 +171,9 @@ public class FileSystemCom implements IFileSystemCom {
 		EncryptedFileDob fileDob;
 		StructureXmlDob sxml;
 		KeyManager keyManager = KeyManager.getInstance();
-		if(!local){
-			 sxml = new StructureXmlDob(false);	
-		}
-		else{
-			sxml = new StructureXmlDob(true);		
-			
-		}
+		
+		sxml = new StructureXmlDob(local);	
+
 		ShareRelation shareRelation = keyManager.getShareRelation(destShareRelation.getID(),true);
 		fileDob = sxml.getEncryptedFileDob();
 		// encrypt file !!!!!
@@ -193,12 +189,9 @@ public class FileSystemCom implements IFileSystemCom {
 		EncryptedFileDob fileDob;
 		StructureXmlDob sxml;
 		KeyManager keyManager = KeyManager.getInstance();
-		if(!local){
-			sxml = new StructureXmlDob(false);
-		}
-		else{
-			sxml = new StructureXmlDob(true);
-		}		
+		
+		sxml = new StructureXmlDob(local);
+				
 		srcShareRelation = keyManager.getShareRelation(srcShareRelation.getID(),true);
 		fileDob = sxml.getEncryptedFileDob();
 			fileInfo = new FileInfoDecrypt(fileDob.getId(), fileDob

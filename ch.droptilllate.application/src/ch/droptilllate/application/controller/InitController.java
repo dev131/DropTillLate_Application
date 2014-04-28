@@ -39,7 +39,7 @@ public class InitController {
 	 * @return true if OK
 	 */
 	public boolean checkProperties(){
-		if(Configuration.getPropertieDropBoxPath(true) == null || Configuration.getPropertieTempPath(false) == null ){
+		if(Configuration.getPropertieDropBoxPath("",true) == null || Configuration.getPropertieTempPath("",false) == null ){
 			this.newUser = true;
 			return false;
 		}
@@ -103,7 +103,7 @@ public class InitController {
 	 * @return
 	 */
 	public boolean checkIfFileStructureAvailable() {
-		File file = new File(Configuration.getPropertieDropBoxPath(true) + Messages.getIdSize()+ OSValidator.getSlash()+ XMLConstruct.IdXMLContainer+"."+ Constants.CONTAINER_EXTENTION);
+		File file = new File(Configuration.getPropertieDropBoxPath("",true) + Messages.getIdSize()+ OSValidator.getSlash()+ XMLConstruct.IdXMLContainer+"."+ Constants.CONTAINER_EXTENTION);
 		if(file.exists()){
 			return true;
 		}
@@ -117,8 +117,8 @@ public class InitController {
 			try {
 				// TODO check for valid dropbox path (no eding slashes)
 				dropboxPath = dropboxPath + OSValidator.getSlash() + dropTillLateFolderName;
-				Configuration.setPropertieDropBoxPath(dropboxPath);
-				Configuration.setPropertieTempPath(tempPath);
+				Configuration.setPropertieDropBoxPath(dropboxPath,"");
+				Configuration.setPropertieTempPath(tempPath,"");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();				
@@ -148,7 +148,7 @@ public class InitController {
 	
 	
 	private void createFolder() {  
-		  File dir = new File(Configuration.getPropertieDropBoxPath(true)+ Messages.getIdSize());
+		  File dir = new File(Configuration.getPropertieDropBoxPath("",true)+ Messages.getIdSize());
 		  dir.mkdir();	
 	}
 	

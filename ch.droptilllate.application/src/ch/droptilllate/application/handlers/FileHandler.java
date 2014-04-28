@@ -98,6 +98,12 @@ public class FileHandler {
 		}	
 	}
 	
+	/**
+	 * Delete file or folder
+	 * @param resource
+	 * @return
+	 * @throws IOException
+	 */
 	public  boolean delete(File resource) throws IOException { 
 		if(resource.isDirectory()) {
 			File[] childFiles = resource.listFiles();

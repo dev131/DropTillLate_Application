@@ -13,33 +13,45 @@ import ch.droptilllate.application.lifecycle.OSValidator;
 
 public class Configuration {
 
-	public static void setPropertieDropBoxPath(String dropboxpath) throws IOException {		 
+	/**
+	 * Set Propertie DROPBOX path
+	 * @param dropboxpath
+	 * @param destpath with / at end
+	 * @throws IOException
+	 */
+	public static void setPropertieDropBoxPath(String dropboxpath, String destpath) throws IOException {		 
 		Properties configProperty = new Properties();
 		configProperty.setProperty("dropboxpath", dropboxpath);
-		File file = new File("config.properties");
+		File file = new File( destpath+"config.properties");
 		FileOutputStream fileOut = new FileOutputStream(file,true);
 		configProperty.store(fileOut, "Dropboxpath property");
 	  }
 	
-	public static void setPropertieTempPath(String temppath) throws IOException {		 
+	/**
+	 * Set Propertie TEMPPATH path
+	 * @param temppath
+	 * @param destpath with / at end
+	 * @throws IOException
+	 */
+	public static void setPropertieTempPath(String temppath, String destpath) throws IOException {		 
 
 		Properties configProperty = new Properties();
 		configProperty.setProperty("temppath", temppath);
-		File file = new File("config.properties");
+		File file = new File(destpath+"config.properties");
 		FileOutputStream fileOut = new FileOutputStream(file,true);
 		configProperty.store(fileOut, "Tempfolder property");
 	
 	  }
 
 	
-	public static String getPropertieDropBoxPath(boolean withSlash) {
+	public static String getPropertieDropBoxPath(String srcpath , boolean withSlash) {
 		 
 		Properties prop = new Properties();
 		InputStream input = null;
 		String path = null;
 		try {
 	 
-			input = new FileInputStream("config.properties");
+			input = new FileInputStream(srcpath +"config.properties");
 	 
 			// load a properties file
 			prop.load(input);
@@ -62,13 +74,13 @@ public class Configuration {
 	  }
 
 
-	public static String getPropertieTempPath(boolean withSlash) {
+	public static String getPropertieTempPath(String srcpath,boolean withSlash) {
 		Properties prop = new Properties();
 		InputStream input = null;
 		String path = null;
 		try {
 	 
-			input = new FileInputStream("config.properties");
+			input = new FileInputStream(srcpath+"config.properties");
 	 
 			// load a properties file
 			prop.load(input);

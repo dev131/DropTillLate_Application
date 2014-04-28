@@ -312,7 +312,7 @@ public class ShareView implements SelectionListener
 		FileHandler filehandler = new FileHandler();
 		ShareRelation shareRleation = ViewController.getInstance().getLastShareRelation();
 		if(shareRleation !=null){
-			File file = new File(Configuration.getPropertieDropBoxPath(true) + ViewController.getInstance().getLastShareRelation().getID());
+			File file = new File(Configuration.getPropertieDropBoxPath("",true) + ViewController.getInstance().getLastShareRelation().getID());
 			try {
 				filehandler.delete(file);
 			} catch (IOException e) {

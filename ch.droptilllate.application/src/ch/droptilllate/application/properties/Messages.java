@@ -49,7 +49,7 @@ public class Messages extends NLS {
 	}
 	
 	public static String getDropboxName(){
-		File file = new File(Configuration.getPropertieDropBoxPath(false));
+		File file = new File(Configuration.getPropertieDropBoxPath("",false));
 		return file.getName();
 	}
 

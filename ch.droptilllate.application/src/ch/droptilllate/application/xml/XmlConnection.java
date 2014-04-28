@@ -61,9 +61,9 @@ public class XmlConnection {
 	
 	public XmlConnection(Boolean local, String key) {
 		if(local){
-			path = Configuration.getPropertieTempPath(true) + XMLConstruct.NameLocalXML;
+			path = Configuration.getPropertieTempPath("",true) + XMLConstruct.NameLocalXML;
 
-			File f = new File(Configuration.getPropertieDropBoxPath(true)+Messages.getIdSize()+ OSValidator.getSlash()
+			File f = new File(Configuration.getPropertieDropBoxPath("",true)+Messages.getIdSize()+ OSValidator.getSlash()
 					+ XMLConstruct.IdXMLContainer+ "."+ Constants.CONTAINER_EXTENTION);
 			//IF exist create new register to listener ELSE decrypt and register to listener
 			if (!f.exists()){
@@ -84,7 +84,7 @@ public class XmlConnection {
 				
 		}
 		else{
-			path = Configuration.getPropertieTempPath(true) + XMLConstruct.NameShareXML; 
+			path = Configuration.getPropertieTempPath("",true) + XMLConstruct.NameShareXML; 
 			File f = new File(path);
 			if (!f.exists())
 				createFile(path);
@@ -94,7 +94,7 @@ public class XmlConnection {
 	private void insertDBEntry(String key) {
 		StructureXmlDob sxml = new StructureXmlDob(true);
 		EncryptedFileDob filedob = sxml.getEncryptedFileDob();
-		ShareMember shareRelation= sxml.getShareRelation();
+		ShareMember shareRelation= sxml.getShareMember();
 		EncryptedContainer encryptedContainer = sxml.getEncryptedContainer();
 		EncryptedFileDao fDao = new EncryptedFileDao();
 		ShareMembersDao srDao = new ShareMembersDao();

@@ -52,7 +52,7 @@ public class CloudDropboxCom implements ICloudProviderCom {
 		Boolean reached = false;
 		int count = 0;
 		String path ="";
-		String tempPath = Configuration.getPropertieDropBoxPath(false);
+		String tempPath = Configuration.getPropertieDropBoxPath("",false);
 		String[] splitResult = tempPath.split(OSValidator.getSlashForSplit());
 		for(String pathPart : splitResult){
 			if(reached == true){
