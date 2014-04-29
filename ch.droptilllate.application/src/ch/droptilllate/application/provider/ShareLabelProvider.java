@@ -4,12 +4,14 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-import ch.droptilllate.application.dao.ContainerDao;
-
-import ch.droptilllate.application.dnb.EncryptedContainer;
+import ch.droptilllate.application.dnb.TillLateContainer;
+import ch.droptilllate.application.exceptions.DatabaseStatus;
 import ch.droptilllate.application.model.EncryptedFileDob;
-
 import ch.droptilllate.application.properties.Messages;
+import ch.droptilllate.application.properties.XMLConstruct;
+import ch.droptilllate.database.api.DBSituation;
+import ch.droptilllate.database.api.IDatabase;
+import ch.droptilllate.database.api.XMLDatabase;
 
 public class ShareLabelProvider implements ITableLabelProvider {
 
@@ -59,16 +61,22 @@ public class ShareLabelProvider implements ITableLabelProvider {
 										.lastIndexOf("."));
 				break;
 			case SHARE:
-				ContainerDao sf = new ContainerDao();
-				EncryptedContainer container = (EncryptedContainer) sf
-						.getElementByID(
-								((EncryptedFileDob) element).getContainerId(),
-								null);
-				if (container.getShareRelationId() != Messages.getIdSize()) {
-					text = "yes";
+				IDatabase database = new XMLDatabase();
+				if(database.openTransaction("", DBSituation.LOCAL_DATABASE)!= DatabaseStatus.OK){
 				}
-				text = "no";
-				break;
+				else{
+					text = "no";
+					TillLateContainer container = (TillLateContainer) database.getElement(TillLateContainer.class, XMLConstruct.AttId,((EncryptedFileDob) element).getContainerId().toString() );
+					if (container.getShareRelationId() != Messages.getIdSize()) {
+						text = "yes";
+						break;
+					}
+					else{
+						text = "no";
+						break;
+					}
+				}
+				
 			default:
 				assert false : identifier + " is not a legal identifier!"; //$NON-NLS-1$
 			}

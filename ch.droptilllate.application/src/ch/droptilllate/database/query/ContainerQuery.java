@@ -1,20 +1,7 @@
-package ch.droptilllate.database;
+package ch.droptilllate.database.query;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-
-
-
-
-
-
-
-
-
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -27,24 +14,17 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import ch.droptilllate.application.dnb.CloudAccount;
-import ch.droptilllate.application.dnb.EncryptedContainer;
-import ch.droptilllate.application.exceptions.DatabaseStatus;
-import ch.droptilllate.application.info.CRUDContainerInfo;
-import ch.droptilllate.application.model.EncryptedFileDob;
-import ch.droptilllate.application.model.GhostFolderDob;
-import ch.droptilllate.application.properties.Messages;
+import ch.droptilllate.application.dnb.TillLateContainer;
 import ch.droptilllate.application.properties.XMLConstruct;
-import ch.droptilllate.application.xml.XmlConnection;
 
 public class ContainerQuery {
 	/**
 	 * Create element into DOM object
-	 * @param EncryptedContainer
+	 * @param TillLateContainer
 	 * @return document
 	 */
-	public Document createElement(List<EncryptedContainer> list, Document document) {
-		for(EncryptedContainer element : list){
+	public Document createElement(List<TillLateContainer> list, Document document) {
+		for(TillLateContainer element : list){
 			NodeList nodelist = document.getElementsByTagName(XMLConstruct.RootElementContainer);
 			Node node = nodelist.item(0);
 			Element account = document.createElement(XMLConstruct.ChildElementContainer);
@@ -62,8 +42,8 @@ public class ContainerQuery {
 	 * @param document
 	 * @return document
 	 */
-	public Document deleteElement(List<EncryptedContainer> list, Document document){
-		for(EncryptedContainer element : list){
+	public Document deleteElement(List<TillLateContainer> list, Document document){
+		for(TillLateContainer element : list){
 		// cast the result to a DOM NodeList
 		NodeList nodes = executeQuery(XMLConstruct.getContainerExpression()+ "[@"+XMLConstruct.AttId+"='"
 				+ element.getId() + "']", document);
@@ -92,8 +72,8 @@ public class ContainerQuery {
 	 * @param document
 	 * @return document
 	 */
-	public Document updateElement(List<EncryptedContainer> list, Document document){
-		for(EncryptedContainer element : list){
+	public Document updateElement(List<TillLateContainer> list, Document document){
+		for(TillLateContainer element : list){
 			NodeList nodes = executeQuery(XMLConstruct.getContainerExpression()+ "[@"+XMLConstruct.AttId+"='"
 					+ element.getId() + "']", document);
 			for (int idx = 0; idx < nodes.getLength(); idx++) {
@@ -111,12 +91,12 @@ public class ContainerQuery {
 	 * @param value
 	 * @return EncryptedContainerlist
 	 */
-	public List<EncryptedContainer> getElement(String argument, String value, Document document){
-		List<EncryptedContainer> list = new ArrayList<EncryptedContainer>();
+	public List<TillLateContainer> getElement(String argument, String value, Document document){
+		List<TillLateContainer> list = new ArrayList<TillLateContainer>();
 		NodeList nodes = executeQuery(XMLConstruct.getContainerExpression()+ "[@"+argument+"='"
 				+ value + "']", document);
 		for (int i = 0; i < nodes.getLength(); i++) {
-			EncryptedContainer container = new EncryptedContainer(
+			TillLateContainer container = new TillLateContainer(
 					Integer.parseInt(nodes.item(i).getAttributes().getNamedItem(XMLConstruct.AttId)
 					.getNodeValue()), 
 					Integer.parseInt(nodes.item(i).getAttributes().getNamedItem(XMLConstruct.AttShareRelationID)
@@ -133,11 +113,11 @@ public class ContainerQuery {
 	 * @param document
 	 * @return EncryptedContainerlist
 	 */
-	public List<EncryptedContainer> getElementAll(Document document) {
+	public List<TillLateContainer> getElementAll(Document document) {
 		NodeList nodes = document.getElementsByTagName(XMLConstruct.ChildElementContainer);
-		List<EncryptedContainer> list = new ArrayList<EncryptedContainer>();
+		List<TillLateContainer> list = new ArrayList<TillLateContainer>();
 		for (int i = 0; i < nodes.getLength(); i++) {
-			EncryptedContainer container = new EncryptedContainer(
+			TillLateContainer container = new TillLateContainer(
 					Integer.parseInt(nodes.item(i).getAttributes().getNamedItem(XMLConstruct.AttId)
 					.getNodeValue()), 
 					Integer.parseInt(nodes.item(i).getAttributes().getNamedItem(XMLConstruct.AttShareRelationID)

@@ -5,6 +5,7 @@ import java.util.List;
 
 import ch.droptilllate.application.dnb.DroppedElement;
 import ch.droptilllate.application.listener.NullDeltaListener;
+import ch.droptilllate.application.properties.Messages;
 
 public class GhostFolderDob extends DroppedElement{
 
@@ -59,9 +60,12 @@ public class GhostFolderDob extends DroppedElement{
 
 	public void addFiles(List<EncryptedFileDob> files) {
 		for (EncryptedFileDob file : files) {
-			this.files.add(file);
-			file.setParent(this);
-			fireAdd(file);
+			int i = Messages.getIdSize();
+			if(file.getId() != i){
+				this.files.add(file);
+				file.setParent(this);
+				fireAdd(file);
+			}	
 		}
 	}
 

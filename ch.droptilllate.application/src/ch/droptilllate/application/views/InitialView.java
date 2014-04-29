@@ -1,6 +1,9 @@
 package ch.droptilllate.application.views;
 
+import static org.junit.Assert.fail;
+
 import java.net.URL;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -35,10 +38,14 @@ import org.osgi.framework.FrameworkUtil;
 
 import ch.droptilllate.application.controller.InitController;
 import ch.droptilllate.application.controller.ViewController;
-import ch.droptilllate.application.dao.CloudAccountDao;
 import ch.droptilllate.application.dnb.CloudAccount;
 import ch.droptilllate.application.error.ParamInitException;
+import ch.droptilllate.application.exceptions.DatabaseStatus;
 import ch.droptilllate.application.info.ErrorMessage;
+import ch.droptilllate.application.properties.Messages;
+import ch.droptilllate.database.api.DBSituation;
+import ch.droptilllate.database.api.IDatabase;
+import ch.droptilllate.database.api.XMLDatabase;
 
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Label;
@@ -346,6 +353,9 @@ public class InitialView implements SelectionListener, ModifyListener
 				// Check if Login successful
 				if (controller.login(password))
 				{
+					IDatabase database = new XMLDatabase();
+					database.createDatabase(password, "", DBSituation.LOCAL_DATABASE);
+					database.openDatabase(password, "", Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 					startApplication();
 				}
 			} else
@@ -410,9 +420,13 @@ public class InitialView implements SelectionListener, ModifyListener
 		
 		ViewController.getInstance().initController();
 		ViewController.getInstance().setSharefunction(cbCloudProvider.getSelection());
-		CloudAccountDao dao = new CloudAccountDao();
-		CloudAccount account = (CloudAccount) dao.getElementAll(null);
-		if(account != null){
+		IDatabase database = new XMLDatabase();
+		DatabaseStatus status = database.createDatabase(dropboxPassword, "", DBSituation.LOCAL_DATABASE);
+		if(status != DatabaseStatus.OK){
+			//TODO ERROR HANDLING
+		}	
+		List<CloudAccount> list =  (List<CloudAccount>) database.getElementAll(CloudAccount.class);
+		if(!list.isEmpty()){
 			ViewController.getInstance().setSharefunction(true);
 		}
 	

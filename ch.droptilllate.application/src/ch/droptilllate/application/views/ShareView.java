@@ -34,7 +34,6 @@ import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ListViewer;
 
 import ch.droptilllate.application.controller.ViewController;
-import ch.droptilllate.application.dao.ShareMembersDao;
 import ch.droptilllate.application.dnb.ShareMember;
 import ch.droptilllate.application.dnb.ShareRelation;
 import ch.droptilllate.application.error.ParamInitException;
@@ -50,6 +49,9 @@ import ch.droptilllate.application.provider.ShareContentProvider;
 import ch.droptilllate.application.provider.ShareLabelProvider;
 import ch.droptilllate.application.provider.TableIdentifier;
 import ch.droptilllate.application.provider.TableIdentifierShare;
+import ch.droptilllate.database.api.DBSituation;
+import ch.droptilllate.database.api.IDatabase;
+import ch.droptilllate.database.api.XMLDatabase;
 
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.layout.GridLayout;
@@ -242,8 +244,10 @@ public class ShareView implements SelectionListener
 	{
 
 		combo_mail.removeAll();
-		ShareMembersDao dao = new ShareMembersDao();
-		ArrayList<ShareMember> shareMemberList = (ArrayList<ShareMember>) dao.getElementAll(null);
+		IDatabase database = new XMLDatabase();
+		database.openTransaction("", DBSituation.LOCAL_DATABASE);	
+		ArrayList<ShareMember> shareMemberList = (ArrayList<ShareMember>) database.getElementAll(ShareMember.class);
+		database.closeTransaction("", Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 		HashSet<String> hashset = new HashSet<String>();
 		for (ShareMember shareMember : shareMemberList)
 		{

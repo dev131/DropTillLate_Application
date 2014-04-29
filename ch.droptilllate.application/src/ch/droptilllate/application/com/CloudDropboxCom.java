@@ -2,14 +2,17 @@ package ch.droptilllate.application.com;
 
 import java.util.List;
 
-import ch.droptilllate.application.dao.CloudAccountDao;
 import ch.droptilllate.application.dnb.CloudAccount;
 import ch.droptilllate.application.lifecycle.OSValidator;
 import ch.droptilllate.application.properties.Configuration;
+import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.cloudprovider.api.ICloudProvider;
 import ch.droptilllate.cloudprovider.api.ICloudProviderCom;
 import ch.droptilllate.cloudprovider.dropbox.DropboxHandler;
 import ch.droptilllate.cloudprovider.error.CloudError;
+import ch.droptilllate.database.api.DBSituation;
+import ch.droptilllate.database.api.IDatabase;
+import ch.droptilllate.database.api.XMLDatabase;
 
 public class CloudDropboxCom implements ICloudProviderCom {
 	private ICloudProvider iprovider;
@@ -17,8 +20,7 @@ public class CloudDropboxCom implements ICloudProviderCom {
 	@Override
 	public CloudError shareFolder(int shareFolderID, List<String> shareEmailList) {
 		iprovider = new DropboxHandler(); 	
-		CloudAccountDao dao = new CloudAccountDao();
-		CloudAccount account = (CloudAccount) dao.getElementAll(null);
+		CloudAccount account = getCloudAccount();
 		return iprovider.shareFolder(getDropboxPath(), shareFolderID, account.getUsername(), account.getPassword(), shareEmailList);		
 	}
 
@@ -31,8 +33,10 @@ public class CloudDropboxCom implements ICloudProviderCom {
 	@Override
 	public CloudError checkIfFolderExists(int shareRelationID) {
 		iprovider = new DropboxHandler();
-		CloudAccountDao dao = new CloudAccountDao();
-		CloudAccount account = (CloudAccount) dao.getElementAll(null);
+		IDatabase database = new XMLDatabase();
+		database.openTransaction("", DBSituation.LOCAL_DATABASE);	
+		CloudAccount account = (CloudAccount) database.getElementAll(CloudAccount.class).get(0);
+		database.closeTransaction("", Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 		return iprovider.checkIfFolderExists(getDropboxPath(), shareRelationID, account.getUsername(), account.getPassword());
 	}
 	
@@ -71,6 +75,13 @@ public class CloudDropboxCom implements ICloudProviderCom {
 		return path;
 	}
 
+	private CloudAccount getCloudAccount(){
+		IDatabase database = new XMLDatabase();
+		database.openTransaction("", DBSituation.LOCAL_DATABASE);	
+		CloudAccount account =  (CloudAccount) database.getElementAll(CloudAccount.class).get(0);
+		database.closeTransaction("", Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
+		return account;
+	}
 
 
 }

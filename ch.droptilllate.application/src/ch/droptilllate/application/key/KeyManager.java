@@ -85,7 +85,7 @@ public class KeyManager {
 	 * Create new ShareRelation
 	 * @param passphrase
 	 * @param shareRelation if ID is set create specified shareRelation
-	 * @return
+	 * @return ShareRelation
 	 */
 	public ShareRelation newShareRelation(String passphrase, Integer shareRelationID){
 		if (shareRelationID == null) {

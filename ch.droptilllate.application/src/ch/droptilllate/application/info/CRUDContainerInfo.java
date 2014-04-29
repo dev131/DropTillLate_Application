@@ -2,25 +2,25 @@ package ch.droptilllate.application.info;
 
 import java.util.List;
 
-import ch.droptilllate.application.dnb.EncryptedContainer;
+import ch.droptilllate.application.dnb.TillLateContainer;
 
 
 public class CRUDContainerInfo {
-	private List<EncryptedContainer> encryptedContainerListError;
-	private List<EncryptedContainer> encryptedContainerListSuccess;
+	private List<TillLateContainer> encryptedContainerListError;
+	private List<TillLateContainer> encryptedContainerListSuccess;
 	
-	public List<EncryptedContainer> getEncryptedContainerListError() {
+	public List<TillLateContainer> getEncryptedContainerListError() {
 		return this.encryptedContainerListError;
 	}
 	public void setEncryptedContainerListError(
-			List<EncryptedContainer> encryptedContainerListError) {
+			List<TillLateContainer> encryptedContainerListError) {
 		this.encryptedContainerListError = encryptedContainerListError;
 	}
-	public List<EncryptedContainer> getEncryptedContainerListSuccess() {
+	public List<TillLateContainer> getEncryptedContainerListSuccess() {
 		return this.encryptedContainerListSuccess;
 	}
 	public void setEncryptedContainerListSuccess(
-			List<EncryptedContainer> encryptedContainerListSuccess) {
+			List<TillLateContainer> encryptedContainerListSuccess) {
 		this.encryptedContainerListSuccess = encryptedContainerListSuccess;
 	}
 

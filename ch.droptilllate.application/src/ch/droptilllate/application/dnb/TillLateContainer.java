@@ -1,6 +1,6 @@
 package ch.droptilllate.application.dnb;
 
-public class EncryptedContainer {
+public class TillLateContainer {
 
 	private Integer id;
 	private Integer shareRelationId;
@@ -10,7 +10,7 @@ public class EncryptedContainer {
 	 * @param id -> auto generate if it is null
 	 * @param shareFolderId
 	 */
-	public EncryptedContainer(Integer id, Integer shareRelationId){
+	public TillLateContainer(Integer id, Integer shareRelationId){
 		this.id= id;
 		this.shareRelationId= shareRelationId;
 	}

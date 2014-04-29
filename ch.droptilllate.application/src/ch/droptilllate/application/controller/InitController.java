@@ -6,8 +6,8 @@ import java.io.IOException;
 import org.eclipse.swt.widgets.Shell;
 
 import ch.droptilllate.application.com.CloudDropboxCom;
-import ch.droptilllate.application.dao.CloudAccountDao;
 import ch.droptilllate.application.dnb.CloudAccount;
+import ch.droptilllate.application.exceptions.DatabaseStatus;
 import ch.droptilllate.application.info.ErrorMessage;
 import ch.droptilllate.application.info.SuccessMessage;
 import ch.droptilllate.application.key.KeyManager;
@@ -17,6 +17,9 @@ import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.properties.XMLConstruct;
 import ch.droptilllate.cloudprovider.api.ICloudProviderCom;
 import ch.droptilllate.cloudprovider.error.CloudError;
+import ch.droptilllate.database.api.DBSituation;
+import ch.droptilllate.database.api.IDatabase;
+import ch.droptilllate.database.api.XMLDatabase;
 import ch.droptilllate.filesystem.preferences.Constants;
 import ch.droptilllate.keyfile.api.KeyFileHandlingSummary;
 import ch.droptilllate.keyfile.error.KeyFileError;
@@ -82,14 +85,19 @@ public class InitController {
 			
 			return CANCEL;
 		}
+		IDatabase database = new XMLDatabase();
+		database.createDatabase(password, "", DBSituation.LOCAL_DATABASE);
+		database.openDatabase(password, "", Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 		//WIthout CloudAccount
 		if(!withSharing) return SUCCESS;
 		//init cloudaccount
-		CloudAccountDao dao = new CloudAccountDao();
-		if(dao.newElement(cloudaccount, keyManager.getShareRelation(Messages.getIdSize(),true).getKey()) == null){
+		database.openTransaction("", DBSituation.LOCAL_DATABASE);
+		if(database.createElement(cloudaccount) == null){
+			database.closeTransaction("", Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 			return CANCEL;
 		}
 		//Everything OK
+		database.closeTransaction("", Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 		return SUCCESS;
 		
 	}
@@ -140,11 +148,7 @@ public class InitController {
 			
 			return true; 
 		}
-	
-	public void insertCloudAccount(){
-		CloudAccountDao dao = new CloudAccountDao();
-		dao.newElement(cloudaccount, null);
-	}
+
 	
 	
 	private void createFolder() {  

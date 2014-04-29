@@ -1,10 +1,7 @@
-package ch.droptilllate.database;
+package ch.droptilllate.database.query;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
+
 import java.util.List;
 
 import javax.xml.xpath.XPath;
@@ -18,14 +15,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import ch.droptilllate.application.dnb.EncryptedContainer;
-import ch.droptilllate.application.exceptions.DatabaseStatus;
-import ch.droptilllate.application.info.CRUDGhostFolderInfo;
-import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
-import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.properties.XMLConstruct;
-import ch.droptilllate.application.xml.XmlConnection;
 
 public class GhostFolderQuery {
 	/**

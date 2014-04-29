@@ -13,12 +13,13 @@ import org.eclipse.swt.widgets.Shell;
 
 import ch.droptilllate.application.com.FileSystemCom;
 import ch.droptilllate.application.controller.ViewController;
-import ch.droptilllate.application.dao.ContainerDao;
-import ch.droptilllate.application.dao.EncryptedFileDao;
-import ch.droptilllate.application.dnb.EncryptedContainer;
+import ch.droptilllate.application.dnb.TillLateContainer;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.cloudprovider.api.IFileSystemCom;
+import ch.droptilllate.database.api.DBSituation;
+import ch.droptilllate.database.api.IDatabase;
+import ch.droptilllate.database.api.XMLDatabase;
 import ch.droptilllate.filesystem.info.FileInfo;
 
 public class IntgryCheckHandler {
@@ -26,13 +27,17 @@ public class IntgryCheckHandler {
 	public void execute(Shell shell) {
 		IFileSystemCom com = FileSystemCom.getInstance();
 		HashMap<Integer, List<EncryptedFileDob>> hashmap = com.fileIntegryCheck();
-		List<EncryptedFileDob> fileListDB = getFileListDB();
+		
+		IDatabase database = new XMLDatabase();	
+		database.openTransaction("", DBSituation.LOCAL_DATABASE);
+		List<EncryptedFileDob> fileListDB = (List<EncryptedFileDob>) database.getElementAll(EncryptedFileDob.class);
 		List<EncryptedFileDob> fileListFS = getFileListFS(hashmap);
 		List<EncryptedFileDob> upgradeListDB = getUpgradeFileList(fileListDB, fileListFS);
-		if(!upgradeListDB.isEmpty()){
-			EncryptedFileDao dao = new EncryptedFileDao();
-			dao.deleteElementAll(null);
-			dao.newElement(upgradeListDB, null);
+		if(!upgradeListDB.isEmpty()){		
+			//Delete all elements
+			database.deleteElement(database.getElementAll(EncryptedFileDob.class));
+			//Insert new entries
+			database.createElement(upgradeListDB);
 			ViewController.getInstance().getInitialInput();
 		}
 	}
@@ -75,12 +80,6 @@ public class IntgryCheckHandler {
 		return fileListFS;
 	}
 
-	private List<EncryptedFileDob> getFileListDB() {
-		EncryptedFileDao dao = new EncryptedFileDao();	
-		List<EncryptedFileDob> listDB = new ArrayList<EncryptedFileDob>();
-		listDB.addAll((List<EncryptedFileDob>) dao.getElementAll(null));
-		return listDB;
-	}
 	
 
 }

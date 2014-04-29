@@ -6,6 +6,7 @@ import java.util.List;
 import ch.droptilllate.application.dnb.ShareRelation;
 import ch.droptilllate.application.info.CRUDCryptedFileInfo;
 import ch.droptilllate.application.model.EncryptedFileDob;
+import ch.droptilllate.database.api.DBSituation;
 import ch.droptilllate.filesystem.info.*;
 import ch.droptilllate.filesystem.api.FileHandlingSummary;
 
@@ -46,7 +47,7 @@ public interface IFileSystemCom {
 	 * @param destinationShareRelation path = Dropbox/ShareRelation1
 	 * @return true if ok
 	 */
-	public boolean encryptFile(ShareRelation destShareRelation, boolean local);
+	public boolean encryptFile(ShareRelation destShareRelation,   DBSituation situation);
 
 	/**
 	 * Decrypte local/share XML files
@@ -54,7 +55,7 @@ public interface IFileSystemCom {
 	 * @param local
 	 * @return true if ok
 	 */
-	public boolean decryptFile(ShareRelation srcShareRelation, boolean local);
+	public boolean decryptFile(ShareRelation srcShareRelation,  DBSituation situation);
 	
 	/**
 	 * Return Hashmap with ShareId and List of EncryptedFileDob as value

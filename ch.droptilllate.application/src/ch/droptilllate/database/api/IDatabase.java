@@ -1,4 +1,4 @@
-package ch.droptilllate.database;
+package ch.droptilllate.database.api;
 
 import java.util.List;
 
@@ -11,28 +11,28 @@ public interface IDatabase {
 	/**
 	 * Create Database xml file
 	 * @param path ../../file.xml
-	 * @param local boolean for local or share database
+	 * @param DBSituation
 	 * @param path properties
 	 * @return DatabaseStatus
 	 */
-	public DatabaseStatus createDatabase(String password, boolean local, String propertiePath);
+	public DatabaseStatus createDatabase(String password, String propertiePath, DBSituation situation);
 	/**
 	 * Open Database
-	 * @param path (from xml file)
-	 * @param key (key for encryption)
-	 * @param local boolean for local or share database
+	 * @param password (password for encryption)
+	 * @param DBSituation
 	 * @param path properties
+	 * @param if (shareFolderDI == null) -> decryptDatabase if (not)->database already decrypted in temp folder
 	 * @return DatabaseStatus
 	 */
-	public DatabaseStatus openDatabase(String password, boolean local, String propertiePath);
+	public DatabaseStatus openDatabase(String password, String propertiePath, Integer shareFolderID,DBSituation situation);
 	
 	/**
 	 * Open new Transaction
-	 * @param local boolean for local or share database
-	 * @param path properties
+	 * @param path properties additional
+	 * @param DBSituation
 	 * @return DatabaseStatus 
 	 */
-	public DatabaseStatus openTransaction(boolean local, String propertiePath);
+	public DatabaseStatus openTransaction(String propertiePath, DBSituation situation);
 	
 	/**
 	 * Reset Transaction
@@ -42,24 +42,26 @@ public interface IDatabase {
 	
 	/**
 	 * Close and save Transaction
-	 * @param path properties
-	 * @param local boolean for local or share database
+	 * @param path properties additional
+	 * @param shareRelationID id destination
+	 * @param DBSituation
 	 * @return DatabaseStatus 
 	 */
-	public DatabaseStatus closeTransaction(boolean local, String propertiePath);
+	public DatabaseStatus closeTransaction(String propertiePath, Integer shareRelationID, DBSituation situation);
+	
 	/**
 	 * Create element
 	 * @param obj Element
 	 * @return  DatabaseStatus
 	 */
-	public DatabaseStatus createElement(Object obj);
+	public List<?> createElement(Object obj);
 	
 	/**
 	 * Create elements
 	 * @param obj Lis<Element>
 	 * @return Database status
 	 */
-	public DatabaseStatus createElement(List<?> obj);
+	public List<?> createElement(List<?> obj);
 	
 	/**
 	 * Delete element with ID

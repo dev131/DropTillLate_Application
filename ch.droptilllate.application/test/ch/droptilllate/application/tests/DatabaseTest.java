@@ -18,10 +18,11 @@ import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.properties.Configuration;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.properties.XMLConstruct;
-import ch.droptilllate.database.IDatabase;
-import ch.droptilllate.database.XMLDatabase;
+import ch.droptilllate.database.api.DBSituation;
+import ch.droptilllate.database.api.IDatabase;
+import ch.droptilllate.database.api.XMLDatabase;
 import ch.droptilllate.keyfile.api.KeyFileHandlingSummary;
-
+ 
 public class DatabaseTest {
 	static String tmpPath = "/Users/marcobetschart/Documents/Eclipse_Test/DB";
 	static String dbPath = "/Users/marcobetschart/Documents/Eclipse_Test/TMP";
@@ -45,19 +46,19 @@ public class DatabaseTest {
 		keyManager.addKeyRelation(Messages.getIdSize(), "password");		
 		
 		IDatabase database = new XMLDatabase();
-		DatabaseStatus status = database.createDatabase("password", local, propertiePath);
+		DatabaseStatus status = database.createDatabase("password", propertiePath, DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}
-		status =database.openDatabase("password", local, propertiePath);
+		status =database.openDatabase("password", propertiePath, Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}		
-		status =database.openTransaction(local, propertiePath);
+		status =database.openTransaction(propertiePath, DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}	
-		status =database.closeTransaction(local, propertiePath);
+		status =database.closeTransaction(propertiePath, Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}
@@ -67,18 +68,18 @@ public class DatabaseTest {
 	public void InsertDatabase(){
 		
 		IDatabase database = new XMLDatabase();
-		DatabaseStatus status =database.openDatabase("password", local, propertiePath);
+		DatabaseStatus status =database.openDatabase("password", propertiePath, Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}		
-		status =database.openTransaction(local, propertiePath);
+		status =database.openTransaction(propertiePath, DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}	
 		GhostFolderDob dob1 = new GhostFolderDob(null, "InsertTestFolder", root);
 		database.createElement(dob1);
 		
-		status =database.closeTransaction(local, propertiePath);
+		status =database.closeTransaction(propertiePath, Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}
@@ -87,11 +88,11 @@ public class DatabaseTest {
 	@Test
 	public void rollBack(){		
 		IDatabase database = new XMLDatabase();
-		DatabaseStatus status =database.openDatabase("password", local, propertiePath);
+		DatabaseStatus status =database.openDatabase("password", propertiePath, Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}		
-		status =database.openTransaction(local, propertiePath);
+		status =database.openTransaction(propertiePath, DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}	
@@ -99,21 +100,21 @@ public class DatabaseTest {
 		database.createElement(dob1);
 		database.rollback();
 		
-		status =database.closeTransaction(local, propertiePath);
+		status =database.closeTransaction(propertiePath, Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}
 	}
 	
 	
-	@Ignore
+	@Test
 	public void getData(){		
 		IDatabase database = new XMLDatabase();
-		DatabaseStatus status =database.openDatabase("password", local, propertiePath);
+		DatabaseStatus status =database.openDatabase("password", propertiePath, Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}		
-		status =database.openTransaction(local, propertiePath);
+		status =database.openTransaction(propertiePath, DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}	
@@ -122,7 +123,7 @@ public class DatabaseTest {
 			System.out.println("////////////GET METHOD///////////");
 			System.out.println(dob1.getName());
 		}		
-		status =database.closeTransaction(local, propertiePath);
+		status =database.closeTransaction(propertiePath, Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}
@@ -132,28 +133,28 @@ public class DatabaseTest {
 	public void deleteDatabase(){
 		//INSERT
 		IDatabase database = new XMLDatabase();
-		DatabaseStatus status =database.openDatabase("password", local, propertiePath);
+		DatabaseStatus status =database.openDatabase("password", propertiePath, Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}		
-		status =database.openTransaction(local, propertiePath);
+		status =database.openTransaction(propertiePath, DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}		
 		GhostFolderDob dob1 = new GhostFolderDob(null, "DeleteTestFolder", root);
 		database.createElement(dob1);		
-		status =database.closeTransaction(local, propertiePath);
+		status =database.closeTransaction(propertiePath, Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}
 		
 		//DELETE
 		database = new XMLDatabase();
-		status =database.openDatabase("password", local, propertiePath);
+		status =database.openDatabase("password", propertiePath, Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}		
-		status =database.openTransaction(local, propertiePath);
+		status =database.openTransaction(propertiePath, DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}	
@@ -161,7 +162,7 @@ public class DatabaseTest {
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}
-		status =database.closeTransaction(local, propertiePath);
+		status =database.closeTransaction(propertiePath, Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}
@@ -171,27 +172,27 @@ public class DatabaseTest {
 	public void updateDatabase(){
 		//INSERT
 		IDatabase database = new XMLDatabase();
-		DatabaseStatus status =database.openDatabase("password", local, propertiePath);
+		DatabaseStatus status =database.openDatabase("password", propertiePath, Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}		
-		status =database.openTransaction(local, propertiePath);
+		status =database.openTransaction(propertiePath, DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}	
 		GhostFolderDob dob1 = new GhostFolderDob(null, "UpdateTestFolder", root);
 		database.createElement(dob1);				
-		status =database.closeTransaction(local, propertiePath);
+		status =database.closeTransaction(propertiePath, Messages.getIdSize(),DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}
 		//Update
 		database = new XMLDatabase();
-		status =database.openDatabase("password", local, propertiePath);
+		status =database.openDatabase("password", propertiePath, Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}		
-		status =database.openTransaction(local, propertiePath);
+		status =database.openTransaction(propertiePath, DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}	
@@ -205,7 +206,7 @@ public class DatabaseTest {
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}
-		status =database.closeTransaction(local, propertiePath);
+		status =database.closeTransaction(propertiePath, Messages.getIdSize(),DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}
@@ -215,27 +216,27 @@ public class DatabaseTest {
 	public void getElementByParent(){
 		//INSERT
 		IDatabase database = new XMLDatabase();
-		DatabaseStatus status =database.openDatabase("password", local, propertiePath);
+		DatabaseStatus status =database.openDatabase("password", propertiePath, Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}		
-		status =database.openTransaction(local, propertiePath);
+		status =database.openTransaction(propertiePath, DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}	
 		GhostFolderDob dob1 = new GhostFolderDob(null, "UpdateTestFolder", root);
 		database.createElement(dob1);				
-		status =database.closeTransaction(local, propertiePath);
+		status =database.closeTransaction(propertiePath, Messages.getIdSize(),DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}
 		//GetElementByParent
 		database = new XMLDatabase();
-		status =database.openDatabase("password", local, propertiePath);
+		status =database.openDatabase("password", propertiePath, Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}		
-		status =database.openTransaction(local, propertiePath);
+		status =database.openTransaction(propertiePath, DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}	
@@ -247,7 +248,7 @@ public class DatabaseTest {
 		for(GhostFolderDob dob2: dob){
 				System.out.println(dob2.getName());
 			}
-		status =database.closeTransaction(local, propertiePath);
+		status =database.closeTransaction(propertiePath, Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 		if(status != DatabaseStatus.OK){
 			fail(status.getMessage());
 		}

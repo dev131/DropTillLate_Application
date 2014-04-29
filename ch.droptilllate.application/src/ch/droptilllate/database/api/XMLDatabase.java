@@ -1,4 +1,4 @@
-package ch.droptilllate.database;
+package ch.droptilllate.database.api;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,11 +7,9 @@ import java.util.List;
 
 import org.w3c.dom.Document;
 
-import ch.droptilllate.application.dao.ContainerDao;
-import ch.droptilllate.application.dao.EncryptedFileDao;
-import ch.droptilllate.application.dao.ShareMembersDao;
+import ch.droptilllate.application.controller.ViewController;
 import ch.droptilllate.application.dnb.CloudAccount;
-import ch.droptilllate.application.dnb.EncryptedContainer;
+import ch.droptilllate.application.dnb.TillLateContainer;
 import ch.droptilllate.application.dnb.ShareMember;
 import ch.droptilllate.application.dnb.ShareRelation;
 import ch.droptilllate.application.exceptions.DatabaseException;
@@ -23,39 +21,62 @@ import ch.droptilllate.application.model.StructureXmlDob;
 import ch.droptilllate.application.properties.Configuration;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.properties.XMLConstruct;
+import ch.droptilllate.database.query.CloudAccountQuery;
+import ch.droptilllate.database.query.ContainerQuery;
+import ch.droptilllate.database.query.FileQuery;
+import ch.droptilllate.database.query.GhostFolderQuery;
+import ch.droptilllate.database.query.ShareMemberQuery;
 
 public class XMLDatabase implements IDatabase {
 
 	private Document oldDocument;
 	private Document newDocument;
-	private String password;
 	
 	@Override
-	public DatabaseStatus createDatabase(String password, boolean local, String propertiePath) {		
-		this.password = password;
+	public DatabaseStatus createDatabase(String password, String propertiePath, DBSituation situation) {			
+		if(situation == DBSituation.LOCAL_DATABASE){
+			return createLocalDB(propertiePath, situation);	
+		}
+		else{
+			return createUpdateDB(propertiePath, situation);
+		}
+		
+	}
+	
+	private DatabaseStatus createUpdateDB(String propertiePath, DBSituation situation) {
 		DBConnection con = new DBConnection();
-		 try {
-			con.createFile(con.getPath(local,propertiePath), password, local);		
-			openTransaction(local, propertiePath);
-			initDBEntries();
-			closeTransaction(local, propertiePath);
-			con.encryptDatabase(password, local);
-			con.deleteTempDB(con.getPath(local,propertiePath));			
+		try {
+			con.createFile(con.getPath(situation,propertiePath));
 		} catch (DatabaseException e) {
 			return DatabaseStatus.DATABASE_NOT_CREATED;
 		}
-		 return DatabaseStatus.OK;
+		return DatabaseStatus.OK;
 	}
-	
+
+	private DatabaseStatus createLocalDB(String propertiePath, DBSituation situation) {
+		DBConnection con = new DBConnection();
+		 try {
+			con.createFile(con.getPath(situation,propertiePath));		
+			openTransaction(propertiePath,situation);
+			initDBEntries();
+			closeTransaction(propertiePath, Messages.getIdSize(),situation);
+			con.deleteTempDB(con.getPath(situation,propertiePath));			
+		} catch (DatabaseException e) {
+			return DatabaseStatus.DATABASE_NOT_CREATED;
+		}
+		 return DatabaseStatus.OK;		
+	}
+
 	@Override
-	public DatabaseStatus openDatabase(String password, boolean local,String propertiePath){
-		this.password = password;
+	public DatabaseStatus openDatabase(String password,String propertiePath, Integer shareFolderID,DBSituation situation){
 		DBConnection con = new DBConnection();
 		FileHandler fileHandler = new FileHandler();
-		File file = new File(con.getPath(local,propertiePath));
+		File file = new File(con.getPath(situation,propertiePath));
 		try {
-			fileHandler.delete(file);
-			con.decryptDatabase(password, con.getPath(local,propertiePath), local);
+			if(shareFolderID != null){
+				fileHandler.delete(file);
+				con.decryptDatabase(password, con.getPath(situation,propertiePath), situation, shareFolderID);
+			}			
 		} catch (DatabaseException | IOException e) {
 			return DatabaseStatus.CANNOT_OPEN_DATABASE;
 		}
@@ -63,11 +84,11 @@ public class XMLDatabase implements IDatabase {
 	}
 
 	@Override
-	public DatabaseStatus openTransaction(boolean local, String propertiePath) {
+	public DatabaseStatus openTransaction(String propertiePath,DBSituation situation) {
 		DBConnection con = new DBConnection();
 		try {
-			 oldDocument = con.getDatabase(con.getPath(local,propertiePath));
-			 newDocument = con.getDatabase(con.getPath(local, propertiePath));
+			 oldDocument = con.getDatabase(con.getPath(situation,propertiePath));
+			 newDocument = con.getDatabase(con.getPath(situation, propertiePath));
 		} catch (DatabaseException e) {
 			return DatabaseStatus.CANNOT_OPEN_DATABASE;
 		}
@@ -81,15 +102,15 @@ public class XMLDatabase implements IDatabase {
 	}
 
 	@Override
-	public DatabaseStatus closeTransaction(boolean local, String propertiePath) {
+	public DatabaseStatus closeTransaction(String propertiePath, Integer shareFolderID,DBSituation situation) {
 		DBConnection con = new DBConnection();
 		try {
-			con.writeToXML(this.password, con.getPath(local,propertiePath), newDocument, local);
+			con.writeToXML(con.getPath(situation,propertiePath), newDocument);
 		} catch (DatabaseException e) {
 			return DatabaseStatus.CANNOT_OPEN_DATABASE;
 		}
 		try {
-			con.encryptDatabase(propertiePath, local);
+			con.encryptDatabase(propertiePath, situation, shareFolderID);
 		} catch (DatabaseException e) {
 			// TODO Auto-generated catch block
 			return DatabaseStatus.CANNOT_WRITE_TO_XML;
@@ -98,21 +119,21 @@ public class XMLDatabase implements IDatabase {
 	}
 
 	@Override
-	public DatabaseStatus createElement(Object obj) {
+	public List<?> createElement(Object obj) {
 		List<Object> list = new ArrayList<Object>();
 		list.add(obj);
 		return createElement(list);
 	}
 
 	@Override
-	public DatabaseStatus createElement(List<?> obj) {
+	public List<?> createElement(List<?> obj) {
 		if(obj.get(0) instanceof EncryptedFileDob){
 		   List<EncryptedFileDob> list = generateFileID((List<EncryptedFileDob>) obj);
 		   FileQuery query = new FileQuery();
 		   newDocument = query.createElement(list, newDocument);
 		};				
-		if(obj.get(0) instanceof EncryptedContainer){
-			 List<EncryptedContainer> list = generateContainerID((List<EncryptedContainer>) obj);
+		if(obj.get(0) instanceof TillLateContainer){
+			 List<TillLateContainer> list = generateContainerID((List<TillLateContainer>) obj);
 			 ContainerQuery query = new ContainerQuery();
 			  newDocument = query.createElement(list, newDocument);
 		};					
@@ -129,7 +150,7 @@ public class XMLDatabase implements IDatabase {
 			CloudAccountQuery query = new CloudAccountQuery();
 			  newDocument = query.createElement((List<CloudAccount>) obj, newDocument);
 		};
-		return DatabaseStatus.OK;
+		return null;
 	}
 
 	@Override
@@ -145,9 +166,9 @@ public class XMLDatabase implements IDatabase {
 			   FileQuery query = new FileQuery();
 			   newDocument = query.deleteElement((List<EncryptedFileDob>) obj, newDocument);
 			};				
-			if(obj.get(0) instanceof EncryptedContainer){
+			if(obj.get(0) instanceof TillLateContainer){
 				 ContainerQuery query = new ContainerQuery();
-				   newDocument = query.deleteElement((List<EncryptedContainer>)obj, newDocument);
+				   newDocument = query.deleteElement((List<TillLateContainer>)obj, newDocument);
 			};					
 			if(obj.get(0) instanceof GhostFolderDob){
 				 GhostFolderQuery query = new GhostFolderQuery();
@@ -176,9 +197,9 @@ public class XMLDatabase implements IDatabase {
 		if(obj.get(0) instanceof EncryptedFileDob){
 			   FileQuery query = new FileQuery();
 			   newDocument = query.updateElement((List<EncryptedFileDob>)obj, newDocument);};				
-			if(obj.get(0) instanceof EncryptedContainer){
+			if(obj.get(0) instanceof TillLateContainer){
 				 ContainerQuery query = new ContainerQuery();
-				  newDocument = query.updateElement((List<EncryptedContainer>)obj, newDocument);};					
+				  newDocument = query.updateElement((List<TillLateContainer>)obj, newDocument);};					
 			if(obj.get(0) instanceof GhostFolderDob){
 				 GhostFolderQuery query = new GhostFolderQuery();
 				  newDocument = query.updateElement((List<GhostFolderDob>)obj, newDocument);};
@@ -196,7 +217,7 @@ public class XMLDatabase implements IDatabase {
 		if(type == EncryptedFileDob.class){
 			   FileQuery query = new FileQuery();
 			   return   query.getElement(argument, value, newDocument);}
-			if(type == EncryptedContainer.class){
+			if(type == TillLateContainer.class){
 				 ContainerQuery query = new ContainerQuery();
 				  return query.getElement(argument, value, newDocument);}			
 			if(type == GhostFolderDob.class){
@@ -216,7 +237,7 @@ public class XMLDatabase implements IDatabase {
 		if(type == EncryptedFileDob.class){
 			   FileQuery query = new FileQuery();
 			   return  query.getElementAll(newDocument);}
-		if(type == EncryptedContainer.class){
+		if(type == TillLateContainer.class){
 				 ContainerQuery query = new ContainerQuery();
 				  return   query.getElementAll(newDocument);}		
 		if(type == GhostFolderDob.class){
@@ -236,7 +257,7 @@ public class XMLDatabase implements IDatabase {
 		if(type == EncryptedFileDob.class){
 			   FileQuery query = new FileQuery();
 			   return   query.getElementByParent(folder, newDocument);}
-		if(type == EncryptedContainer.class){
+		if(type == TillLateContainer.class){
 				  return  null;}		
 		if(type == GhostFolderDob.class){
 				 GhostFolderQuery query = new GhostFolderQuery();
@@ -276,8 +297,8 @@ public class XMLDatabase implements IDatabase {
 		return obj;
 	}
 	
-	private List<EncryptedContainer> generateContainerID(List<EncryptedContainer> obj){
-		for(EncryptedContainer dob: obj){
+	private List<TillLateContainer> generateContainerID(List<TillLateContainer> obj){
+		for(TillLateContainer dob: obj){
 			if (dob.getId() == null) {
 				int id = (int) (Math.random() * Messages.getIdSize() + 1);
 				// Check if it exist
@@ -292,10 +313,10 @@ public class XMLDatabase implements IDatabase {
 
 
 	private void initDBEntries(){
-			StructureXmlDob sxml = new StructureXmlDob(true);
+			StructureXmlDob sxml = new StructureXmlDob(DBSituation.LOCAL_DATABASE);
 			EncryptedFileDob filedob = sxml.getEncryptedFileDob();
 			ShareMember shareRelation= sxml.getShareMember();
-			EncryptedContainer encryptedContainer = sxml.getEncryptedContainer();
+			TillLateContainer encryptedContainer = sxml.getEncryptedContainer();
 			//TODO error handling if not working target or whatever
 			createElement(filedob);
 			createElement(shareRelation);

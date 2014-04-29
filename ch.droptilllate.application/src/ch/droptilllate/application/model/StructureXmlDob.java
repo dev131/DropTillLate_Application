@@ -3,17 +3,18 @@ package ch.droptilllate.application.model;
 import java.io.File;
 import java.sql.Date;
 
-import ch.droptilllate.application.dnb.EncryptedContainer;
+import ch.droptilllate.application.dnb.TillLateContainer;
 import ch.droptilllate.application.dnb.ShareRelation;
 import ch.droptilllate.application.dnb.ShareMember;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.properties.XMLConstruct;
+import ch.droptilllate.database.api.DBSituation;
 
 public class StructureXmlDob {
 	
 	private EncryptedFileDob encryptedFileDob;
 	private ShareMember shareMember;
-	private EncryptedContainer encryptedContainer;
+	private TillLateContainer encryptedContainer;
 	private String fileName;
 	private Integer fileId;
 	
@@ -23,8 +24,8 @@ public class StructureXmlDob {
 	 * @param key
 	 * @param local (if set id and name from local xml)
 	 */
-	public StructureXmlDob(boolean local){
-			if(local){
+	public StructureXmlDob(DBSituation situation){
+			if(situation == DBSituation.LOCAL_DATABASE){
 				this.fileName = XMLConstruct.NameLocalXML;
 				this.fileId = Integer.parseInt(XMLConstruct.IdLocalXMLFiles);
 			}
@@ -40,7 +41,7 @@ public class StructureXmlDob {
 				0L, 
 				Integer.parseInt(XMLConstruct.IdXMLContainer));
 		this.shareMember = new ShareMember(Messages.getIdSize(), Messages.OwnerMail);
-		this.encryptedContainer = new EncryptedContainer(Integer.parseInt(XMLConstruct.IdXMLContainer), Messages.getIdSize());
+		this.encryptedContainer = new TillLateContainer(Integer.parseInt(XMLConstruct.IdXMLContainer), Messages.getIdSize());
 		
 	}
 
@@ -52,7 +53,7 @@ public class StructureXmlDob {
 		return this.shareMember;
 	}
 
-	public EncryptedContainer getEncryptedContainer() {
+	public TillLateContainer getEncryptedContainer() {
 		return this.encryptedContainer;
 	}
 

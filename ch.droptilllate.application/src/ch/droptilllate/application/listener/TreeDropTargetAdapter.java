@@ -14,13 +14,14 @@ import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.widgets.TreeItem;
 
 import ch.droptilllate.application.controller.ViewController;
-import ch.droptilllate.application.dao.EncryptedFileDao;
-import ch.droptilllate.application.dao.GhostFolderDao;
 import ch.droptilllate.application.dnb.DroppedElement;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.views.Status;
-import ch.droptilllate.application.xml.AbstractXmlDatabase;
+import ch.droptilllate.database.api.DBSituation;
+import ch.droptilllate.database.api.IDatabase;
+import ch.droptilllate.database.api.XMLDatabase;
+import ch.droptilllate.database.xml.AbstractXmlDatabase;
 
 public class TreeDropTargetAdapter extends DropTargetAdapter {
 	@Inject
@@ -69,8 +70,8 @@ public class TreeDropTargetAdapter extends DropTargetAdapter {
 	
 	@Override
 	public void drop(DropTargetEvent event) {
-		EncryptedFileDao encryptedFileDao = new EncryptedFileDao();
-		GhostFolderDao encryptedFolderDao = new GhostFolderDao();
+		IDatabase database = new XMLDatabase();
+		database.openTransaction("", DBSituation.LOCAL_DATABASE);
 		// Handle Drag'N'Drop from Desktop into tree
 		if (this.fileTransfer.isSupportedType(event.currentDataType)) {
 			final String[] droppedFileInformation = (String[]) event.data;
@@ -123,7 +124,7 @@ public class TreeDropTargetAdapter extends DropTargetAdapter {
 					draggedFile.getParent().removeFile(draggedFile);
 					draggedFile.setParent(this.dragOverFolder);
 					//Write to Database
-					encryptedFileDao.updateElement(draggedFile, null);
+					database.updateElement(draggedFile);
 					this.dragOverFolder.addFile(draggedFile);
 				} else if (draggedElement instanceof GhostFolderDob) {
 					GhostFolderDob draggedFolder = (GhostFolderDob) draggedElement;
@@ -141,7 +142,7 @@ public class TreeDropTargetAdapter extends DropTargetAdapter {
 
 					draggedFolder.getParent().removeFolder(draggedFolder);
 					draggedFolder.setParent(this.dragOverFolder);
-					encryptedFolderDao.updateElement(draggedFolder, null);
+					database.updateElement(draggedFolder);
 					this.dragOverFolder.addFolder(draggedFolder);
 				}
 				// set dragOverFolder back to root for next drop. Otherwise

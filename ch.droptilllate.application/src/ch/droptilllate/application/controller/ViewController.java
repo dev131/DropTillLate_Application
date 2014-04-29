@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -40,16 +41,12 @@ import org.eclipse.swt.widgets.Widget;
 
 import ch.droptilllate.application.com.CloudDropboxCom;
 import ch.droptilllate.application.com.FileSystemCom;
-import ch.droptilllate.application.dao.CloudAccountDao;
-import ch.droptilllate.application.dao.ContainerDao;
-import ch.droptilllate.application.dao.EncryptedFileDao;
-import ch.droptilllate.application.dao.GhostFolderDao;
-import ch.droptilllate.application.dao.ShareMembersDao;
 import ch.droptilllate.application.dnb.CloudAccount;
-import ch.droptilllate.application.dnb.EncryptedContainer;
+import ch.droptilllate.application.dnb.TillLateContainer;
 import ch.droptilllate.application.dnb.DroppedElement;
 import ch.droptilllate.application.dnb.ShareRelation;
 import ch.droptilllate.application.dnb.ShareMember;
+import ch.droptilllate.application.exceptions.DatabaseStatus;
 import ch.droptilllate.application.handlers.FileHandler;
 import ch.droptilllate.application.info.CRUDCryptedFileInfo;
 import ch.droptilllate.application.info.ErrorMessage;
@@ -71,6 +68,9 @@ import ch.droptilllate.application.views.Status;
 import ch.droptilllate.cloudprovider.api.ICloudProviderCom;
 import ch.droptilllate.cloudprovider.api.IFileSystemCom;
 import ch.droptilllate.cloudprovider.error.CloudError;
+import ch.droptilllate.database.api.DBSituation;
+import ch.droptilllate.database.api.IDatabase;
+import ch.droptilllate.database.api.XMLDatabase;
 import ch.droptilllate.application.views.ShareView;
 
 public class ViewController {
@@ -89,7 +89,7 @@ public class ViewController {
 	private ShareManager shareManager;
 	public ShareRelation shareRelation = null;
 	public boolean sharefunction = false;
-
+	private IDatabase database;
 	public ViewController() {
 		// Exists only to defeat instantiation.
 	}
@@ -161,7 +161,10 @@ public class ViewController {
 		// Integer id, String name, Date date, String path,GhostFolderDob
 		// parent) {
 		root = new GhostFolderDob(0, "Root-Folder", null);
+		database = new XMLDatabase();
+		database.openTransaction("", DBSituation.LOCAL_DATABASE);
 		getFolderContent(root);
+		database.closeTransaction("", Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 		return root;
 	}
 
@@ -169,11 +172,8 @@ public class ViewController {
 	 * Needed by getInitialInput() to fill all (sub)folders with files.
 	 */
 	private void getFolderContent(GhostFolderDob folder) {
-		GhostFolderDao encryptedFolderDao = new GhostFolderDao();
-		EncryptedFileDao encryptedFileDao = new EncryptedFileDao();
-		folder.addFiles((encryptedFileDao).getFilesInFolder(folder, null));
-		List<GhostFolderDob> childFolders = (encryptedFolderDao)
-				.getFoldersInFolder(folder, null);
+		folder.addFiles((List<EncryptedFileDob>) database.getElementByParent(EncryptedFileDob.class, folder));
+		List<GhostFolderDob> childFolders = (List<GhostFolderDob>) database.getElementByParent(GhostFolderDob.class, folder);
 		if (childFolders != null && childFolders.size() > 0) {
 			folder.addFolders(childFolders);
 			for (GhostFolderDob childFolder : childFolders) {
@@ -205,6 +205,7 @@ public class ViewController {
 		fileList = getSelectedFileList();
 		folderList = getSelectedFolderList();
 		// Insert subfolder/files
+		database.openTransaction("", DBSituation.LOCAL_DATABASE);
 		getEntriesInFolders();
 		// Delete on Filesystem
 		IFileSystemCom com = FileSystemCom.getInstance();
@@ -214,9 +215,7 @@ public class ViewController {
 			Status status = Status.getInstance();
 			status.setMessage(fileDob.getName() + " -> successfully deleted");
 		}
-		// Delete on DB
-		EncryptedFileDao fileDB = new EncryptedFileDao();
-		fileDB.deleteElement(result.getEncryptedFileListSuccess(), null);
+		database.deleteElement(result.getEncryptedFileListSuccess());
 		// Check Folder
 		for (EncryptedFileDob fileDob : result.getEncryptedFileListError()) {
 			for (GhostFolderDob folderDob : folderList) {
@@ -225,24 +224,22 @@ public class ViewController {
 				}
 			}
 		}
-		GhostFolderDao folderDb = new GhostFolderDao();
-		folderDb.deleteElement(folderList, null);
+		database.deleteElement(folderList);
 		deleteTreeFiles(fileList);
 		deleteTreeFolders(folderList);
+		//CloseDatabase
+		database.closeTransaction("", Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 		viewer.refresh();
 	}
 
 	private void getEntriesInFolders() {
-		GhostFolderDao encryptedFolderDao = new GhostFolderDao();
-		EncryptedFileDao encryptedFileDao = new EncryptedFileDao();
 		List<EncryptedFileDob> tmpfilelist = new ArrayList<EncryptedFileDob>();
 		List<GhostFolderDob> tmpfolderlist = new ArrayList<GhostFolderDob>();
 		for (GhostFolderDob folder : folderList) {
-			tmpfolderlist.addAll(encryptedFolderDao.getFoldersInFolder(folder,
-					null));
+			tmpfolderlist.addAll((List<GhostFolderDob>)database.getElementByParent(GhostFolderDob.class, folder));
 		}
 		for (GhostFolderDob folder : folderList) {
-			tmpfilelist.addAll(encryptedFileDao.getFilesInFolder(folder, null));
+			tmpfilelist.addAll((List<EncryptedFileDob>)database.getElementByParent(EncryptedFileDob.class, folder));
 		}
 		folderList.addAll(tmpfolderlist);
 		fileList.addAll(tmpfilelist);
@@ -340,11 +337,13 @@ public class ViewController {
 	 * @param name
 	 */
 	public void newFolder(String name) {
-		GhostFolderDao folderDao = new GhostFolderDao();
+		database.openTransaction("", DBSituation.LOCAL_DATABASE);
 		File newFile = new File(name);
 		GhostFolderDob dob = new GhostFolderDob(null, newFile.getName(), root);
+		database.createElement(dob);
 		// insert in DB and Treeview
-		root.addFolder((GhostFolderDob) folderDao.newElement(dob, null));
+		root.addFolder((GhostFolderDob) database.createElement(dob).get(0));
+		database.closeTransaction("", Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 	}
 
 	/**
@@ -356,7 +355,7 @@ public class ViewController {
 	public void encryptDropElements(String[] droppedFileInformation,
 			GhostFolderDob dragOverFolder) {
 		actualDropFiles = new ArrayList<EncryptedFileDob>();
-
+		database.openTransaction("", DBSituation.LOCAL_DATABASE);
 		// insert DAO and update VIEW
 		for (String currentDroppedElement : droppedFileInformation) {
 			dropTreeElements(new File(currentDroppedElement), dragOverFolder);
@@ -367,13 +366,12 @@ public class ViewController {
 		ShareRelation shareFolder = new ShareRelation(Messages.getIdSize(), null);
 		CRUDCryptedFileInfo result = fileSystem.encryptFile(actualDropFiles, false);
 		// Update DB
-		EncryptedFileDao fileDB = new EncryptedFileDao();
+		
 		for (EncryptedFileDob fileDob : result.getEncryptedFileListSuccess()) {
-			fileDB.updateElement(fileDob, null);
-			EncryptedContainer container = new EncryptedContainer(
+			database.updateElement(fileDob);
+			TillLateContainer container = new TillLateContainer(
 					fileDob.getContainerId(), Messages.getIdSize());
-			ContainerDao containerDB = new ContainerDao();
-			containerDB.newElement(container, null);
+			database.createElement(container);
 			Status status = Status.getInstance();
 			status.setMessage(fileDob.getName() + " -> encryption worked");
 		}
@@ -382,10 +380,11 @@ public class ViewController {
 			status.setMessage(fileDob.getName() + " -> encryption not worked");
 		}
 		// Delete Error Files on DB
-		fileDB.deleteElement(result.getEncryptedFileListError(), null);
+		database.deleteElement(result.getEncryptedFileListError());
 		// TODO maybe delete dropped element Delete
 		// droppedElement.delete();
 		// droppedFile.setPath(Messages.getLocalPathDropbox());
+		database.closeTransaction("", Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 	}
 
 	/**
@@ -407,9 +406,7 @@ public class ViewController {
 					droppedElement.getPath(), parent, droppedElement.length(),
 					null);
 			// Insert new Node in DB
-			EncryptedFileDao fileDB = new EncryptedFileDao();
-			EncryptedFileDob encryptedPersistedFile = (EncryptedFileDob) fileDB
-					.newElement(fileDob, null);
+			EncryptedFileDob encryptedPersistedFile = (EncryptedFileDob) database.createElement(fileDob);
 			parent.addFile(encryptedPersistedFile);
 			// add to list
 			actualDropFiles.add(encryptedPersistedFile);
@@ -418,9 +415,7 @@ public class ViewController {
 			// parent
 			GhostFolderDob folderDob = new GhostFolderDob(null,
 					droppedElement.getName(), parent);
-			GhostFolderDao folderDB = new GhostFolderDao();
-			GhostFolderDob encryptedPersistedFolder = (GhostFolderDob) folderDB
-					.newElement(folderDob, null);
+			GhostFolderDob encryptedPersistedFolder = (GhostFolderDob) database.createElement(folderDob);
 			parent.addFolder(encryptedPersistedFolder);
 			for (File file : droppedElement.listFiles()) {
 				dropTreeElements(file, encryptedPersistedFolder);
@@ -453,14 +448,16 @@ public class ViewController {
 	public boolean shareFiles(ArrayList<String> mailList,
 			ArrayList<EncryptedFileDob> fileList, String password, boolean auto) {
 		//Check valid account
-		CloudAccountDao dao = new CloudAccountDao();
-		CloudAccount account = (CloudAccount) dao.getElementAll(null);
+		database.openTransaction("", DBSituation.LOCAL_DATABASE);
+		CloudAccount account = (CloudAccount) database.getElementAll(CloudAccount.class).get(0);
 		if(account == null){
 			return false;
 		}	
 		CloudError status = CloudError.NONE;
+		IDatabase database = new XMLDatabase();
+		database.openTransaction("", DBSituation.LOCAL_DATABASE);
 		shareManager = new ShareManager(fileList, password,
-				mailList);
+				mailList,database);
 		if (shareManager.getSTATUS() == 0) {
 			// ERROR
 		}
@@ -468,12 +465,18 @@ public class ViewController {
 			// CREATE
 			// Create and insert newShareRelation
 			KeyManager km = KeyManager.getInstance();			
-			shareRelation = new ShareRelation(null, null);
 			shareRelation = km.newShareRelation(password, null);
 			//Create new ShareRelation on filesystem
 			shareRelation = shareManager.createNewSharedRelation(fileList, shareRelation);
 			shareManager.insertShareMembers(shareRelation, mailList);
-			shareManager.createUpdateFiles(shareRelation);
+			database.closeTransaction("", Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
+			//CREATE NEW UPDATE DATABASE
+			IDatabase updatedatabase = new XMLDatabase();
+			updatedatabase.createDatabase(password, "", DBSituation.UPDATE_DATABASE);
+			updatedatabase.openDatabase(password, "", shareRelation.getID(), DBSituation.UPDATE_DATABASE);
+			updatedatabase.openTransaction("", DBSituation.UPDATE_DATABASE);
+			shareManager.createUpdateFiles(shareRelation, database);
+			updatedatabase.closeTransaction("", shareRelation.getID(), DBSituation.UPDATE_DATABASE);
 			//Share file Automatically
 			if(!auto){
 				status = shareFileToCloudManually(shareRelation, mailList, false);
@@ -573,12 +576,11 @@ public class ViewController {
 		// Create GhostFolder
 		GhostFolderDob ghostFolderDob = new GhostFolderDob(null, foldername,
 				root);
-		GhostFolderDao ghostfolderDao = new GhostFolderDao();
 		// Encrypt UploadFile
-		IFileSystemCom com = FileSystemCom.getInstance();
-		if (!com.decryptFile(shareRelation, false)) {
-			Status status = Status.getInstance();
-			status.setMessage("Wrong Password");
+		DatabaseStatus status = database.openDatabase(password, "", shareRelation.getID(), DBSituation.UPDATE_DATABASE);
+		if (status != DatabaseStatus.OK) {
+			Status status1 = Status.getInstance();
+			status.setMessage(status.getError());
 
 		} else {
 			// Delete if file decryption success
@@ -590,35 +592,27 @@ public class ViewController {
 				e.printStackTrace();
 			}
 			// Insert DB
-			ghostFolderDob = (GhostFolderDob) ghostfolderDao.newElement(
-					ghostFolderDob, null);
+			database.openTransaction("", DBSituation.LOCAL_DATABASE);
+			ghostFolderDob = (GhostFolderDob) database.createElement(ghostFolderDob);
+			database.closeTransaction("", Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 			// UpdateFile Import
-			ShareManager shareManager = new ShareManager();
-			List<EncryptedFileDob> fileDobList = shareManager
-					.getUpdateFiles(shareRelation.getKey());
-			List<EncryptedContainer> containerDobList = shareManager
-					.getUpdateContainers(shareRelation.getKey());
-			List<ShareMember> shareRelationDobList = shareManager
-					.getUpdateShareRelation(shareRelation.getKey());
-			// Update/Insert fileList
-			EncryptedFileDao fileDao = new EncryptedFileDao();
-			for (int i = 0; i < fileDobList.size(); i++) {
-				fileDobList.get(i).setParent(ghostFolderDob);
-				fileDao.newElement(fileDobList.get(i), null);
+			database.openTransaction("", DBSituation.UPDATE_DATABASE);
+			List<TillLateContainer> upcontainerList = (List<TillLateContainer>) database.getElementAll(TillLateContainer.class);
+			List<ShareMember> upsharememberList = (List<ShareMember>) database.getElementAll(ShareMember.class);
+			List<EncryptedFileDob> upfileDobList = (List<EncryptedFileDob>) database.getElementAll(EncryptedFileDob.class);
+			database.closeTransaction("", shareRelation.getID(), DBSituation.UPDATE_DATABASE);
+			for (int i = 0; i < upfileDobList.size(); i++) {
+				upfileDobList.get(i).setParent(ghostFolderDob);
 			}
-			// Insert ShareRelations
-			ShareMembersDao shareDao = new ShareMembersDao();
-			for (ShareMember relation : shareRelationDobList) {
-				shareDao.newElement(relation, null);
-			}
-			// Insert Containers
-			ContainerDao containerDao = new ContainerDao();
-			for (EncryptedContainer container : containerDobList) {
-				containerDao.newElement(container, null);
-			}
+			//InsertEntries into local db
+			database.openTransaction("", DBSituation.LOCAL_DATABASE);
+			database.createElement(upfileDobList);
+			database.createElement(upsharememberList);
+			database.createElement(upcontainerList);
+			database.closeTransaction("", Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 			// Update Tree
 			root.addFolder(ghostFolderDob);
-			ghostFolderDob.addFiles(fileDobList);
+			ghostFolderDob.addFiles(upfileDobList);
 			viewer.refresh();
 		}
 

@@ -8,7 +8,7 @@ public class ShareRelation {
 	
 	/**
 	 * ShareFolder
-	 * @param id -> auto generate if it is null
+	 * @param id -> auto generate if it null by database insert
 	 * @param path
 	 * @param key
 	 */

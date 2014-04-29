@@ -1,4 +1,4 @@
-package ch.droptilllate.database;
+package ch.droptilllate.database.api;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,10 +25,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import ch.droptilllate.application.com.FileSystemCom;
-import ch.droptilllate.application.dao.ContainerDao;
-import ch.droptilllate.application.dao.EncryptedFileDao;
-import ch.droptilllate.application.dao.ShareMembersDao;
-import ch.droptilllate.application.dnb.EncryptedContainer;
+import ch.droptilllate.application.dnb.TillLateContainer;
 import ch.droptilllate.application.dnb.ShareMember;
 import ch.droptilllate.application.dnb.ShareRelation;
 import ch.droptilllate.application.exceptions.DatabaseException;
@@ -51,7 +48,7 @@ public class DBConnection {
 	 * @throws DatabaseException 
 	 * @throws  
 	 */
-	public void createFile(String path, String password, boolean local) throws DatabaseException {
+	public void createFile(String path) throws DatabaseException {
 			DocumentBuilderFactory documentFactory = DocumentBuilderFactory
 					.newInstance();
 			DocumentBuilder documentBuilder = null;
@@ -80,7 +77,8 @@ public class DBConnection {
 			//Create SubShareRelationElement
 			Element shareRelations = document.createElement(XMLConstruct.RootElementShareMember);
 			collection.appendChild(shareRelations);
-			writeToXML(password,path, document, local);
+			writeToXML(path, document);
+			
 	}
 
 	/**
@@ -120,7 +118,7 @@ public class DBConnection {
 	 * @param document
 	 * @throws DatabaseException 
 	 */
-	public synchronized void writeToXML(String password, String path,Document document, boolean local) throws DatabaseException {
+	public synchronized void writeToXML(String path,Document document) throws DatabaseException {
 		TransformerFactory transformerFactory = TransformerFactory
 				.newInstance();
 		try {
@@ -172,14 +170,14 @@ public class DBConnection {
 	 * @return
 	 * @throws DatabaseException 
 	 */
-	public void decryptDatabase(String password, String path, boolean local) throws DatabaseException {
+	public void decryptDatabase(String password, String path, DBSituation situation, Integer shareFolderID) throws DatabaseException {
 		IFileSystemCom fileSystem = FileSystemCom.getInstance();	
-		ShareRelation shareFolder = new ShareRelation(Messages.getIdSize(), password);
-		if(fileSystem.decryptFile(shareFolder, local)){
+		ShareRelation shareFolder = new ShareRelation(shareFolderID, password);
+		if(fileSystem.decryptFile(shareFolder, situation)){
 			StructureXmlDob sxml;
 			File file = new File(path);	
 			
-			sxml = new StructureXmlDob(local);
+			sxml = new StructureXmlDob(situation);
 			//Register File Listener
 			EncryptedFileDob dob = sxml.getEncryptedFileDob();
 			FileHandler fileHandler = new FileHandler();
@@ -195,10 +193,10 @@ public class DBConnection {
 	 * @param key
 	 * @throws DatabaseException 
 	 */
-	public synchronized void encryptDatabase(String password, boolean local) throws DatabaseException {
+	public synchronized void encryptDatabase(String password, DBSituation situation, Integer shareRelationID) throws DatabaseException {
 		IFileSystemCom fileSystem = FileSystemCom.getInstance();	
-		ShareRelation shareRelation = new ShareRelation(Messages.getIdSize(), password);
-		if(!fileSystem.encryptFile(shareRelation, local)){
+		ShareRelation shareRelation = new ShareRelation(shareRelationID, password);
+		if(!fileSystem.encryptFile(shareRelation, situation)){
 			throw new DatabaseException(DatabaseStatus.DATABASE_ENCRYPTION_FAILED);
 		}
 	}
@@ -225,8 +223,8 @@ public class DBConnection {
 	 * @param local
 	 * @return
 	 */
-	public String getPath(boolean local, String path) {
-		if(local){
+	public String getPath(DBSituation situation, String path) {
+		if(situation == DBSituation.LOCAL_DATABASE){
 			return Configuration.getPropertieTempPath(path,true) + XMLConstruct.NameLocalXML;
 		} 
 		else{
