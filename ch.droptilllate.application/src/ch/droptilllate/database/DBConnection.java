@@ -51,7 +51,7 @@ public class DBConnection {
 	 * @throws DatabaseException 
 	 * @throws  
 	 */
-	public void createFile(String path) throws DatabaseException {
+	public void createFile(String path, String password, boolean local) throws DatabaseException {
 			DocumentBuilderFactory documentFactory = DocumentBuilderFactory
 					.newInstance();
 			DocumentBuilder documentBuilder = null;
@@ -80,7 +80,7 @@ public class DBConnection {
 			//Create SubShareRelationElement
 			Element shareRelations = document.createElement(XMLConstruct.RootElementShareMember);
 			collection.appendChild(shareRelations);
-
+			writeToXML(password,path, document, local);
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class DBConnection {
 	 * @param document
 	 * @throws DatabaseException 
 	 */
-	public synchronized void writeToXML(String path,Document document) throws DatabaseException {
+	public synchronized void writeToXML(String password, String path,Document document, boolean local) throws DatabaseException {
 		TransformerFactory transformerFactory = TransformerFactory
 				.newInstance();
 		try {
@@ -133,8 +133,6 @@ public class DBConnection {
 		} catch (TransformerException e) {
 			e.printStackTrace();
 		}
-	
-
 	}
 
 	/**
@@ -197,7 +195,7 @@ public class DBConnection {
 	 * @param key
 	 * @throws DatabaseException 
 	 */
-	public void encryptDatabase(String password, boolean local) throws DatabaseException {
+	public synchronized void encryptDatabase(String password, boolean local) throws DatabaseException {
 		IFileSystemCom fileSystem = FileSystemCom.getInstance();	
 		ShareRelation shareRelation = new ShareRelation(Messages.getIdSize(), password);
 		if(!fileSystem.encryptFile(shareRelation, local)){

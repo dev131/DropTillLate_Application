@@ -65,7 +65,7 @@ public class ContainerQuery {
 	public Document deleteElement(List<EncryptedContainer> list, Document document){
 		for(EncryptedContainer element : list){
 		// cast the result to a DOM NodeList
-		NodeList nodes = executeQuery(XMLConstruct.getFileExpression()+ "[@"+XMLConstruct.AttId+"='"
+		NodeList nodes = executeQuery(XMLConstruct.getContainerExpression()+ "[@"+XMLConstruct.AttId+"='"
 				+ element.getId() + "']", document);
 		for (int idx = 0; idx < nodes.getLength(); idx++) {
 			nodes.item(idx).getParentNode().removeChild(nodes.item(idx));
@@ -94,7 +94,7 @@ public class ContainerQuery {
 	 */
 	public Document updateElement(List<EncryptedContainer> list, Document document){
 		for(EncryptedContainer element : list){
-			NodeList nodes = executeQuery(XMLConstruct.getFileExpression()+ "[@"+XMLConstruct.AttId+"='"
+			NodeList nodes = executeQuery(XMLConstruct.getContainerExpression()+ "[@"+XMLConstruct.AttId+"='"
 					+ element.getId() + "']", document);
 			for (int idx = 0; idx < nodes.getLength(); idx++) {
 				if (element.getShareRelationId() != null){	
@@ -113,7 +113,7 @@ public class ContainerQuery {
 	 */
 	public List<EncryptedContainer> getElement(String argument, String value, Document document){
 		List<EncryptedContainer> list = new ArrayList<EncryptedContainer>();
-		NodeList nodes = executeQuery(XMLConstruct.getFileExpression()+ "[@"+argument+"='"
+		NodeList nodes = executeQuery(XMLConstruct.getContainerExpression()+ "[@"+argument+"='"
 				+ value + "']", document);
 		for (int i = 0; i < nodes.getLength(); i++) {
 			EncryptedContainer container = new EncryptedContainer(

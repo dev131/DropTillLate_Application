@@ -56,8 +56,13 @@ public class XMLConstruct extends NLS {
 				+ ChildElementContainer;
 	}
 
-	public static String getShareRelationExpression() {
+	public static String getShareMemberExpression() {
 		return "/" + RootElement + "/" + RootElementShareMember
 				+ "/" + ChildElementShareMember;
+	}
+	
+	public static String getCloudAccountExpression(){
+		return "/" + RootElement + "/" + RootElementCloudAccount
+				+ "/" + ChildElementCloudAccount;
 	}
 }

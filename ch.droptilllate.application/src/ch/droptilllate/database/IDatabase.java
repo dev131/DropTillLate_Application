@@ -59,35 +59,35 @@ public interface IDatabase {
 	 * @param obj Lis<Element>
 	 * @return Database status
 	 */
-	public DatabaseStatus createElement(List<Object> obj);
+	public DatabaseStatus createElement(List<?> obj);
 	
 	/**
-	 * Delete element
+	 * Delete element with ID
 	 * @param obj Element
 	 * @return  DatabaseStatus
 	 */
 	public DatabaseStatus deleteElement(Object obj);
 	
 	/**
-	 * Delete elements
+	 * Delete elements with ID
 	 * @param obj Lis<Element>
 	 * @return Database status
 	 */
-	public DatabaseStatus deleteElement(List<Object> obj);
+	public DatabaseStatus deleteElement(List<?> obj);
 	
 	/**
-	 * Update elements
+	 * Update elements with ID
 	 * @param obj Element
 	 * @return Database status
 	 */
 	public DatabaseStatus updateElement(Object obj);
 	
 	/**
-	 * Update elements
+	 * Update elements with ID
 	 * @param obj Lis<Element>
 	 * @return Database status
 	 */
-	public DatabaseStatus updateElement(List<Object> obj);
+	public DatabaseStatus updateElement(List<?> obj);
 	
 	/**
 	 * Get Element 
@@ -96,7 +96,7 @@ public interface IDatabase {
 	 * @param value
 	 * @return Lis<Element>
 	 */
-	public List<Object> getElement(Object type, String argument, String value);
+	public List<?> getElement(Object type, String argument, String value);
 	
 	/**
 	 * Get Element by Parentfolder (just for files and folder)
@@ -105,11 +105,11 @@ public interface IDatabase {
 	 * @param value
 	 * @return Lis<Element>
 	 */
-	public List<Object> getElementByParent(Object type, GhostFolderDob folder);
+	public List<?> getElementByParent(Object type, GhostFolderDob folder);
 	
 	/**
 	 * Get Element all
 	 * @return List<Object>
 	 */
-	public List<Object> getElementAll(Object Type);
+	public List<?> getElementAll(Object Type);
 }

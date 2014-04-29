@@ -61,7 +61,7 @@ public class FileQuery {
 	}
 
 	/**
-	 * Delete files from DOM object
+	 * Delete files from DOM object with id
 	 * @param fileDobList
 	 * @param document
 	 * @return document

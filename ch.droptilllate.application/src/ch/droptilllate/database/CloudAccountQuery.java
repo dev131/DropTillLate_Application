@@ -55,7 +55,7 @@ public class CloudAccountQuery {
 		public Document deleteElement(List<CloudAccount> list, Document document){
 			for(CloudAccount element : list){
 			// cast the result to a DOM NodeList
-			NodeList nodes = executeQuery(XMLConstruct.getFileExpression()+ "[@"+XMLConstruct.AttCloudUsername+"='"
+			NodeList nodes = executeQuery(XMLConstruct.getCloudAccountExpression()+ "[@"+XMLConstruct.AttCloudUsername+"='"
 					+ element.getUsername() + "']", document);
 			for (int idx = 0; idx < nodes.getLength(); idx++) {
 				nodes.item(idx).getParentNode().removeChild(nodes.item(idx));
@@ -84,7 +84,7 @@ public class CloudAccountQuery {
 		 */
 		public Document updateElement(List<CloudAccount> list, Document document){
 			for(CloudAccount element : list){
-				NodeList nodes = executeQuery(XMLConstruct.getFileExpression()+ "[@"+XMLConstruct.AttCloudUsername+"='"
+				NodeList nodes = executeQuery(XMLConstruct.getCloudAccountExpression()+ "[@"+XMLConstruct.AttCloudUsername+"='"
 						+ element.getUsername() + "']", document);
 				for (int idx = 0; idx < nodes.getLength(); idx++) {
 					if (element.getPassword() != null)
@@ -103,7 +103,7 @@ public class CloudAccountQuery {
 		 */
 		public List<CloudAccount> getElement(String argument, String value, Document document){
 			List<CloudAccount> list = new ArrayList<CloudAccount>();
-			NodeList nodes = executeQuery(XMLConstruct.getFileExpression()+ "[@"+argument+"='"
+			NodeList nodes = executeQuery(XMLConstruct.getCloudAccountExpression()+ "[@"+argument+"='"
 					+ value + "']", document);
 			for (int i = 0; i < nodes.getLength(); i++) {
 				CloudAccount account = new CloudAccount(nodes.item(i).getAttributes().getNamedItem(XMLConstruct.AttCloudUsername)

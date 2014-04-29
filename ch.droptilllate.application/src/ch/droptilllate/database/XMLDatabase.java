@@ -1,5 +1,7 @@
 package ch.droptilllate.database;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +16,7 @@ import ch.droptilllate.application.dnb.ShareMember;
 import ch.droptilllate.application.dnb.ShareRelation;
 import ch.droptilllate.application.exceptions.DatabaseException;
 import ch.droptilllate.application.exceptions.DatabaseStatus;
+import ch.droptilllate.application.handlers.FileHandler;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.model.StructureXmlDob;
@@ -25,17 +28,19 @@ public class XMLDatabase implements IDatabase {
 
 	private Document oldDocument;
 	private Document newDocument;
+	private String password;
 	
 	@Override
 	public DatabaseStatus createDatabase(String password, boolean local, String propertiePath) {		
+		this.password = password;
 		DBConnection con = new DBConnection();
 		 try {
-			con.createFile(con.getPath(local,propertiePath));
-			con.encryptDatabase(password, local);	
+			con.createFile(con.getPath(local,propertiePath), password, local);		
 			openTransaction(local, propertiePath);
 			initDBEntries();
-			con.writeToXML(con.getPath(local, propertiePath), newDocument);
-			con.deleteTempDB(con.getPath(local,propertiePath));
+			closeTransaction(local, propertiePath);
+			con.encryptDatabase(password, local);
+			con.deleteTempDB(con.getPath(local,propertiePath));			
 		} catch (DatabaseException e) {
 			return DatabaseStatus.DATABASE_NOT_CREATED;
 		}
@@ -44,10 +49,14 @@ public class XMLDatabase implements IDatabase {
 	
 	@Override
 	public DatabaseStatus openDatabase(String password, boolean local,String propertiePath){
+		this.password = password;
 		DBConnection con = new DBConnection();
+		FileHandler fileHandler = new FileHandler();
+		File file = new File(con.getPath(local,propertiePath));
 		try {
+			fileHandler.delete(file);
 			con.decryptDatabase(password, con.getPath(local,propertiePath), local);
-		} catch (DatabaseException e) {
+		} catch (DatabaseException | IOException e) {
 			return DatabaseStatus.CANNOT_OPEN_DATABASE;
 		}
 		return DatabaseStatus.OK;
@@ -75,9 +84,15 @@ public class XMLDatabase implements IDatabase {
 	public DatabaseStatus closeTransaction(boolean local, String propertiePath) {
 		DBConnection con = new DBConnection();
 		try {
-			con.writeToXML(con.getPath(local,propertiePath), newDocument);
+			con.writeToXML(this.password, con.getPath(local,propertiePath), newDocument, local);
 		} catch (DatabaseException e) {
 			return DatabaseStatus.CANNOT_OPEN_DATABASE;
+		}
+		try {
+			con.encryptDatabase(propertiePath, local);
+		} catch (DatabaseException e) {
+			// TODO Auto-generated catch block
+			return DatabaseStatus.CANNOT_WRITE_TO_XML;
 		}
 		return DatabaseStatus.OK;
 	}
@@ -85,33 +100,34 @@ public class XMLDatabase implements IDatabase {
 	@Override
 	public DatabaseStatus createElement(Object obj) {
 		List<Object> list = new ArrayList<Object>();
+		list.add(obj);
 		return createElement(list);
 	}
 
 	@Override
-	public DatabaseStatus createElement(List<Object> obj) {
+	public DatabaseStatus createElement(List<?> obj) {
 		if(obj.get(0) instanceof EncryptedFileDob){
-		   List<EncryptedFileDob> list = generateFileID((List<EncryptedFileDob>)(Object) obj);
+		   List<EncryptedFileDob> list = generateFileID((List<EncryptedFileDob>) obj);
 		   FileQuery query = new FileQuery();
 		   newDocument = query.createElement(list, newDocument);
 		};				
 		if(obj.get(0) instanceof EncryptedContainer){
-			 List<EncryptedContainer> list = generateContainerID((List<EncryptedContainer>)(Object) obj);
+			 List<EncryptedContainer> list = generateContainerID((List<EncryptedContainer>) obj);
 			 ContainerQuery query = new ContainerQuery();
 			  newDocument = query.createElement(list, newDocument);
 		};					
 		if(obj.get(0) instanceof GhostFolderDob){
-			 List<GhostFolderDob> list = generateFolderID((List<GhostFolderDob>)(Object) obj);
+			 List<GhostFolderDob> list = generateFolderID((List<GhostFolderDob>) obj);
 			 GhostFolderQuery query = new GhostFolderQuery();
 			  newDocument = query.createElement(list, newDocument);
 		};
 		if(obj.get(0) instanceof ShareMember){
 			ShareMemberQuery query = new ShareMemberQuery();
-			  newDocument = query.createElement((List<ShareMember>)(Object) obj, newDocument);
+			  newDocument = query.createElement((List<ShareMember>) obj, newDocument);
 		};
 		if(obj.get(0) instanceof CloudAccount){
 			CloudAccountQuery query = new CloudAccountQuery();
-			  newDocument = query.createElement((List<CloudAccount>)(Object) obj, newDocument);
+			  newDocument = query.createElement((List<CloudAccount>) obj, newDocument);
 		};
 		return DatabaseStatus.OK;
 	}
@@ -119,30 +135,31 @@ public class XMLDatabase implements IDatabase {
 	@Override
 	public DatabaseStatus deleteElement(Object obj) {
 		List<Object> list = new ArrayList<Object>();
+		list.add(obj);
 		return deleteElement(list);
 	}
 
 	@Override
-	public DatabaseStatus deleteElement(List<Object> obj) {
+	public DatabaseStatus deleteElement(List<?> obj) {
 		if(obj.get(0) instanceof EncryptedFileDob){
 			   FileQuery query = new FileQuery();
-			   newDocument = query.deleteElement((List<EncryptedFileDob>)(Object)obj, newDocument);
+			   newDocument = query.deleteElement((List<EncryptedFileDob>) obj, newDocument);
 			};				
 			if(obj.get(0) instanceof EncryptedContainer){
 				 ContainerQuery query = new ContainerQuery();
-				   newDocument = query.deleteElement((List<EncryptedContainer>)(Object)obj, newDocument);
+				   newDocument = query.deleteElement((List<EncryptedContainer>)obj, newDocument);
 			};					
 			if(obj.get(0) instanceof GhostFolderDob){
 				 GhostFolderQuery query = new GhostFolderQuery();
-				   newDocument = query.deleteElement((List<GhostFolderDob>)(Object)obj, newDocument);
+				   newDocument = query.deleteElement((List<GhostFolderDob>)obj, newDocument);
 			};
 			if(obj.get(0) instanceof ShareMember){
 				ShareMemberQuery query = new ShareMemberQuery();
-				   newDocument = query.deleteElement((List<ShareMember>)(Object)obj, newDocument);
+				   newDocument = query.deleteElement((List<ShareMember>)obj, newDocument);
 			};
 			if(obj.get(0) instanceof CloudAccount){
 				CloudAccountQuery query = new CloudAccountQuery();
-				   newDocument = query.deleteElement((List<CloudAccount>)(Object)obj, newDocument);
+				   newDocument = query.deleteElement((List<CloudAccount>)obj, newDocument);
 			};
 			return DatabaseStatus.OK;
 	}
@@ -150,85 +167,83 @@ public class XMLDatabase implements IDatabase {
 	@Override
 	public DatabaseStatus updateElement(Object obj) {
 		List<Object> list = new ArrayList<Object>();
+		list.add(obj);
 		return updateElement(list);
 	}
 
 	@Override
-	public DatabaseStatus updateElement(List<Object> obj) {
+	public DatabaseStatus updateElement(List<?> obj) {
 		if(obj.get(0) instanceof EncryptedFileDob){
 			   FileQuery query = new FileQuery();
-			   newDocument = query.updateElement((List<EncryptedFileDob>)(Object)obj, newDocument);};				
+			   newDocument = query.updateElement((List<EncryptedFileDob>)obj, newDocument);};				
 			if(obj.get(0) instanceof EncryptedContainer){
 				 ContainerQuery query = new ContainerQuery();
-				  newDocument = query.updateElement((List<EncryptedContainer>)(Object)obj, newDocument);};					
+				  newDocument = query.updateElement((List<EncryptedContainer>)obj, newDocument);};					
 			if(obj.get(0) instanceof GhostFolderDob){
 				 GhostFolderQuery query = new GhostFolderQuery();
-				  newDocument = query.updateElement((List<GhostFolderDob>)(Object)obj, newDocument);};
+				  newDocument = query.updateElement((List<GhostFolderDob>)obj, newDocument);};
 			if(obj.get(0) instanceof ShareMember){
 				ShareMemberQuery query = new ShareMemberQuery();
-				  newDocument = query.updateElement((List<ShareMember>)(Object)obj, newDocument);};
+				  newDocument = query.updateElement((List<ShareMember>)obj, newDocument);};
 			if(obj.get(0) instanceof CloudAccount){
 				CloudAccountQuery query = new CloudAccountQuery();
-				  newDocument = query.updateElement((List<CloudAccount>)(Object)obj, newDocument);};
+				  newDocument = query.updateElement((List<CloudAccount>)obj, newDocument);};
 			return DatabaseStatus.OK;
 	}
 
 	@Override
-	public List<Object> getElement(Object type, String argument, String value) {
-		if(type instanceof EncryptedFileDob){
+	public List<?> getElement(Object type, String argument, String value) {
+		if(type == EncryptedFileDob.class){
 			   FileQuery query = new FileQuery();
-			   return  (List<Object>)(EncryptedFileDob) query.getElement(argument, value, newDocument);}
-			if(type instanceof EncryptedContainer){
+			   return   query.getElement(argument, value, newDocument);}
+			if(type == EncryptedContainer.class){
 				 ContainerQuery query = new ContainerQuery();
-				  return  (List<Object>)(EncryptedContainer) query.getElement(argument, value, newDocument);}			
-			if(type instanceof GhostFolderDob){
+				  return query.getElement(argument, value, newDocument);}			
+			if(type == GhostFolderDob.class){
 				 GhostFolderQuery query = new GhostFolderQuery();
-				  return  (List<Object>)(GhostFolderDob) query.getElement(argument, value, newDocument);}
-			if(type instanceof ShareMember){
+				  return query.getElement(argument, value, newDocument);}
+			if(type == ShareMember.class){
 				ShareMemberQuery query = new ShareMemberQuery();
-				  return  (List<Object>)(ShareMember) query.getElement(argument, value, newDocument);}
-			if(type instanceof CloudAccount){
+				  return  query.getElement(argument, value, newDocument);}
+			if(type == CloudAccount.class){
 				CloudAccountQuery query = new CloudAccountQuery();
-				  return  (List<Object>)(CloudAccount) query.getElement(argument, value, newDocument);}
+				  return  query.getElement(argument, value, newDocument);}
 			return null;
 	}
 
 	@Override
-	public List<Object> getElementAll(Object type) {
-		if(type instanceof EncryptedFileDob){
+	public List<?> getElementAll(Object type) {
+		if(type == EncryptedFileDob.class){
 			   FileQuery query = new FileQuery();
-			   return  (List<Object>)(EncryptedFileDob) query.getElementAll(newDocument);}
-			if(type instanceof EncryptedContainer){
+			   return  query.getElementAll(newDocument);}
+		if(type == EncryptedContainer.class){
 				 ContainerQuery query = new ContainerQuery();
-				  return  (List<Object>)(EncryptedContainer) query.getElementAll(newDocument);}		
-			if(type instanceof GhostFolderDob){
+				  return   query.getElementAll(newDocument);}		
+		if(type == GhostFolderDob.class){
 				 GhostFolderQuery query = new GhostFolderQuery();
-				  return  (List<Object>)(GhostFolderDob) query.getElementAll(newDocument);}
-			if(type instanceof ShareMember){
+				  return   query.getElementAll(newDocument);}
+		if(type == ShareMember.class){
 				ShareMemberQuery query = new ShareMemberQuery();
-				  return  (List<Object>)(ShareMember) query.getElementAll(newDocument);}
-			if(type instanceof CloudAccount){
+				  return   query.getElementAll(newDocument);}
+		if(type == CloudAccount.class){
 				CloudAccountQuery query = new CloudAccountQuery();
-				  return  (List<Object>)(CloudAccount) query.getElementAll(newDocument);}
+				  return  query.getElementAll(newDocument);}
 			return null;
 	}
 
 	@Override
-	public List<Object> getElementByParent(Object type, GhostFolderDob folder) {
-		if(type instanceof EncryptedFileDob){
+	public List<?> getElementByParent(Object type, GhostFolderDob folder) {
+		if(type == EncryptedFileDob.class){
 			   FileQuery query = new FileQuery();
-			   return  (List<Object>)(EncryptedFileDob) query.getElementByParent(folder, newDocument);}
-			if(type instanceof EncryptedContainer){
-				 ContainerQuery query = new ContainerQuery();
+			   return   query.getElementByParent(folder, newDocument);}
+		if(type == EncryptedContainer.class){
 				  return  null;}		
-			if(type instanceof GhostFolderDob){
+		if(type == GhostFolderDob.class){
 				 GhostFolderQuery query = new GhostFolderQuery();
-				  return  (List<Object>)(GhostFolderDob) query.getElementByParent(folder, newDocument);}
-			if(type instanceof ShareMember){
-				ShareMemberQuery query = new ShareMemberQuery();
+				  return  query.getElementByParent(folder, newDocument);}
+		if(type == ShareMember.class){
 				  return  null;}
-			if(type instanceof CloudAccount){
-				CloudAccountQuery query = new CloudAccountQuery();
+		if(type == CloudAccount.class){
 				  return  null;}
 			return null;
 	}
@@ -281,6 +296,7 @@ public class XMLDatabase implements IDatabase {
 			EncryptedFileDob filedob = sxml.getEncryptedFileDob();
 			ShareMember shareRelation= sxml.getShareMember();
 			EncryptedContainer encryptedContainer = sxml.getEncryptedContainer();
+			//TODO error handling if not working target or whatever
 			createElement(filedob);
 			createElement(shareRelation);
 			createElement(encryptedContainer);

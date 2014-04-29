@@ -56,7 +56,7 @@ public class ShareMemberQuery {
 	public Document deleteElement(List<ShareMember> list, Document document){
 		for(ShareMember element : list){
 		// cast the result to a DOM NodeList
-		NodeList nodes = executeQuery(XMLConstruct.getFileExpression()+ "[@"+XMLConstruct.AttShareRelationID+"='"
+		NodeList nodes = executeQuery(XMLConstruct.getShareMemberExpression()+ "[@"+XMLConstruct.AttShareRelationID+"='"
 				+ element.getShareRelationId() + "']", document);
 		for (int idx = 0; idx < nodes.getLength(); idx++) {
 			nodes.item(idx).getParentNode().removeChild(nodes.item(idx));
@@ -85,7 +85,7 @@ public class ShareMemberQuery {
 	 */
 	public Document updateElement(List<ShareMember> list, Document document){
 		for(ShareMember element : list){
-			NodeList nodes = executeQuery(XMLConstruct.getFileExpression()+ "[@"+XMLConstruct.AttMail+"='"
+			NodeList nodes = executeQuery(XMLConstruct.getShareMemberExpression()+ "[@"+XMLConstruct.AttMail+"='"
 					+ element.getMail() + "']", document);
 			for (int idx = 0; idx < nodes.getLength(); idx++) {
 				if (element.getShareRelationId() != null)
@@ -104,7 +104,7 @@ public class ShareMemberQuery {
 	 */
 	public List<ShareMember> getElement(String argument, String value, Document document){
 		List<ShareMember> list = new ArrayList<ShareMember>();
-		NodeList nodes = executeQuery(XMLConstruct.getFileExpression()+ "[@"+argument+"='"
+		NodeList nodes = executeQuery(XMLConstruct.getShareMemberExpression()+ "[@"+argument+"='"
 				+ value + "']", document);
 		for (int i = 0; i < nodes.getLength(); i++) {
 			ShareMember sharemember = new ShareMember(Integer.parseInt(nodes.item(i).getAttributes().getNamedItem(XMLConstruct.AttShareRelationID)

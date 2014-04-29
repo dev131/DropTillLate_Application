@@ -56,7 +56,7 @@ public class GhostFolderQuery {
 	public Document deleteElement(List<GhostFolderDob> list, Document document){
 		for(GhostFolderDob element : list){
 		// cast the result to a DOM NodeList
-		NodeList nodes = executeQuery(XMLConstruct.getFileExpression()+ "[@"+XMLConstruct.AttId+"='"
+		NodeList nodes = executeQuery(XMLConstruct.getGhostFolderExpression()+ "[@"+XMLConstruct.AttId+"='"
 				+ element.getId() + "']", document);
 		for (int idx = 0; idx < nodes.getLength(); idx++) {
 			nodes.item(idx).getParentNode().removeChild(nodes.item(idx));
@@ -85,13 +85,18 @@ public class GhostFolderQuery {
 	 */
 	public Document updateElement(List<GhostFolderDob> list, Document document){
 		for(GhostFolderDob element : list){
-			NodeList nodes = executeQuery(XMLConstruct.getFileExpression()+ "[@"+XMLConstruct.AttId+"='"
+			NodeList nodes = executeQuery(XMLConstruct.getGhostFolderExpression()+ "[@"+XMLConstruct.AttId+"='"
 					+ element.getId() + "']", document);
 			for (int idx = 0; idx < nodes.getLength(); idx++) {
 				if (element.getParent() != null){	
-				nodes.item(idx).getAttributes().getNamedItem(XMLConstruct.AttFolderName)
-							.setNodeValue(element.getName().toString());
-		}}
+				nodes.item(idx).getAttributes().getNamedItem(XMLConstruct.AttParentId)
+							.setNodeValue(element.getParent().getId().toString());
+				}
+				if(element.getName()!= null){
+					nodes.item(idx).getAttributes().getNamedItem(XMLConstruct.AttFolderName)
+					.setNodeValue(element.getName().toString());
+				}
+				}
 		}
 			return document;
 	}
@@ -104,7 +109,7 @@ public class GhostFolderQuery {
 	 */
 	public List<GhostFolderDob> getElement(String argument, String value, Document document){
 		List<GhostFolderDob> list = new ArrayList<GhostFolderDob>();
-		NodeList nodes = executeQuery(XMLConstruct.getFileExpression()+ "[@"+argument+"='"
+		NodeList nodes = executeQuery(XMLConstruct.getGhostFolderExpression()+ "[@"+argument+"='"
 				+ value + "']", document);
 		for (int i = 0; i < nodes.getLength(); i++) {
 			GhostFolderDob dob = new GhostFolderDob(
