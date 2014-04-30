@@ -19,12 +19,14 @@ import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.properties.XMLConstruct;
 
 public class GhostFolderQuery {
+	public Document document;
 	/**
 	 * Create element into DOM object
 	 * @param encryptedFile
 	 * @return document
 	 */
-	public Document createElement(List<GhostFolderDob> list, Document document) {
+	public List<GhostFolderDob> createElement(List<GhostFolderDob> list, Document document) {
+		this.document = document;
 		for(GhostFolderDob element : list){
 			NodeList nodelist = document.getElementsByTagName(XMLConstruct.RootElementGhostFolder);
 			Node node = nodelist.item(0);
@@ -35,7 +37,7 @@ public class GhostFolderQuery {
 			ghostfolder.setAttribute(XMLConstruct.AttFolderName, element.getName());
 			node.appendChild(ghostfolder);
 		}	
-		return document;
+		return list;
 	}
 
 	/**
@@ -184,6 +186,10 @@ public class GhostFolderQuery {
 		// cast the result to a DOM NodeList
 		nodes = (NodeList) result;
 		return nodes;
+	}
+
+	public Document getDocument() {
+		return document;
 	}
 	
 	

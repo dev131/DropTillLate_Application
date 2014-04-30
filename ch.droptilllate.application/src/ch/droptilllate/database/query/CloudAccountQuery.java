@@ -19,13 +19,13 @@ import ch.droptilllate.application.dnb.CloudAccount;
 import ch.droptilllate.application.properties.XMLConstruct;
 
 public class CloudAccountQuery {
-
+	public Document document;
 		/**
 		 * Create element into DOM object
 		 * @param encryptedFile
 		 * @return document
 		 */
-		public Document createElement(List<CloudAccount> list, Document document) {
+		public List<CloudAccount> createElement(List<CloudAccount> list, Document document) {
 			for(CloudAccount element : list){
 				NodeList nodelist = document.getElementsByTagName(XMLConstruct.RootElementCloudAccount);
 				Node node = nodelist.item(0);
@@ -35,7 +35,7 @@ public class CloudAccountQuery {
 				account.setAttribute(XMLConstruct.AttCloudPassword, element.getPassword());
 				node.appendChild(account);
 			}	
-			return document;
+			return list;
 		}
 
 		/**
@@ -151,6 +151,10 @@ public class CloudAccountQuery {
 			// cast the result to a DOM NodeList
 			nodes = (NodeList) result;
 			return nodes;
+		}
+
+		public Document getDocument() {
+			return document;
 		}
 		
 }

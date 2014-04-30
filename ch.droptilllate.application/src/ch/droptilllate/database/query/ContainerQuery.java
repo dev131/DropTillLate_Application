@@ -18,12 +18,14 @@ import ch.droptilllate.application.dnb.TillLateContainer;
 import ch.droptilllate.application.properties.XMLConstruct;
 
 public class ContainerQuery {
+	public Document document;
 	/**
 	 * Create element into DOM object
 	 * @param TillLateContainer
 	 * @return document
 	 */
-	public Document createElement(List<TillLateContainer> list, Document document) {
+	public List<TillLateContainer> createElement(List<TillLateContainer> list, Document document) {
+		this.document = document;
 		for(TillLateContainer element : list){
 			NodeList nodelist = document.getElementsByTagName(XMLConstruct.RootElementContainer);
 			Node node = nodelist.item(0);
@@ -33,7 +35,7 @@ public class ContainerQuery {
 			account.setAttribute(XMLConstruct.AttShareRelationID, element.getShareRelationId().toString());
 			node.appendChild(account);
 		}	
-		return document;
+		return list;
 	}
 
 	/**
@@ -155,6 +157,10 @@ public class ContainerQuery {
 		// cast the result to a DOM NodeList
 		nodes = (NodeList) result;
 		return nodes;
+	}
+
+	public Document getDocument() {
+		return document;
 	}
 	
 

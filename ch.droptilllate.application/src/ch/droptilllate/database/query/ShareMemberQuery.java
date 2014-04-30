@@ -21,13 +21,14 @@ import ch.droptilllate.application.dnb.ShareMember;
 import ch.droptilllate.application.properties.XMLConstruct;
 
 public class ShareMemberQuery {
-
+	public Document document;
 	/**
 	 * Create element into DOM object
 	 * @param encryptedFile
 	 * @return document
 	 */
-	public Document createElement(List<ShareMember> list, Document document) {
+	public List<ShareMember> createElement(List<ShareMember> list, Document document) {
+		this.document = document;
 		for(ShareMember element : list){
 			NodeList nodelist = document.getElementsByTagName(XMLConstruct.RootElementShareMember);
 			Node node = nodelist.item(0);
@@ -37,7 +38,7 @@ public class ShareMemberQuery {
 			shareMember.setAttribute(XMLConstruct.AttShareRelationID, element.getShareRelationId().toString());
 			node.appendChild(shareMember);
 		}	
-		return document;
+		return list;
 	}
 
 	/**
@@ -153,6 +154,10 @@ public class ShareMemberQuery {
 		// cast the result to a DOM NodeList
 		nodes = (NodeList) result;
 		return nodes;
+	}
+
+	public Document getDocument() {
+		return document;
 	}
 	
 	

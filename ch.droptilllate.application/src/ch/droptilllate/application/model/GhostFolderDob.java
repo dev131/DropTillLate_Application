@@ -60,13 +60,10 @@ public class GhostFolderDob extends DroppedElement{
 
 	public void addFiles(List<EncryptedFileDob> files) {
 		for (EncryptedFileDob file : files) {
-			int i = Messages.getIdSize();
-			if(file.getId() != i){
 				this.files.add(file);
 				file.setParent(this);
 				fireAdd(file);
 			}	
-		}
 	}
 
 	public List<EncryptedFileDob> getFiles() {

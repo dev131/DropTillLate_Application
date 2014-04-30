@@ -394,6 +394,7 @@ public class ViewController {
 	 * @param parent
 	 */
 	private void dropTreeElements(File droppedElement, GhostFolderDob parent) {
+		database.openTransaction("", DBSituation.LOCAL_DATABASE);
 		if (!droppedElement.isDirectory()) {
 			if (droppedElement.getName().contains(".DS_Store")) {
 				return;
@@ -406,7 +407,7 @@ public class ViewController {
 					droppedElement.getPath(), parent, droppedElement.length(),
 					null);
 			// Insert new Node in DB
-			EncryptedFileDob encryptedPersistedFile = (EncryptedFileDob) database.createElement(fileDob);
+			EncryptedFileDob encryptedPersistedFile = (EncryptedFileDob) database.createElement(fileDob).get(0);
 			parent.addFile(encryptedPersistedFile);
 			// add to list
 			actualDropFiles.add(encryptedPersistedFile);
@@ -415,7 +416,7 @@ public class ViewController {
 			// parent
 			GhostFolderDob folderDob = new GhostFolderDob(null,
 					droppedElement.getName(), parent);
-			GhostFolderDob encryptedPersistedFolder = (GhostFolderDob) database.createElement(folderDob);
+			GhostFolderDob encryptedPersistedFolder = (GhostFolderDob) database.createElement(folderDob).get(0);
 			parent.addFolder(encryptedPersistedFolder);
 			for (File file : droppedElement.listFiles()) {
 				dropTreeElements(file, encryptedPersistedFolder);
@@ -423,6 +424,7 @@ public class ViewController {
 			// boolean success = droppedElement.delete();
 			// log.debug("Sourcefolder deleted");
 		}
+		database.closeTransaction("", Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 
 	}
 

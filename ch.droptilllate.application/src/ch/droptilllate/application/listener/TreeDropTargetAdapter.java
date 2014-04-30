@@ -91,6 +91,8 @@ public class TreeDropTargetAdapter extends DropTargetAdapter {
 				 viewcontroller.encryptDropElements(droppedFileInformation, this.dragOverFolder);
 
 			} catch (Exception e) {
+				//TODO Exception handling
+				System.out.println(" EncryptDropRElement failed");
 				// log.error("Error at proccessing dropped data. " + e);
 			}
 			// set dragOverFolder back to root for next drop. Otherwise dropping

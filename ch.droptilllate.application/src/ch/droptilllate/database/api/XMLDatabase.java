@@ -130,25 +130,35 @@ public class XMLDatabase implements IDatabase {
 		if(obj.get(0) instanceof EncryptedFileDob){
 		   List<EncryptedFileDob> list = generateFileID((List<EncryptedFileDob>) obj);
 		   FileQuery query = new FileQuery();
-		   newDocument = query.createElement(list, newDocument);
+		   list = query.createElement(list, newDocument);
+		   newDocument = query.getDocument();
+		   return list;
 		};				
 		if(obj.get(0) instanceof TillLateContainer){
 			 List<TillLateContainer> list = generateContainerID((List<TillLateContainer>) obj);
 			 ContainerQuery query = new ContainerQuery();
-			  newDocument = query.createElement(list, newDocument);
+			 list = query.createElement(list, newDocument);
+			   newDocument = query.getDocument();
+			   return list;
 		};					
 		if(obj.get(0) instanceof GhostFolderDob){
 			 List<GhostFolderDob> list = generateFolderID((List<GhostFolderDob>) obj);
 			 GhostFolderQuery query = new GhostFolderQuery();
-			  newDocument = query.createElement(list, newDocument);
+			 list = query.createElement(list, newDocument);
+			   newDocument = query.getDocument();
+			   return list;
 		};
 		if(obj.get(0) instanceof ShareMember){
 			ShareMemberQuery query = new ShareMemberQuery();
-			  newDocument = query.createElement((List<ShareMember>) obj, newDocument);
+				obj = query.createElement((List<ShareMember>) obj, newDocument);
+			   newDocument = query.getDocument();
+			   return obj;
 		};
 		if(obj.get(0) instanceof CloudAccount){
 			CloudAccountQuery query = new CloudAccountQuery();
-			  newDocument = query.createElement((List<CloudAccount>) obj, newDocument);
+			 obj = query.createElement((List<CloudAccount>) obj, newDocument);
+			   newDocument = query.getDocument();
+			   return obj;
 		};
 		return null;
 	}

@@ -21,21 +21,24 @@ import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.properties.XMLConstruct;
 
-public class FileQuery {
 
+
+public class FileQuery {
+	public Document document;
 	/**
 	 * Create element into DOM object
 	 * @param encryptedFile
 	 * @return document
 	 */
-	public Document createElement(List<EncryptedFileDob> fileDobList, Document document) {
+	public List<EncryptedFileDob> createElement(List<EncryptedFileDob> fileDobList, Document document) {
+		this.document = document;
 		for(EncryptedFileDob encryptedFileDob : fileDobList){
 			NodeList nodelist = document.getElementsByTagName(XMLConstruct.RootElementFile);
 			Node node = nodelist.item(0);
 			Element file = document.createElement(XMLConstruct.ChildElementFile);
 			// Generate xml entry with ID
 			file.setAttribute(XMLConstruct.AttId, Integer.toString(encryptedFileDob.getId()));
-			String parentID = "0";
+			String parentID = "";
 			if(encryptedFileDob.getParent() != null){
 			parentID = Integer.toString(encryptedFileDob.getParent().getId());
 			}
@@ -51,7 +54,7 @@ public class FileQuery {
 			file.setAttribute(XMLConstruct.AttContainerId, containerID);
 			node.appendChild(file);
 		}	
-		return document;
+		return fileDobList;
 	}
 
 	/**
@@ -266,5 +269,11 @@ public class FileQuery {
 		nodes = (NodeList) result;
 		return nodes;
 	}
+
+	public Document getDocument() {
+		return document;
+	}
+	
+	
 	
 }
