@@ -380,7 +380,9 @@ public class ViewController {
 			status.setMessage(fileDob.getName() + " -> encryption not worked");
 		}
 		// Delete Error Files on DB
-		database.deleteElement(result.getEncryptedFileListError());
+		if(!result.getEncryptedFileListError().isEmpty()){
+			database.deleteElement(result.getEncryptedFileListError());
+		}
 		// TODO maybe delete dropped element Delete
 		// droppedElement.delete();
 		// droppedFile.setPath(Messages.getLocalPathDropbox());
