@@ -354,7 +354,6 @@ public class InitialView implements SelectionListener, ModifyListener
 				if (controller.login(password))
 				{
 					IDatabase database = new XMLDatabase();
-					database.createDatabase(password, "", DBSituation.LOCAL_DATABASE);
 					database.openDatabase(password, "", Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 					startApplication();
 				}
@@ -421,8 +420,7 @@ public class InitialView implements SelectionListener, ModifyListener
 		ViewController.getInstance().initController();
 		ViewController.getInstance().setSharefunction(cbCloudProvider.getSelection());
 		IDatabase database = new XMLDatabase();
-		DatabaseStatus status = database.createDatabase(dropboxPassword, "", DBSituation.LOCAL_DATABASE);
-		if(status != DatabaseStatus.OK){
+		if(database.openTransaction("", DBSituation.LOCAL_DATABASE) != DatabaseStatus.OK){
 			//TODO ERROR HANDLING
 		}	
 		List<CloudAccount> list =  (List<CloudAccount>) database.getElementAll(CloudAccount.class);

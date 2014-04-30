@@ -179,9 +179,10 @@ public class DBConnection {
 			
 			sxml = new StructureXmlDob(situation);
 			//Register File Listener
-			EncryptedFileDob dob = sxml.getEncryptedFileDob();
-			FileHandler fileHandler = new FileHandler();
-			fileHandler.setFileListener(file, dob);		
+			//TODO not useful
+//			EncryptedFileDob dob = sxml.getEncryptedFileDob();
+//			FileHandler fileHandler = new FileHandler();
+//			fileHandler.setFileListener(file, dob);		
 		}		
 		else{
 			throw new DatabaseException(DatabaseStatus.DATABASE_DECRYPTION_FAILED);
