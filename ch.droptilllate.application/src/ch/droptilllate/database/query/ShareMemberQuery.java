@@ -30,9 +30,9 @@ public class ShareMemberQuery {
 	public List<ShareMember> createElement(List<ShareMember> list, Document document) {
 		this.document = document;
 		for(ShareMember element : list){
-			NodeList nodelist = document.getElementsByTagName(XMLConstruct.RootElementShareMember);
+			NodeList nodelist = this.document.getElementsByTagName(XMLConstruct.RootElementShareMember);
 			Node node = nodelist.item(0);
-			Element shareMember = document.createElement(XMLConstruct.ChildElementShareMember);
+			Element shareMember = this.document.createElement(XMLConstruct.ChildElementShareMember);
 			// Generate xml entry with ID
 			shareMember.setAttribute(XMLConstruct.AttMail, element.getMail());
 			shareMember.setAttribute(XMLConstruct.AttShareRelationID, element.getShareRelationId().toString());

@@ -240,7 +240,7 @@ public class FileSystemCom implements IFileSystemCom {
 	private TillLateContainer getTillLateContainerByID(Integer id){
 		IDatabase database = new XMLDatabase();
 		database.openTransaction("", DBSituation.LOCAL_DATABASE);	
-		TillLateContainer container = (TillLateContainer) database.getElement(TillLateContainer.class, XMLConstruct.AttId, id.toString());
+		TillLateContainer container = (TillLateContainer) database.getElement(TillLateContainer.class, XMLConstruct.AttId, id.toString()).get(0);
 		database.closeTransaction("", Messages.getIdSize(),DBSituation.LOCAL_DATABASE);
 		return container;
 	}

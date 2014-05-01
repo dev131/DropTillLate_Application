@@ -33,9 +33,9 @@ public class FileQuery {
 	public List<EncryptedFileDob> createElement(List<EncryptedFileDob> fileDobList, Document document) {
 		this.document = document;
 		for(EncryptedFileDob encryptedFileDob : fileDobList){
-			NodeList nodelist = document.getElementsByTagName(XMLConstruct.RootElementFile);
+			NodeList nodelist = this.document.getElementsByTagName(XMLConstruct.RootElementFile);
 			Node node = nodelist.item(0);
-			Element file = document.createElement(XMLConstruct.ChildElementFile);
+			Element file = this.document.createElement(XMLConstruct.ChildElementFile);
 			// Generate xml entry with ID
 			file.setAttribute(XMLConstruct.AttId, Integer.toString(encryptedFileDob.getId()));
 			String parentID = "";

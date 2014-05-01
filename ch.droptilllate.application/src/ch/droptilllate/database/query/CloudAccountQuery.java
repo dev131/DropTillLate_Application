@@ -27,9 +27,9 @@ public class CloudAccountQuery {
 		 */
 		public List<CloudAccount> createElement(List<CloudAccount> list, Document document) {
 			for(CloudAccount element : list){
-				NodeList nodelist = document.getElementsByTagName(XMLConstruct.RootElementCloudAccount);
+				NodeList nodelist = this.document.getElementsByTagName(XMLConstruct.RootElementCloudAccount);
 				Node node = nodelist.item(0);
-				Element account = document.createElement(XMLConstruct.ChildElementCloudAccount);
+				Element account = this.document.createElement(XMLConstruct.ChildElementCloudAccount);
 				// Generate xml entry with ID
 				account.setAttribute(XMLConstruct.AttCloudUsername, element.getUsername());
 				account.setAttribute(XMLConstruct.AttCloudPassword, element.getPassword());

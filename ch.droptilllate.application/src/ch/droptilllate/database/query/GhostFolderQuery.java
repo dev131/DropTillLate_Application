@@ -28,9 +28,9 @@ public class GhostFolderQuery {
 	public List<GhostFolderDob> createElement(List<GhostFolderDob> list, Document document) {
 		this.document = document;
 		for(GhostFolderDob element : list){
-			NodeList nodelist = document.getElementsByTagName(XMLConstruct.RootElementGhostFolder);
+			NodeList nodelist = this.document.getElementsByTagName(XMLConstruct.RootElementGhostFolder);
 			Node node = nodelist.item(0);
-			Element ghostfolder = document.createElement(XMLConstruct.ChildElementGhostFolder);
+			Element ghostfolder = this.document.createElement(XMLConstruct.ChildElementGhostFolder);
 			// Generate xml entry with ID
 			ghostfolder.setAttribute(XMLConstruct.AttId, element.getId().toString());
 			ghostfolder.setAttribute(XMLConstruct.AttParentId, element.getParent().getId().toString());

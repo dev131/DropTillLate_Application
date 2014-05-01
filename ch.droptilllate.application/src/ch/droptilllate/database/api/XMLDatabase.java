@@ -119,14 +119,14 @@ public class XMLDatabase implements IDatabase {
 	}
 
 	@Override
-	public List<?> createElement(Object obj) {
+	public synchronized List<?> createElement(Object obj) {
 		List<Object> list = new ArrayList<Object>();
 		list.add(obj);
 		return createElement(list);
 	}
 
 	@Override
-	public List<?> createElement(List<?> obj) {
+	public synchronized List<?> createElement(List<?> obj) {
 		if(obj.get(0) instanceof EncryptedFileDob){
 		   List<EncryptedFileDob> list = generateFileID((List<EncryptedFileDob>) obj);
 		   FileQuery query = new FileQuery();

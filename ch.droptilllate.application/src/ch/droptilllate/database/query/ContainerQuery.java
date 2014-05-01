@@ -27,9 +27,9 @@ public class ContainerQuery {
 	public List<TillLateContainer> createElement(List<TillLateContainer> list, Document document) {
 		this.document = document;
 		for(TillLateContainer element : list){
-			NodeList nodelist = document.getElementsByTagName(XMLConstruct.RootElementContainer);
+			NodeList nodelist = this.document.getElementsByTagName(XMLConstruct.RootElementContainer);
 			Node node = nodelist.item(0);
-			Element account = document.createElement(XMLConstruct.ChildElementContainer);
+			Element account = this.document.createElement(XMLConstruct.ChildElementContainer);
 			// Generate xml entry with ID
 			account.setAttribute(XMLConstruct.AttId, element.getId().toString());
 			account.setAttribute(XMLConstruct.AttShareRelationID, element.getShareRelationId().toString());
