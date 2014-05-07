@@ -17,11 +17,9 @@ import ch.droptilllate.application.controller.ViewController;
 import ch.droptilllate.application.dnb.DroppedElement;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
-import ch.droptilllate.application.views.Status;
 import ch.droptilllate.database.api.DBSituation;
 import ch.droptilllate.database.api.IDatabase;
-import ch.droptilllate.database.api.XMLDatabase;
-import ch.droptilllate.database.xml.AbstractXmlDatabase;
+import ch.droptilllate.database.xml.XMLDatabase;
 
 public class TreeDropTargetAdapter extends DropTargetAdapter {
 	@Inject

@@ -66,7 +66,7 @@ public interface IFileSystemCom {
 	/**
 	 * Encrypt and Export fileList
 	 * @param fileList
-	 * @return
+	 * @return CRUDCryptedFileInfo (FileSuccessList, FileError List)
 	 */
 	public  CRUDCryptedFileInfo exportFiles(List<EncryptedFileDob> fileList);
 }

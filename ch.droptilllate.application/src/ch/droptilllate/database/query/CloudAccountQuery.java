@@ -26,6 +26,7 @@ public class CloudAccountQuery {
 		 * @return document
 		 */
 		public List<CloudAccount> createElement(List<CloudAccount> list, Document document) {
+			this.document = document;
 			for(CloudAccount element : list){
 				NodeList nodelist = this.document.getElementsByTagName(XMLConstruct.RootElementCloudAccount);
 				Node node = nodelist.item(0);

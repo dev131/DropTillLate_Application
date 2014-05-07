@@ -11,7 +11,7 @@ import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.properties.XMLConstruct;
 import ch.droptilllate.database.api.DBSituation;
 import ch.droptilllate.database.api.IDatabase;
-import ch.droptilllate.database.api.XMLDatabase;
+import ch.droptilllate.database.xml.XMLDatabase;
 
 public class ShareLabelProvider implements ITableLabelProvider {
 
@@ -66,7 +66,7 @@ public class ShareLabelProvider implements ITableLabelProvider {
 				}
 				else{
 					text = "no";
-					TillLateContainer container = (TillLateContainer) database.getElement(TillLateContainer.class, XMLConstruct.AttId,((EncryptedFileDob) element).getContainerId().toString() );
+					TillLateContainer container = (TillLateContainer) database.getElement(TillLateContainer.class, XMLConstruct.AttId,((EncryptedFileDob) element).getContainerId().toString()).get(0);
 					if (container.getShareRelationId() != Messages.getIdSize()) {
 						text = "yes";
 						break;

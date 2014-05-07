@@ -7,35 +7,43 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import ch.droptilllate.application.com.CloudDropboxCom;
 import ch.droptilllate.application.com.FileSystemCom;
-
+import ch.droptilllate.application.controller.ViewController;
+import ch.droptilllate.application.dnb.CloudAccount;
 import ch.droptilllate.application.dnb.TillLateContainer;
 import ch.droptilllate.application.dnb.ShareRelation;
 import ch.droptilllate.application.dnb.ShareMember;
+import ch.droptilllate.application.exceptions.DatabaseStatus;
 import ch.droptilllate.application.info.CRUDCryptedFileInfo;
+import ch.droptilllate.application.info.ErrorMessage;
+import ch.droptilllate.application.info.SuccessMessage;
 import ch.droptilllate.application.key.KeyManager;
 import ch.droptilllate.application.model.EncryptedFileDob;
+import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.properties.XMLConstruct;
 import ch.droptilllate.application.views.Status;
+import ch.droptilllate.cloudprovider.api.ICloudProviderCom;
 import ch.droptilllate.cloudprovider.api.IFileSystemCom;
+import ch.droptilllate.cloudprovider.error.CloudError;
 import ch.droptilllate.database.api.DBSituation;
 import ch.droptilllate.database.api.IDatabase;
-import ch.droptilllate.database.api.XMLDatabase;
+import ch.droptilllate.database.xml.XMLDatabase;
 
 
 public class ShareManager {
 
-	private int ERROR = 0;
-	private int CREATE = 1;
-	private int USEEXIST = 2;
-	private int STATUS = 0;
-	private int ShareExist = 3;
+	private ShareStatus shareStatus;
 	private IDatabase database = null;
+	private DatabaseStatus dbstatus;
 	private List<String> emailList;
-	private List<TillLateContainer> contList;
-	private List<EncryptedFileDob> dobfileList;
-	private List<ShareMember> shareMemberList;
+	private String password;
+	private ShareRelation shareRelation;
+	private List<TillLateContainer> updatecontList;
+	private List<EncryptedFileDob> sharefileList;
+	private List<EncryptedFileDob> updatefileList;
+	private List<ShareMember> updateshareMemberList;
 	
 	/**
 	* Limited functionality
@@ -49,41 +57,42 @@ public class ShareManager {
 	 * @param password
 	 * @param emailList
 	 */
-	public ShareManager(List<EncryptedFileDob> fileList,
-			String password, List<String> emailList,IDatabase database) {
+	public ShareManager(List<EncryptedFileDob> sharefileList,
+			String password, List<String> emailList) {
 		this.emailList = emailList;
-		this.database = database;
-		checkShareMembers(emailList);
-		STATUS = 0;
-		if(STATUS != ShareExist){
+		this.sharefileList = sharefileList;
+		this.password = password;
+		database = new XMLDatabase();
+		database.openTransaction("", DBSituation.LOCAL_DATABASE);
+		//TODO Check If shareemails already together in a sharerelation
+		checkShareMembers(this.emailList);
 		// create HashSet with all shareRelationID
-		HashSet<Integer> hashSet_shareRelationList = getShareRelationList(fileList);
+		HashSet<Integer> hashSet_shareRelationList = getShareRelationList(sharefileList);
 		// FILL Hashmap with key = sharedfolderID and filelist as value
 		HashMap<Integer, ArrayList<EncryptedFileDob>> hashmap = getHashMap(
-				fileList, hashSet_shareRelationList);
+				sharefileList, hashSet_shareRelationList);
 		// Check if entries available
 		// TODO cancel sharing
 		if (hashmap.isEmpty())
-			STATUS = ERROR;
+			shareStatus = ShareStatus.ERROR;
 		// Check if All Files from one ShareRelation
 		if (hashmap.size() == 1) {
 			// Check if Files from same ShareRelation but not all
 			if (!checkIfMoreFilesAvailable(hashSet_shareRelationList.iterator()
-					.next(), fileList)) {	
-					STATUS = CREATE;
+					.next(), sharefileList)) {	
+				shareStatus = ShareStatus.CREATE_NEW;
 			} else {
 				if (hashmap.containsKey(Messages.getIdSize())) {
 					// All Files from ShareRelation 0
-					STATUS = CREATE;
+					shareStatus = ShareStatus.CREATE_NEW;
 				} else {
 					// All Files from ShareRelation x not 0
-					STATUS = USEEXIST;
+					shareStatus = ShareStatus.USE_EXISTING;
 				}
 			}
 		} else {
 			// From more then one ShareRelation
-			STATUS = CREATE;
-		}
+			shareStatus = ShareStatus.CREATE_NEW;
 		}
 	}
 
@@ -101,7 +110,7 @@ public class ShareManager {
 				List<ShareMember> tmp = (List<ShareMember>) database.getElement(ShareMember.class, XMLConstruct.AttShareRelationID, sharemember.getShareRelationId().toString());
 				if(tmp.size() == list.size()){
 					//Sharefolder contains just the sharemembers, share file into existing sharefolder
-					STATUS = ShareExist;
+					shareStatus = ShareStatus.SHARERELATION_EXISTING;
 				}
 			}
 		}
@@ -109,15 +118,18 @@ public class ShareManager {
 		
 	}
 	
-	public ShareRelation useExistingSharedRelation(List<EncryptedFileDob> fileList,
-			String password) {
+	/**
+	 * Use Existing ShareRelation
+	 * @return ShareRelation
+	 */
+	private ShareRelation useExistingSharedRelation() {
 		HashSet<Integer> hashFile = new HashSet<Integer>();
-		for(EncryptedFileDob fileDob : fileList){
+		for(EncryptedFileDob fileDob : this.sharefileList){
 			hashFile.add(fileDob.getContainerId());
 		}
 		TillLateContainer container = null;
 		for(Integer id : hashFile){
-		 container = (TillLateContainer) database.getElement(TillLateContainer.class, XMLConstruct.AttId, id.toString());			
+		 container = (TillLateContainer) database.getElement(TillLateContainer.class, XMLConstruct.AttId, id.toString()).get(0);			
 		}		
 		// Get existing ShareRelation
 		KeyManager km = KeyManager.getInstance();
@@ -126,22 +138,20 @@ public class ShareManager {
 
 	/**
 	 * Move the Sharefolder and insert in DB with containers
-	 * @param fileList
 	 * @param shareRelation
 	 * @return ShareRelation
 	 */
-	public ShareRelation createNewSharedRelation(
-			ArrayList<EncryptedFileDob> fileList,ShareRelation shareRelation) {
+	private ShareRelation createNewSharedRelation(ShareRelation shareRelation) {
 		// Move Files
 		IFileSystemCom iFile = FileSystemCom.getInstance();	
-		CRUDCryptedFileInfo result = iFile.moveFiles(fileList, shareRelation);
+		CRUDCryptedFileInfo result = iFile.moveFiles(sharefileList, shareRelation);
 		// Handle Error
 		for (EncryptedFileDob fileDob : result.getEncryptedFileListError()) {
 			Status status = Status.getInstance();
 			status.setMessage(fileDob.getName() + " -> sharing not worked");
 		}
 		// Update Database
-		database.createElement(result.getEncryptedFileListSuccess());
+		database.updateElement(result.getEncryptedFileListSuccess());
 		HashSet<Integer> hashSet = new HashSet<Integer>();
 		for (EncryptedFileDob fileDob : result.getEncryptedFileListSuccess()) {
 			hashSet.add(fileDob.getContainerId());
@@ -157,20 +167,37 @@ public class ShareManager {
 		return shareRelation;
 	}
 	
-
-	public void prepareUpdateDatabase(ShareRelation shareRelation,IDatabase database){
-		contList = (List<TillLateContainer>) database.getElement(TillLateContainer.class, XMLConstruct.AttShareRelationID, shareRelation.getID().toString());
+	/**
+	 * Preparte Files, Container and ShareMembers for Update (use local db)
+	 * @param shareRelation
+	 */
+	private void prepareUpdateDatabase(ShareRelation shareRelation){
+		updatefileList = new ArrayList<EncryptedFileDob>();
+		GhostFolderDob root = new GhostFolderDob(0, "Root-Folder", null);
+			updatecontList = (List<TillLateContainer>) database.getElement(TillLateContainer.class, XMLConstruct.AttShareRelationID, shareRelation.getID().toString());
 			List<EncryptedFileDob> dobfileList = new ArrayList<EncryptedFileDob>();
-		for(TillLateContainer container : contList){
-			List<EncryptedFileDob> dobfilelistTemp = (List<EncryptedFileDob>) database.getElement(EncryptedFileDob.class, XMLConstruct.AttContainerId, container.getId().toString());
-			dobfileList.addAll(dobfilelistTemp);
+		for(TillLateContainer container : updatecontList){
+			dobfileList = (List<EncryptedFileDob>) database.getElement(EncryptedFileDob.class, XMLConstruct.AttContainerId, container.getId().toString());
+			for(EncryptedFileDob dob : dobfileList){
+				dob.setParent(root);
+			}
+			updatefileList.addAll(dobfileList);
 		}	
-		shareMemberList = (List<ShareMember>) database.getElement(ShareMember.class, XMLConstruct.AttShareRelationID, shareRelation.getID().toString());	
+		updateshareMemberList = (List<ShareMember>) database.getElement(ShareMember.class, XMLConstruct.AttShareRelationID, shareRelation.getID().toString());	
 	}
-	public void createUpdateFiles(ShareRelation shareRelation,IDatabase database) {
-		database.createElement(contList);
-		database.createElement(dobfileList);
-		database.createElement(shareMemberList);
+	
+	/**
+	 * Create UpdateXML (Use update DB must be created before)
+	 * @param database
+	 */
+	private DatabaseStatus createUpdateFiles(IDatabase database) {
+		List<TillLateContainer> cdob  = (List<TillLateContainer>) database.createElement(updatecontList);
+		List<EncryptedFileDob> fdob =(List<EncryptedFileDob>) database.createElement(updatefileList);
+		List<EncryptedFileDob> sdob =(List<EncryptedFileDob>) database.createElement(updateshareMemberList);
+		if(cdob.isEmpty() || fdob.isEmpty() || sdob.isEmpty()){
+			return DatabaseStatus.TRANSACTION_FAILED;
+		}
+		return DatabaseStatus.OK;
 	}
 
 	private boolean checkIfMoreFilesAvailable(Integer shareRelationID,
@@ -192,8 +219,8 @@ public class ShareManager {
 
 		HashSet<Integer> hashSet = new HashSet<Integer>();
 		for (EncryptedFileDob fileDob : fileList) {
-			TillLateContainer container = (TillLateContainer) database.getElement(TillLateContainer.class, XMLConstruct.AttContainerId, fileDob.getContainerId().toString());
-			hashSet.add(container.getShareRelationId());
+			List<TillLateContainer> container = (List<TillLateContainer>) database.getElement(TillLateContainer.class, XMLConstruct.AttId, fileDob.getContainerId().toString());
+			hashSet.add(container.get(0).getShareRelationId());
 		}
 		return hashSet;
 	}
@@ -206,9 +233,8 @@ public class ShareManager {
 		for (Integer shareRelationID : hashSet) {
 			ArrayList<EncryptedFileDob> arraylist = new ArrayList<EncryptedFileDob>();
 			for (EncryptedFileDob fileDob : fileList) {
-				if ((((TillLateContainer) database.getElement(TillLateContainer.class, XMLConstruct.AttContainerId, fileDob.getContainerId().toString())
-						.get(0)).getShareRelationId()
-						 == shareRelationID)) {
+				TillLateContainer container = (TillLateContainer) database.getElement(TillLateContainer.class, XMLConstruct.AttId, fileDob.getContainerId().toString()).get(0);
+				if ((container.getShareRelationId() == shareRelationID)) {
 					arraylist.add(fileDob);
 				}
 			}
@@ -217,20 +243,111 @@ public class ShareManager {
 		return hashmap;
 	}
 	
-	public void insertShareMembers(ShareRelation shareRelation, ArrayList<String> mailList) {
+	private void insertShareMembers(ShareRelation shareRelation) {
 		ShareMember sharerelation = new ShareMember(shareRelation.getID(), Messages.OwnerMail);
 		database.createElement(sharerelation);
-		for(String mail : mailList){
+		for(String mail : emailList){
 			sharerelation = new ShareMember(shareRelation.getID(), mail);
 			database.createElement(sharerelation);
 		}	
 	}
 
 
-	public int getSTATUS() {
-		return STATUS;
+	/**
+	 * ShareFiles Return true if oke Return false for Manually
+	 * @param auto boolean if autosharing or manually
+	 * @return ShareStatus
+	 */
+	public ShareStatus shareFiles(boolean auto) {
+		//Check valid account
+		database.openTransaction("", DBSituation.LOCAL_DATABASE);
+		CloudAccount account = (CloudAccount) database.getElementAll(CloudAccount.class).get(0);
+		if(account == null){
+			return ShareStatus.ACCOUNT_NOT_EXISTING;
+		}	
+		CloudError cloudProviderStatus = CloudError.NONE;
+		if (shareStatus == ShareStatus.ERROR) {
+			return shareStatus;
+		}
+		//WHEN Sharerelation not exist
+		if (shareStatus == ShareStatus.CREATE_NEW) {
+			// CREATE
+			// Create and insert newShareRelation
+			KeyManager km = KeyManager.getInstance();			
+			shareRelation = km.newShareRelation(password, null);
+			//Create new ShareRelation on filesystem
+			shareRelation = createNewSharedRelation(shareRelation);
+			insertShareMembers(shareRelation);
+			prepareUpdateDatabase(shareRelation);
+			database.closeTransaction("", Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
+			//CREATE NEW UPDATE DATABASE
+			IDatabase updatedatabase = new XMLDatabase();
+			updatedatabase.createDatabase(password, "", DBSituation.UPDATE_DATABASE);
+			updatedatabase.openDatabase(password, "", null, DBSituation.UPDATE_DATABASE);			
+			updatedatabase.openTransaction("", DBSituation.UPDATE_DATABASE);
+			createUpdateFiles(updatedatabase);
+			updatedatabase.closeTransaction("", shareRelation.getID(), DBSituation.UPDATE_DATABASE);		
+			//Share files
+			cloudProviderStatus = shareFilesToCloud(auto, false);
+			shareStatus = ShareStatus.OK_NEW;
+		
+		}
+		if (shareStatus == ShareStatus.USE_EXISTING) {
+			// USING EXISTING			
+			shareRelation = useExistingSharedRelation();
+			//Use mannually, Headless browser supports no automatically sharing if file already shared
+			cloudProviderStatus = shareFilesToCloud(false, true);
+			shareStatus = ShareStatus.OK_Existing;
+
+		}
+		//NOT in use until now
+		if(shareStatus == ShareStatus.SHARERELATION_EXISTING){
+			//ALL MEMBERS ARE IN THE SAME SHARERELATION
+			//TODO Update xml etc. not working in this release
+			cloudProviderStatus = CloudError.FOLDER_ALREADY_SHARED;	
+			shareStatus = ShareStatus.SHARERELATION_EXISTING;
+		}
+			// TODO ERROR sharing
+		if (cloudProviderStatus == CloudError.NONE) {
+				// NO ERROR OCCURED
+				KeyManager keyManager = KeyManager.getInstance();
+				keyManager.addKeyRelation(shareRelation.getID(), shareRelation.getKey());
+			//	new SuccessMessage(shell, "Success", "shared");
+			} else {
+				// ERROR ocured
+				shareStatus = ShareStatus.ERROR;
+			}
+		return shareStatus;
 	}
 
-	
+	/**
+	 * Share Files on cloud
+	 * @param auto (Auto sharing or manually)
+	 * @param alreadyshared (If file is shared for the first time, other webdialog)
+	 * @return CloudError
+	 */
+	private CloudError shareFilesToCloud(boolean auto, boolean alreadyshared) {
+		ICloudProviderCom com = new CloudDropboxCom();
+		if(auto){		
+			//TRY twice
+			CloudError status = com.shareFolder(shareRelation.getID(), emailList);
+			int i = 0;
+			if(status != CloudError.NONE && i < 2){
+				status = com.shareFolder(shareRelation.getID(), emailList);
+			}		
+			return status;
+		}
+		else{
+			com.shareFolderManuallyViaBrowser(shareRelation.getID(), alreadyshared);
+		}
+		return null;
+	}
+	/**
+	 * Return actual ShareRelation (key, id)
+	 * @return ShareRelation
+	 */
+	public ShareRelation getShareRelation() {
+		return shareRelation;
+	}
 	
 }

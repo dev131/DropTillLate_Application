@@ -39,6 +39,7 @@ import ch.droptilllate.application.dnb.ShareRelation;
 import ch.droptilllate.application.error.ParamInitException;
 import ch.droptilllate.application.handlers.FileHandler;
 import ch.droptilllate.application.info.ErrorMessage;
+import ch.droptilllate.application.info.SuccessMessage;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.properties.Configuration;
@@ -49,9 +50,11 @@ import ch.droptilllate.application.provider.ShareContentProvider;
 import ch.droptilllate.application.provider.ShareLabelProvider;
 import ch.droptilllate.application.provider.TableIdentifier;
 import ch.droptilllate.application.provider.TableIdentifierShare;
+import ch.droptilllate.application.share.ShareManager;
+import ch.droptilllate.application.share.ShareStatus;
 import ch.droptilllate.database.api.DBSituation;
 import ch.droptilllate.database.api.IDatabase;
-import ch.droptilllate.database.api.XMLDatabase;
+import ch.droptilllate.database.xml.XMLDatabase;
 
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.layout.GridLayout;
@@ -76,12 +79,14 @@ public class ShareView implements SelectionListener
 	private Button btnDelete;
 	private List maillist;
 	private Combo combo_mail;
-	private ArrayList<EncryptedFileDob> fileList;
+	private ArrayList<EncryptedFileDob> sharefileList;
+	private ArrayList<EncryptedFileDob> dbfileList;
 	private Group grpShareSettings;
 	private Group grpSelectedFiles;
 	private Button btnManually;
+	private ShareManager manager;
 	
-	ResourceBundle bundle;
+	private ResourceBundle bundle;
 
 	public ShareView()
 	{
@@ -261,11 +266,12 @@ public class ShareView implements SelectionListener
 
 	public void setInitialTree(ArrayList<EncryptedFileDob> fileList)
 	{
-		this.fileList = fileList;
+		this.sharefileList = fileList;
+		this.dbfileList = fileList;
 		root = new GhostFolderDob(0, "Root-Folder", null);
 		treeViewer.setInput(root);
 		treeViewer.expandToLevel(1);
-		root.addFiles(this.fileList);
+		root.addFiles(this.sharefileList);
 	}
 
 	// *********** private METHODS**************////
@@ -372,11 +378,11 @@ public class ShareView implements SelectionListener
 
 	private void shareFile(boolean auto)
 	{
-		
+		ShareStatus shareStatus;
 		try{
 			// CHECK if all data are available			
 			ShareViewHelper.checkMailList(maillist);
-			ShareViewHelper.checkFileList(fileList);
+			ShareViewHelper.checkFileList(sharefileList);
 			ShareViewHelper.checkPassword(text_password.getText());
 			
 			// share the shizzle
@@ -385,30 +391,55 @@ public class ShareView implements SelectionListener
 			{
 				emailList.add(temp);
 			}
+			//INIT SHAREMANAGER
+			
 			if (auto)
 			{
-				success = ViewController.getInstance().shareFiles(emailList, fileList, text_password.getText(), true);
+				manager = new ShareManager(dbfileList, text_password.getText(), emailList);
+				shareStatus = manager.shareFiles(auto);		
+				//Check
+				updateStatus(shareStatus);
 			} else
-			{
-				success = ViewController.getInstance().shareFiles(emailList, fileList, text_password.getText(), false);
-			}
-			if (!success)
-			{
-				btnManually.setVisible(true);
-			} else
-			{
+			{//Share manually
+				manager = new ShareManager(dbfileList, text_password.getText(), emailList);
+				shareStatus = manager.shareFiles(auto);	
+				//CHECK
+				updateStatus(shareStatus);
+			}		
 				success = true;
-				MPart ownpart = partService.findPart("ch.droptilllate.application.part.decryptedview");
-				ownpart.setVisible(true);
-				MPart mPart = partService.findPart("ch.droptilllate.application.part.sharepart");
-				mPart.setVisible(false);
-			}
+				
 			
 		} catch (ParamInitException e)
 		{
 			new ErrorMessage(shell, e.getCategory(), e.getMessage()); 
 		}
 
+	}
+
+	private void updateStatus(ShareStatus shareStatus) {
+		if(shareStatus == ShareStatus.ERROR){
+			new SuccessMessage(shell, "MESSAGE", shareStatus.toString());
+		}
+		if(shareStatus == ShareStatus.OK_Existing){
+			new SuccessMessage(shell, "MESSAGE", shareStatus.toString() );
+			success();
+		}
+		if(shareStatus == ShareStatus.OK_NEW){
+			new SuccessMessage(shell, "MESSAGE", shareStatus.toString());
+			success();
+		}
+		if(shareStatus == ShareStatus.ACCOUNT_NOT_EXISTING){
+			new SuccessMessage(shell, "MESSAGE", shareStatus.toString());
+		}
+		
+	}
+
+	private void success() {
+		ViewController.getInstance().initTree();
+		MPart ownpart = partService.findPart("ch.droptilllate.application.part.decryptedview");
+		ownpart.setVisible(true);
+		MPart mPart = partService.findPart("ch.droptilllate.application.part.sharepart");
+		mPart.setVisible(false);	
 	}
 
 	@Override
