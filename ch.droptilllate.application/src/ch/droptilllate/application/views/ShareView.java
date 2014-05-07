@@ -435,6 +435,7 @@ public class ShareView implements SelectionListener
 	}
 
 	private void success() {
+		ViewController.getInstance().initTree();
 		MPart ownpart = partService.findPart("ch.droptilllate.application.part.decryptedview");
 		ownpart.setVisible(true);
 		MPart mPart = partService.findPart("ch.droptilllate.application.part.sharepart");

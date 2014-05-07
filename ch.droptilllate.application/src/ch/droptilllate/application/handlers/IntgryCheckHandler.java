@@ -38,7 +38,7 @@ public class IntgryCheckHandler {
 			database.deleteElement(database.getElementAll(EncryptedFileDob.class));
 			//Insert new entries
 			database.createElement(upgradeListDB);
-			ViewController.getInstance().getInitialInput();
+			ViewController.getInstance().initTree();
 		}
 	}
 

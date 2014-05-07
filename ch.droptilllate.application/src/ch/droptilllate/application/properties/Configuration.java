@@ -74,6 +74,12 @@ public class Configuration {
 	  }
 
 
+	/**
+	 * Get Temp Path
+	 * @param srcpath Additional propertie path
+	 * @param withSlash
+	 * @return path
+	 */
 	public static String getPropertieTempPath(String srcpath,boolean withSlash) {
 		Properties prop = new Properties();
 		InputStream input = null;

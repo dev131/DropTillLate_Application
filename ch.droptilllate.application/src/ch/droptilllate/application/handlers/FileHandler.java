@@ -1,11 +1,13 @@
 package ch.droptilllate.application.handlers;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
@@ -13,8 +15,12 @@ import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.VFS;
 import org.apache.commons.vfs2.impl.DefaultFileMonitor;
 
+import ch.droptilllate.application.com.FileSystemCom;
+import ch.droptilllate.application.info.CRUDCryptedFileInfo;
 import ch.droptilllate.application.listener.FileChangeListener;
 import ch.droptilllate.application.model.EncryptedFileDob;
+import ch.droptilllate.application.properties.Configuration;
+import ch.droptilllate.cloudprovider.api.IFileSystemCom;
 
 public class FileHandler {
 	
@@ -129,6 +135,23 @@ public class FileHandler {
 		 fm.addFile(listendir);
 		 fm.start();
 	}
-	
+
+	public List<EncryptedFileDob> openFiles(List<EncryptedFileDob> filellist){
+		IFileSystemCom iFileSystem = FileSystemCom.getInstance();
+		CRUDCryptedFileInfo result = iFileSystem.decryptFile(filellist);
+		for (EncryptedFileDob fileDob : result.getEncryptedFileListSuccess()) {		
+			File file = new File(Configuration.getPropertieTempPath("",true)
+					+ fileDob.getId() + "." + fileDob.getType());
+			FileHandler fileHanlder = new FileHandler();
+			fileHanlder.setFileListener(file, fileDob);
+			try {
+				Desktop.getDesktop().edit(file);
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return result.getEncryptedFileListError();
+	}
 }
  

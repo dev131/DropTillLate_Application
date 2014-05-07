@@ -264,28 +264,31 @@ public class ViewController {
 	public void openFiles() {
 		// TODO Statusline
 		List<EncryptedFileDob> fileList = getSelectedFileList();
-
+		openfile(fileList);
 		// check succesfull list
-		IFileSystemCom iFileSystem = FileSystemCom.getInstance();
-		CRUDCryptedFileInfo result = iFileSystem.decryptFile(fileList);
-		for (EncryptedFileDob fileDob : result.getEncryptedFileListSuccess()) {
-			Status status = Status.getInstance();
-			status.setMessage(fileDob.getName() + " -> decryption worked");
-			File file = new File(Configuration.getPropertieTempPath("",true)
-					+ fileDob.getId() + "." + fileDob.getType());
-			FileHandler fileHanlder = new FileHandler();
-			fileHanlder.setFileListener(file, fileDob);
-			try {
-				Desktop.getDesktop().edit(file);
+		
+	}
+	public void openfile(List<EncryptedFileDob> openfilelist){
+		FileHandler handler = new FileHandler();
+		List<EncryptedFileDob> errorlist = handler.openFiles(openfilelist);
+		for (EncryptedFileDob fileDob : errorlist) {
+			//Check if file already in use
+			if(checkFileIsAlreadyOpen(fileDob.getName())){
+				File file = new File(Configuration.getPropertieTempPath("", true)+ fileDob.getId() +"." +fileDob.getType());
+				try {
+					handler.delete(file);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}	
+				openfile(errorlist);
+			};
+			
+		}
+	}
 
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		for (EncryptedFileDob fileDob : result.getEncryptedFileListError()) {
-			Status status = Status.getInstance();
-			status.setMessage(fileDob.getName() + " -> decryption not worked");
-		}
+	public boolean checkFileIsAlreadyOpen(String filename) {
+		return MessageDialog.openConfirm(shell, "Could not open file: " + filename, "Check if file already in use. Confirm will overwrite your not saved file changes");
 	}
 
 	/**
