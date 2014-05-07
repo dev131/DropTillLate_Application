@@ -328,9 +328,10 @@ public class ShareManager {
 	 */
 	private CloudError shareFilesToCloud(boolean auto, boolean alreadyshared) {
 		ICloudProviderCom com = new CloudDropboxCom();
+		CloudError status;
 		if(auto){		
 			//TRY twice
-			CloudError status = com.shareFolder(shareRelation.getID(), emailList);
+			status = com.shareFolder(shareRelation.getID(), emailList);
 			int i = 0;
 			if(status != CloudError.NONE && i < 2){
 				status = com.shareFolder(shareRelation.getID(), emailList);
@@ -338,9 +339,9 @@ public class ShareManager {
 			return status;
 		}
 		else{
-			com.shareFolderManuallyViaBrowser(shareRelation.getID(), alreadyshared);
+			status = com.shareFolderManuallyViaBrowser(shareRelation.getID(), alreadyshared);
 		}
-		return null;
+		return status;
 	}
 	/**
 	 * Return actual ShareRelation (key, id)

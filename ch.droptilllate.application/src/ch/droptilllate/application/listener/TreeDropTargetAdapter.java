@@ -17,6 +17,7 @@ import ch.droptilllate.application.controller.ViewController;
 import ch.droptilllate.application.dnb.DroppedElement;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
+import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.database.api.DBSituation;
 import ch.droptilllate.database.api.IDatabase;
 import ch.droptilllate.database.xml.XMLDatabase;
@@ -157,6 +158,7 @@ public class TreeDropTargetAdapter extends DropTargetAdapter {
 			itemsNotMoved = 0;
 		}
 		TreeDragSourceListener.draggedDroppedElements.clear();
+		database.closeTransaction("", Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 		this.treeViewer.refresh();
 	}
 	
