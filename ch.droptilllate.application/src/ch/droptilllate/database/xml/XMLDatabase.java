@@ -1,4 +1,4 @@
-package ch.droptilllate.database.api;
+package ch.droptilllate.database.xml;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +21,9 @@ import ch.droptilllate.application.model.StructureXmlDob;
 import ch.droptilllate.application.properties.Configuration;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.properties.XMLConstruct;
+import ch.droptilllate.database.api.DBConnection;
+import ch.droptilllate.database.api.DBSituation;
+import ch.droptilllate.database.api.IDatabase;
 import ch.droptilllate.database.query.CloudAccountQuery;
 import ch.droptilllate.database.query.ContainerQuery;
 import ch.droptilllate.database.query.FileQuery;

@@ -45,7 +45,7 @@ import ch.droptilllate.application.info.ErrorMessage;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.database.api.DBSituation;
 import ch.droptilllate.database.api.IDatabase;
-import ch.droptilllate.database.api.XMLDatabase;
+import ch.droptilllate.database.xml.XMLDatabase;
 
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Label;
@@ -417,7 +417,7 @@ public class InitialView implements SelectionListener, ModifyListener
 		MPart ownpart = partService.findPart("ch.droptilllate.application.part.InitialView");
 		ownpart.setVisible(false);		
 		
-		ViewController.getInstance().initController();
+		ViewController.getInstance().initTree();
 		ViewController.getInstance().setSharefunction(cbCloudProvider.getSelection());
 		IDatabase database = new XMLDatabase();
 		if(database.openTransaction("", DBSituation.LOCAL_DATABASE) != DatabaseStatus.OK){

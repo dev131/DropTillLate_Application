@@ -24,7 +24,7 @@ import ch.droptilllate.application.properties.XMLConstruct;
 import ch.droptilllate.cloudprovider.api.IFileSystemCom;
 import ch.droptilllate.database.api.DBSituation;
 import ch.droptilllate.database.api.IDatabase;
-import ch.droptilllate.database.api.XMLDatabase;
+import ch.droptilllate.database.xml.XMLDatabase;
 import ch.droptilllate.filesystem.error.FileError;
 import ch.droptilllate.filesystem.info.*;
 import ch.droptilllate.filesystem.api.FileHandlingSummary;

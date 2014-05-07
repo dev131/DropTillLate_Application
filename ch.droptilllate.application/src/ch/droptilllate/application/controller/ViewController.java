@@ -72,7 +72,7 @@ import ch.droptilllate.cloudprovider.api.IFileSystemCom;
 import ch.droptilllate.cloudprovider.error.CloudError;
 import ch.droptilllate.database.api.DBSituation;
 import ch.droptilllate.database.api.IDatabase;
-import ch.droptilllate.database.api.XMLDatabase;
+import ch.droptilllate.database.xml.XMLDatabase;
 import ch.droptilllate.application.views.ShareView;
 
 public class ViewController {
@@ -129,7 +129,7 @@ public class ViewController {
 		
 	}
 
-	public void initController() {
+	public void initTree() {
 		// Get InitialInput
 		root = getInitialInput();
 		viewer.setInput(root);
@@ -289,6 +289,10 @@ public class ViewController {
 		}
 	}
 
+	/**
+	 * Get selectedFiles
+	 * @return List<EncryptedFileDob>
+	 */
 	private List<EncryptedFileDob> getSelectedFileList() {
 		List<EncryptedFileDob> fileList = new ArrayList<EncryptedFileDob>();
 		TreeItem[] treeItems = tree.getSelection();
@@ -311,7 +315,7 @@ public class ViewController {
 
 	/**
 	 * Get selectedFolder
-	 * @return
+	 * @return List<GhostFolderDob>
 	 */
 	private List<GhostFolderDob> getSelectedFolderList() {
 		List<GhostFolderDob> folderList = new ArrayList<GhostFolderDob>();
@@ -471,7 +475,7 @@ public class ViewController {
 	 * @return
 	 */
 	public boolean shareFiles(ArrayList<String> mailList,
-			ArrayList<EncryptedFileDob> fileList, String password, boolean auto) {
+			ArrayList<EncryptedFileDob> sharefileList,ArrayList<EncryptedFileDob> dbfileList, String password, boolean auto) {
 		//Check valid account
 		database.openTransaction("", DBSituation.LOCAL_DATABASE);
 		CloudAccount account = (CloudAccount) database.getElementAll(CloudAccount.class).get(0);
@@ -479,9 +483,7 @@ public class ViewController {
 			return false;
 		}	
 		CloudError status = CloudError.NONE;
-		IDatabase database = new XMLDatabase();
-		database.openTransaction("", DBSituation.LOCAL_DATABASE);
-		shareManager = new ShareManager(fileList, password,
+		shareManager = new ShareManager(dbfileList, password,
 				mailList,database);
 		if (shareManager.getSTATUS() == 0) {
 			// ERROR
@@ -492,15 +494,16 @@ public class ViewController {
 			KeyManager km = KeyManager.getInstance();			
 			shareRelation = km.newShareRelation(password, null);
 			//Create new ShareRelation on filesystem
-			shareRelation = shareManager.createNewSharedRelation(fileList, shareRelation);
+			shareRelation = shareManager.createNewSharedRelation(dbfileList, shareRelation);
 			shareManager.insertShareMembers(shareRelation, mailList);
+			shareManager.prepareUpdateDatabase(shareRelation, database, fileList);
 			database.closeTransaction("", Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 			//CREATE NEW UPDATE DATABASE
 			IDatabase updatedatabase = new XMLDatabase();
 			updatedatabase.createDatabase(password, "", DBSituation.UPDATE_DATABASE);
-			updatedatabase.openDatabase(password, "", shareRelation.getID(), DBSituation.UPDATE_DATABASE);
+			updatedatabase.openDatabase(password, "", null, DBSituation.UPDATE_DATABASE);
 			updatedatabase.openTransaction("", DBSituation.UPDATE_DATABASE);
-			shareManager.createUpdateFiles(shareRelation, database);
+			shareManager.createUpdateFiles(updatedatabase);
 			updatedatabase.closeTransaction("", shareRelation.getID(), DBSituation.UPDATE_DATABASE);
 			//Share file Automatically
 			if(!auto){

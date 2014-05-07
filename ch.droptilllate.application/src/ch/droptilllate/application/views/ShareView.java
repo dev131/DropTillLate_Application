@@ -51,7 +51,7 @@ import ch.droptilllate.application.provider.TableIdentifier;
 import ch.droptilllate.application.provider.TableIdentifierShare;
 import ch.droptilllate.database.api.DBSituation;
 import ch.droptilllate.database.api.IDatabase;
-import ch.droptilllate.database.api.XMLDatabase;
+import ch.droptilllate.database.xml.XMLDatabase;
 
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.layout.GridLayout;
@@ -76,7 +76,8 @@ public class ShareView implements SelectionListener
 	private Button btnDelete;
 	private List maillist;
 	private Combo combo_mail;
-	private ArrayList<EncryptedFileDob> fileList;
+	private ArrayList<EncryptedFileDob> sharefileList;
+	private ArrayList<EncryptedFileDob> dbfileList;
 	private Group grpShareSettings;
 	private Group grpSelectedFiles;
 	private Button btnManually;
@@ -261,11 +262,12 @@ public class ShareView implements SelectionListener
 
 	public void setInitialTree(ArrayList<EncryptedFileDob> fileList)
 	{
-		this.fileList = fileList;
+		this.sharefileList = fileList;
+		this.dbfileList = fileList;
 		root = new GhostFolderDob(0, "Root-Folder", null);
 		treeViewer.setInput(root);
 		treeViewer.expandToLevel(1);
-		root.addFiles(this.fileList);
+		root.addFiles(this.sharefileList);
 	}
 
 	// *********** private METHODS**************////
@@ -376,7 +378,7 @@ public class ShareView implements SelectionListener
 		try{
 			// CHECK if all data are available			
 			ShareViewHelper.checkMailList(maillist);
-			ShareViewHelper.checkFileList(fileList);
+			ShareViewHelper.checkFileList(sharefileList);
 			ShareViewHelper.checkPassword(text_password.getText());
 			
 			// share the shizzle
@@ -387,10 +389,10 @@ public class ShareView implements SelectionListener
 			}
 			if (auto)
 			{
-				success = ViewController.getInstance().shareFiles(emailList, fileList, text_password.getText(), true);
+				success = ViewController.getInstance().shareFiles(emailList, sharefileList,dbfileList, text_password.getText(), true);
 			} else
 			{
-				success = ViewController.getInstance().shareFiles(emailList, fileList, text_password.getText(), false);
+				success = ViewController.getInstance().shareFiles(emailList, sharefileList,dbfileList, text_password.getText(), false);
 			}
 			if (!success)
 			{

@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import ch.droptilllate.application.com.FileSystemCom;
-
+import ch.droptilllate.application.controller.ViewController;
 import ch.droptilllate.application.dnb.TillLateContainer;
 import ch.droptilllate.application.dnb.ShareRelation;
 import ch.droptilllate.application.dnb.ShareMember;
@@ -21,7 +21,7 @@ import ch.droptilllate.application.views.Status;
 import ch.droptilllate.cloudprovider.api.IFileSystemCom;
 import ch.droptilllate.database.api.DBSituation;
 import ch.droptilllate.database.api.IDatabase;
-import ch.droptilllate.database.api.XMLDatabase;
+import ch.droptilllate.database.xml.XMLDatabase;
 
 
 public class ShareManager {
@@ -117,7 +117,7 @@ public class ShareManager {
 		}
 		TillLateContainer container = null;
 		for(Integer id : hashFile){
-		 container = (TillLateContainer) database.getElement(TillLateContainer.class, XMLConstruct.AttId, id.toString());			
+		 container = (TillLateContainer) database.getElement(TillLateContainer.class, XMLConstruct.AttId, id.toString()).get(0);			
 		}		
 		// Get existing ShareRelation
 		KeyManager km = KeyManager.getInstance();
@@ -131,17 +131,17 @@ public class ShareManager {
 	 * @return ShareRelation
 	 */
 	public ShareRelation createNewSharedRelation(
-			ArrayList<EncryptedFileDob> fileList,ShareRelation shareRelation) {
+			ArrayList<EncryptedFileDob> fileListShare,ShareRelation shareRelation) {
 		// Move Files
 		IFileSystemCom iFile = FileSystemCom.getInstance();	
-		CRUDCryptedFileInfo result = iFile.moveFiles(fileList, shareRelation);
+		CRUDCryptedFileInfo result = iFile.moveFiles(fileListShare, shareRelation);
 		// Handle Error
 		for (EncryptedFileDob fileDob : result.getEncryptedFileListError()) {
 			Status status = Status.getInstance();
 			status.setMessage(fileDob.getName() + " -> sharing not worked");
 		}
 		// Update Database
-		database.createElement(result.getEncryptedFileListSuccess());
+		database.updateElement(result.getEncryptedFileListSuccess());
 		HashSet<Integer> hashSet = new HashSet<Integer>();
 		for (EncryptedFileDob fileDob : result.getEncryptedFileListSuccess()) {
 			hashSet.add(fileDob.getContainerId());
@@ -157,8 +157,8 @@ public class ShareManager {
 		return shareRelation;
 	}
 	
-
-	public void prepareUpdateDatabase(ShareRelation shareRelation,IDatabase database){
+	public void prepareUpdateDatabase(ShareRelation shareRelation,IDatabase database, List<EncryptedFileDob> list){
+		this.dobfileList = list;
 		contList = (List<TillLateContainer>) database.getElement(TillLateContainer.class, XMLConstruct.AttShareRelationID, shareRelation.getID().toString());
 			List<EncryptedFileDob> dobfileList = new ArrayList<EncryptedFileDob>();
 		for(TillLateContainer container : contList){
@@ -167,7 +167,7 @@ public class ShareManager {
 		}	
 		shareMemberList = (List<ShareMember>) database.getElement(ShareMember.class, XMLConstruct.AttShareRelationID, shareRelation.getID().toString());	
 	}
-	public void createUpdateFiles(ShareRelation shareRelation,IDatabase database) {
+	public void createUpdateFiles(IDatabase database) {
 		database.createElement(contList);
 		database.createElement(dobfileList);
 		database.createElement(shareMemberList);
@@ -192,8 +192,8 @@ public class ShareManager {
 
 		HashSet<Integer> hashSet = new HashSet<Integer>();
 		for (EncryptedFileDob fileDob : fileList) {
-			TillLateContainer container = (TillLateContainer) database.getElement(TillLateContainer.class, XMLConstruct.AttContainerId, fileDob.getContainerId().toString());
-			hashSet.add(container.getShareRelationId());
+			List<TillLateContainer> container = (List<TillLateContainer>) database.getElement(TillLateContainer.class, XMLConstruct.AttId, fileDob.getContainerId().toString());
+			hashSet.add(container.get(0).getShareRelationId());
 		}
 		return hashSet;
 	}
@@ -206,9 +206,8 @@ public class ShareManager {
 		for (Integer shareRelationID : hashSet) {
 			ArrayList<EncryptedFileDob> arraylist = new ArrayList<EncryptedFileDob>();
 			for (EncryptedFileDob fileDob : fileList) {
-				if ((((TillLateContainer) database.getElement(TillLateContainer.class, XMLConstruct.AttContainerId, fileDob.getContainerId().toString())
-						.get(0)).getShareRelationId()
-						 == shareRelationID)) {
+				TillLateContainer container = (TillLateContainer) database.getElement(TillLateContainer.class, XMLConstruct.AttId, fileDob.getContainerId().toString()).get(0);
+				if ((container.getShareRelationId() == shareRelationID)) {
 					arraylist.add(fileDob);
 				}
 			}
@@ -231,6 +230,8 @@ public class ShareManager {
 		return STATUS;
 	}
 
+	
+	
 	
 	
 }

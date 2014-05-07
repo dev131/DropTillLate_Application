@@ -19,7 +19,7 @@ import ch.droptilllate.cloudprovider.api.ICloudProviderCom;
 import ch.droptilllate.cloudprovider.error.CloudError;
 import ch.droptilllate.database.api.DBSituation;
 import ch.droptilllate.database.api.IDatabase;
-import ch.droptilllate.database.api.XMLDatabase;
+import ch.droptilllate.database.xml.XMLDatabase;
 import ch.droptilllate.filesystem.preferences.Constants;
 import ch.droptilllate.keyfile.api.KeyFileHandlingSummary;
 import ch.droptilllate.keyfile.error.KeyFileError;
