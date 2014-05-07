@@ -88,7 +88,6 @@ public class ViewController {
 	private static ViewController instance = null;
 	private List<EncryptedFileDob> actualDropFiles;
 	private Shell shell;
-	private ShareManager shareManager;
 	public ShareRelation shareRelation = null;
 	public boolean sharefunction = false;
 	private IDatabase database;
@@ -460,112 +459,14 @@ public class ViewController {
 	 */
 	public void openShareContext() {
 		fileList = new ArrayList<EncryptedFileDob>();
-		List<EncryptedFileDob> fileList = getSelectedFileList();
+		fileList = getSelectedFileList();
 		ShareView.getInstance().setInitialTree(
 				(ArrayList<EncryptedFileDob>) fileList);
 		ShareView.getInstance().setInitialInputMailList();
 		ShareView.getInstance().setInitView();
 	}
 
-	/**
-	 * ShareFiles Return true if oke Return false for Manually
-	 * @param mailList
-	 * @param fileList
-	 * @param password
-	 * @return
-	 */
-	public boolean shareFiles(ArrayList<String> mailList,
-			ArrayList<EncryptedFileDob> sharefileList,ArrayList<EncryptedFileDob> dbfileList, String password, boolean auto) {
-		//Check valid account
-		database.openTransaction("", DBSituation.LOCAL_DATABASE);
-		CloudAccount account = (CloudAccount) database.getElementAll(CloudAccount.class).get(0);
-		if(account == null){
-			return false;
-		}	
-		CloudError status = CloudError.NONE;
-		shareManager = new ShareManager(dbfileList, password,
-				mailList,database);
-		if (shareManager.getSTATUS() == 0) {
-			// ERROR
-		}
-		if (shareManager.getSTATUS() == 1) {
-			// CREATE
-			// Create and insert newShareRelation
-			KeyManager km = KeyManager.getInstance();			
-			shareRelation = km.newShareRelation(password, null);
-			//Create new ShareRelation on filesystem
-			shareRelation = shareManager.createNewSharedRelation(dbfileList, shareRelation);
-			shareManager.insertShareMembers(shareRelation, mailList);
-			shareManager.prepareUpdateDatabase(shareRelation, database, fileList);
-			database.closeTransaction("", Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
-			//CREATE NEW UPDATE DATABASE
-			IDatabase updatedatabase = new XMLDatabase();
-			updatedatabase.createDatabase(password, "", DBSituation.UPDATE_DATABASE);
-			updatedatabase.openDatabase(password, "", null, DBSituation.UPDATE_DATABASE);
-			updatedatabase.openTransaction("", DBSituation.UPDATE_DATABASE);
-			shareManager.createUpdateFiles(updatedatabase);
-			updatedatabase.closeTransaction("", shareRelation.getID(), DBSituation.UPDATE_DATABASE);
-			//Share file Automatically
-			if(!auto){
-				status = shareFileToCloudManually(shareRelation, mailList, false);
-			}
-			else{
-				status = shareFileToCloudAutomatically(shareRelation, mailList);
-			}
-		
-		}
-		if (shareManager.getSTATUS() == 2) {
-			// USING EXISTING			
-			shareRelation = shareManager.useExistingSharedRelation(fileList, password);
-			new SuccessMessage(shell, "MESSAGE", "Shared ->  password = "
-					+ shareRelation.getKey());
-			status = shareFileToCloudManually(shareRelation, mailList, false);
-		}
-		if(shareManager.getSTATUS()==3){
-			//ALL MEMBERS ARE IN THE SAME SHARERELATION
-			status = CloudError.FOLDER_ALREADY_SHARED;
-			
-		}
-			// TODO ERROR sharing
-		if (status == CloudError.NONE) {
-				// NO ERROR OCCURED
-				KeyManager keyManager = KeyManager.getInstance();
-				keyManager.addKeyRelation(shareRelation.getID(), shareRelation.getKey());
-				new SuccessMessage(shell, "Success", "shared");
-				return true;
-			} else {
-				// ERROR ocured
-				new ErrorMessage(shell, "ERROR", status.getMessage() +"  Share error -> Check files or Try Manually");
-				return false;
-			}
-	}
-
-	/**
-	 * ShareFileAutomatically
-	 * @param shareFolder
-	 * @param mailList
-	 * @return
-	 */
-	private CloudError shareFileToCloudAutomatically(ShareRelation shareFolder, ArrayList<String> mailList) {
-		ICloudProviderCom com = new CloudDropboxCom();
-		CloudError status = com.shareFolder(shareFolder.getID(), mailList);
-		int i = 0;
-		if(status != CloudError.NONE && i < 2){
-			status = com.shareFolder(shareFolder.getID(), mailList);
-		}		
-		return status;
-	}
-	/**
-	 * Open webbrowser for CloudProvider
-	 * @param shareFolder
-	 * @param mailList
-	 * @param alreadyShared
-	 * @return
-	 */
-	private CloudError shareFileToCloudManually(ShareRelation shareFolder, ArrayList<String> mailList, boolean alreadyShared){
-		ICloudProviderCom com = new CloudDropboxCom();
-		return com.shareFolderManuallyViaBrowser(shareFolder.getID(), alreadyShared);
-	}
+	
 
 	public List<File> listFilesForFolder(final File folder) {
 		List<File> fileList = new ArrayList<File>();

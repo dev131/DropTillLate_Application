@@ -66,7 +66,7 @@ public class ShareLabelProvider implements ITableLabelProvider {
 				}
 				else{
 					text = "no";
-					TillLateContainer container = (TillLateContainer) database.getElement(TillLateContainer.class, XMLConstruct.AttId,((EncryptedFileDob) element).getContainerId().toString() );
+					TillLateContainer container = (TillLateContainer) database.getElement(TillLateContainer.class, XMLConstruct.AttId,((EncryptedFileDob) element).getContainerId().toString()).get(0);
 					if (container.getShareRelationId() != Messages.getIdSize()) {
 						text = "yes";
 						break;
