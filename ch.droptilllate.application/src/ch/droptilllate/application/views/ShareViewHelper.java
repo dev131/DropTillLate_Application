@@ -17,7 +17,7 @@ public class ShareViewHelper
 
 	public static boolean checkPassword(String value) throws ParamInitException
 	{
-		if (!isFieldAValidString(value))
+		if (!ViewHelper.isFieldAValidString(value))
 		{
 			throw new ParamInitException("Missing Parameter", "Please provide a password for the shared files ");
 		}
@@ -41,15 +41,7 @@ public class ShareViewHelper
 		}
 		return true;
 	}	
-
-	public static boolean isFieldAValidString(String field)
-	{
-		if (field == null)
-		{
-			return false;
-		}
-		return field.length() > 0;
-	}
+	
 	
 	
 

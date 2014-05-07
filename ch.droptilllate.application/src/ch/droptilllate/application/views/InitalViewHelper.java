@@ -15,7 +15,7 @@ public class InitalViewHelper
 
 	public static boolean checkDropboxPassword(String value) throws ParamInitException
 	{
-		if (!isFieldAValidString(value))
+		if (!ViewHelper.isFieldAValidString(value))
 		{
 			throw new ParamInitException("Missing Parameter", "Please provide a valid Dropbox Password");
 		}
@@ -24,7 +24,7 @@ public class InitalViewHelper
 	
 	public static boolean checkDropboxLoginName(String value) throws ParamInitException
 	{
-		if (!isFieldAValidString(value))
+		if (!ViewHelper.isFieldAValidString(value))
 		{
 			throw new ParamInitException("Missing Parameter", "Please provide a valid Dropbox Username");
 		}
@@ -33,36 +33,42 @@ public class InitalViewHelper
 
 	public static boolean checkDropboxFolderName(String value) throws ParamInitException
 	{
-		if (!isFieldAValidString(value))
+		boolean error = false;
+		if (!ViewHelper.isFieldAValidString(value))
 		{
 			throw new ParamInitException("Missing Parameter", "Please provide a valid DropTillLate folder");
-		}
+		}		
 		return true;
 	}
 
 	public static boolean checkDTLPassword(String value) throws ParamInitException
 	{
-		if (!isFieldAValidString(value))
-		{
-			throw new ParamInitException("Missing Parameter", "Please provide a valid password");
-		}
-		return true;
+		return ViewHelper.isValidPassword(value);
 	}
 
 	public static boolean checkTempPath(String value) throws ParamInitException
 	{
-		if (!isFieldAValidString(value))
+		if (!ViewHelper.isFieldAValidString(value))
 		{
 			throw new ParamInitException("Missing Parameter", "Please provide a valid temporary file path");
+		}
+		if (!ViewHelper.isValidDir(value, true)){
+			throw new ParamInitException("Invalid Parameter", "Specified temporary folder path is not valid: \n" + value);
 		}
 		return true;
 	}
 
 	public static boolean checkDropboxPath(String value) throws ParamInitException
 	{
-		if (!isFieldAValidString(value))
+		if (!ViewHelper.isFieldAValidString(value))
 		{
 			throw new ParamInitException("Missing Parameter", "Please provide a valid Dropbox path");
+		}		
+		if (!ViewHelper.isValidDir(value, false)){
+			throw new ParamInitException("Invalid Parameter", "Specified Dropbox folder path is not valid, please make sure it is the path to a valid directory: \n" + value);
+		}
+		if (!ViewHelper.doesDirExistOnFS(value)){
+			throw new ParamInitException("Invalid Parameter", "Specified Dropbox folder path could not be found: \n" + value);
 		}
 		return true;
 	}
@@ -77,14 +83,7 @@ public class InitalViewHelper
 		return true;
 	}
 
-	public static boolean isFieldAValidString(String field)
-	{
-		if (field == null)
-		{
-			return false;
-		}
-		return field.length() > 0;
-	}
+	
 	
 	
 

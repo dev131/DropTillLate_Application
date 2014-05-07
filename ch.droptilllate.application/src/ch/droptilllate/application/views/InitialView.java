@@ -4,6 +4,7 @@ import static org.junit.Assert.fail;
 
 import java.net.URL;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -74,6 +75,7 @@ public class InitialView implements SelectionListener, ModifyListener
 	private Text text_tempPath;
 	private Text text_dropboxPath;
 	private Text text_password;
+	private Button btnSearchKeyfile;
 	private Button btnSearchDropFolder;
 	private Button btnSearchTmpFolder;
 	private Button btnLogin;
@@ -93,8 +95,11 @@ public class InitialView implements SelectionListener, ModifyListener
 	private Group grpDroptilllateSettings;
 	private Group grpDropboxSettings;
 	private Button cbCloudProvider;
+	private Button cbExistingDTLAccount;
 	private Composite compositeContent;
 	private Composite parent;
+	
+	private ResourceBundle bundle;
 
 	// STRINGS
 	private String dropboxfoldername = "";
@@ -115,17 +120,21 @@ public class InitialView implements SelectionListener, ModifyListener
 	private static int FORM_WIDTH = 800;
 	private static int HEIGHT_OFFSET = 20;
 	private static int B_STARTUP_HEIGHT = 60;
+	private static int BUTTON_WIDTH = 100;
 
 	@PostConstruct
 	public void createControls(Composite parent, Shell shell, EPartService partService, EModelService modelService, MApplication application)
 	{
 		parent.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		this.parent = parent;
+		
+		// initialise language string bundle
+		bundle = ResourceBundle.getBundle("ch.droptilllate.application.multilanguage.InitialView");
 
 		this.shell = shell;
-		Bundle bundle = FrameworkUtil.getBundle(TreeView.class);
+		Bundle bundleFW = FrameworkUtil.getBundle(TreeView.class);
 		// URL url = FileLocator.find(bundle, new Path("icons/icon_128x128.png"), null);
-		URL url = FileLocator.find(bundle, new Path("icons/LOGO_BIG_V1.png"), null);
+		URL url = FileLocator.find(bundleFW, new Path("icons/LOGO_BIG_V1.png"), null);
 		ImageDescriptor image = ImageDescriptor.createFromURL(url);
 		parent.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		parent.setLayout(new GridLayout(1, true));
@@ -160,7 +169,7 @@ public class InitialView implements SelectionListener, ModifyListener
 		grpDroptilllateSettings.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		grpDroptilllateSettings.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		grpDroptilllateSettings.setFont(SWTResourceManager.getFont("Arial", 18, SWT.NORMAL));
-		grpDroptilllateSettings.setText("DropTillLate Settings");
+		grpDroptilllateSettings.setText(bundle.getString("DTLSettings"));
 		GridLayout gl_grpDroptilllateSettings = new GridLayout(3, false);
 		gl_grpDroptilllateSettings.marginTop = 10;
 		gl_grpDroptilllateSettings.marginBottom = 10;
@@ -168,40 +177,57 @@ public class InitialView implements SelectionListener, ModifyListener
 		gl_grpDroptilllateSettings.horizontalSpacing = 10;
 		grpDroptilllateSettings.setLayout(gl_grpDroptilllateSettings);
 
-		// ------------- Row 1 ---------------
-		lblDroptilllateFoldername = initLabel(grpDroptilllateSettings, "Arial", 14, "Foldername", false);
-
+		// ------------- Row ---------------
+		cbExistingDTLAccount = new Button(grpDroptilllateSettings, SWT.CHECK);
+		cbExistingDTLAccount.setFont(SWTResourceManager.getFont("Arial", 12, SWT.NORMAL));
+		GridData gdCbExistingDTLAccount = new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1);
+		cbExistingDTLAccount.setLayoutData(gdCbExistingDTLAccount);
+		cbExistingDTLAccount.setText(bundle.getString("cbExistingDTLAccount"));
+		cbExistingDTLAccount.addSelectionListener(this);
+		cbExistingDTLAccount.setToolTipText(bundle.getString("ttcbExistingDTLAccount"));
+		
+		
+		// ------------- Row ---------------
+		lblDroptilllateFoldername = initLabel(grpDroptilllateSettings, "Arial", 14, bundle.getString("labelDTLFolder"), false);
+		lblDroptilllateFoldername.setToolTipText(bundle.getString("ttDTLFolder"));
+		
 		txtDroptilllate = initTextField(grpDroptilllateSettings, "Arial", 14, "DropTillLate", true, false);
 
-		new Label(grpDroptilllateSettings, SWT.NONE); // 3. slot
+		btnSearchKeyfile = initButton(grpDroptilllateSettings, "Arial", 12, bundle.getString("buttonImportKeyFile"), BUTTON_WIDTH);
+		btnSearchKeyfile.setToolTipText(bundle.getString("ttImportKeyfile"));
+		btnSearchKeyfile.setVisible(false);
+		btnSearchKeyfile.addSelectionListener(this);
 
-		// ------------- Row 2 ---------------
-		lblPassword = initLabel(grpDroptilllateSettings, "Arial", 14, "Login Password", false);
-
+		// ------------- Row ---------------
+		lblPassword = initLabel(grpDroptilllateSettings, "Arial", 14, bundle.getString("labelDTLPassword"), false);
+		lblPassword.setToolTipText(bundle.getString("ttDTLPassword"));
+		
 		text_password = initTextField(grpDroptilllateSettings, "Arial", 14, "", true, true);
 
-		btnLogin_1 = initButton(grpDroptilllateSettings, "Arial", 12, "login", false);
+		btnLogin_1 = initButton(grpDroptilllateSettings, "Arial", 12, bundle.getString("buttonDTLLogin"), BUTTON_WIDTH);
 		btnLogin_1.addSelectionListener(this);
 
-		// ------------- Row 3 ---------------
-		lblDropboxFolder = initLabel(grpDroptilllateSettings, "Arial", 14, "Dropbox path ", false);
-
+		// ------------- Row ---------------
+		lblDropboxFolder = initLabel(grpDroptilllateSettings, "Arial", 14, bundle.getString("labelDropboxPath"), false);
+		lblDropboxFolder.setToolTipText(bundle.getString("ttDropboxPath"));
+		
 		text_dropboxPath = initTextField(grpDroptilllateSettings, "Arial", 14, "", true, false);
 
-		btnSearchDropFolder = initButton(grpDroptilllateSettings, "Arial", 12, "search ...", false);
+		btnSearchDropFolder = initButton(grpDroptilllateSettings, "Arial", 12, bundle.getString("buttonSearchPath"), BUTTON_WIDTH);
 		btnSearchDropFolder.addSelectionListener(this);
 
-		// ------------- Row 4 ---------------
-		lblTempFolder = initLabel(grpDroptilllateSettings, "Arial", 14, "Temporary file path ", false);
-
+		// ------------- Row ---------------
+		lblTempFolder = initLabel(grpDroptilllateSettings, "Arial", 14, bundle.getString("labelTempPath"), false);
+		lblTempFolder.setToolTipText(bundle.getString("ttTempPath"));
+		
 		text_tempPath = initTextField(grpDroptilllateSettings, "Arial", 14, "", true, false);
 
-		btnSearchTmpFolder = initButton(grpDroptilllateSettings, "Arial", 12, "search ...", false);
+		btnSearchTmpFolder = initButton(grpDroptilllateSettings, "Arial", 12, bundle.getString("buttonSearchPath"), BUTTON_WIDTH);
 		btnSearchTmpFolder.addSelectionListener(this);
 
 		// ******************************************* Startup Button *******************************************
 
-		btnLogin = initButton(compositeContent, "Arial", 12, "Startup DropTillLate", true);
+		btnLogin = initButton(compositeContent, "Arial", 12, bundle.getString("buttonStartupDTL"), true);
 		GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gd.heightHint = B_STARTUP_HEIGHT;
 		btnLogin.setLayoutData(gd);
@@ -210,14 +236,15 @@ public class InitialView implements SelectionListener, ModifyListener
 		// ******************************************* CloudPovider Selector *******************************************
 		cbCloudProvider = new Button(compositeContent, SWT.CHECK);
 		cbCloudProvider.setFont(SWTResourceManager.getFont("Arial", 12, SWT.NORMAL));
-		cbCloudProvider.setText("Add Dropbox Account");
+		cbCloudProvider.setText(bundle.getString("cbCloudProvider"));
 		cbCloudProvider.addSelectionListener(this);
+		cbCloudProvider.setToolTipText(bundle.getString("ttcbCloudProvider"));
 
 		// ******************************************* DROPBOX SETTINGS *******************************************
 		grpDropboxSettings = new Group(compositeContent, SWT.NONE);
 		grpDropboxSettings.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, true, false, 1, 1));
 		grpDropboxSettings.setFont(SWTResourceManager.getFont("Arial", 18, SWT.NORMAL));
-		grpDropboxSettings.setText("Dropbox Settings");
+		grpDropboxSettings.setText(bundle.getString("DBAccount"));
 		GridLayout gl_grpDropboxSettings = new GridLayout(2, false);
 		gl_grpDropboxSettings.verticalSpacing = 10;
 		gl_grpDropboxSettings.horizontalSpacing = 10;
@@ -225,21 +252,21 @@ public class InitialView implements SelectionListener, ModifyListener
 		gl_grpDropboxSettings.marginBottom = 10;
 		grpDropboxSettings.setLayout(gl_grpDropboxSettings);
 
-		// ------------- Row 1 ---------------
-		lblDropboxLoginname = initLabel(grpDropboxSettings, "Arial", 14, "Dropbox Login ", false);
+		// ------------- Row ---------------
+		lblDropboxLoginname = initLabel(grpDropboxSettings, "Arial", 14, bundle.getString("labelDBLogin"), false);
 
 		text_DropboxLoginName = initTextField(grpDropboxSettings, "Arial", 14, "", 300, false);
 
-		// ------------- Row 2 ---------------
-		lblPassword_1 = initLabel(grpDropboxSettings, "Arial", 14, "Password ", false);
+		// ------------- Row ---------------
+		lblPassword_1 = initLabel(grpDropboxSettings, "Arial", 14, bundle.getString("LabelDBPassword"), false);
 
 		text_DropboxPassword = initTextField(grpDropboxSettings, "Arial", 14, "", 300, true);
 
-		// ------------- Row 3 ---------------
+		// ------------- Row ---------------
 		btnTestDropbox = new Button(grpDropboxSettings, SWT.PUSH);
 		btnTestDropbox.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		btnTestDropbox.setFont(SWTResourceManager.getFont("Arial", 12, SWT.NORMAL));
-		btnTestDropbox.setText("Test Dropbox Account");
+		btnTestDropbox.setText(bundle.getString("buttonTestCloudProvider"));
 		btnTestDropbox.addSelectionListener(this);
 
 		// ******************************************* Visibilities *******************************************
@@ -303,7 +330,32 @@ public class InitialView implements SelectionListener, ModifyListener
 		text_DropboxPassword.setVisible(visible);
 		btnTestDropbox.setVisible(visible);
 		text_DropboxLoginName.setVisible(visible);
-		lblDropboxLoginname.setVisible(visible);
+		lblDropboxLoginname.setVisible(visible);		
+	}
+	
+	private void toggleExistingDTLSettings(boolean visible)
+	{
+		cbCloudProvider.setVisible(!visible);
+		txtDroptilllate.setVisible(!visible);
+		btnSearchKeyfile.setVisible(visible);
+		if (visible) {
+			lblDroptilllateFoldername.setText(bundle.getString("labelKeyFile"));
+			lblDropboxFolder.setText(bundle.getString("labelExistingDTLFolder"));
+			lblDropboxFolder.pack();			
+			lblPassword.setText(bundle.getString("labelExistingDTLPassword"));			
+			lblDropboxFolder.setToolTipText(bundle.getString("ttExistingDTLFolder"));
+			lblPassword.setToolTipText(bundle.getString("ttExistingDTLPassword"));
+			lblDroptilllateFoldername.setToolTipText(bundle.getString("ttImportKeyfile"));
+		} else {
+			lblDroptilllateFoldername.setText(bundle.getString("labelDTLFolder"));
+			lblDropboxFolder.setText(bundle.getString("labelDropboxPath"));
+			lblPassword.setText(bundle.getString("labelDTLPassword"));
+			lblDropboxFolder.setToolTipText("ttDropboxPath");
+			lblPassword.setToolTipText(bundle.getString("ttDTLPassword"));
+			lblDropboxFolder.setToolTipText(bundle.getString("ttDropboxPath"));
+			lblPassword.setToolTipText(bundle.getString("ttDTLPassword"));
+			lblDroptilllateFoldername.setToolTipText(bundle.getString("ttDTLFolder"));
+		}
 	}
 
 	@Focus
@@ -367,7 +419,7 @@ public class InitialView implements SelectionListener, ModifyListener
 	}
 	
 
-	public void cbCloudProviderPressed()
+	private void cbCloudProviderPressed()
 	{
 		boolean checked = cbCloudProvider.getSelection();
 		toggleDropboxSettingVisibility(checked);
@@ -379,15 +431,20 @@ public class InitialView implements SelectionListener, ModifyListener
 			y += sizeFrame.y;
 		}
 		shell.setSize(x, y);
-
 	}
-
 	
+	private void cbExistingDTLAccountPressed() {
+		boolean checked = cbExistingDTLAccount.getSelection();
+		if (checked)  {
+			// deselect Dropbox account infos
+			cbCloudProvider.setSelection(false);
+			cbCloudProviderPressed();
+		}
+		toggleExistingDTLSettings(checked);
+	}	
 
 	private void startApplication()
-	{
-		
-		
+	{		
 		MHandledToolItem aboutHandler = (MHandledToolItem) modelService.find("ch.droptilllate.application.handledtoolitem.about",
 				application);
 		aboutHandler.setVisible(true);	
@@ -465,6 +522,10 @@ public class InitialView implements SelectionListener, ModifyListener
 		if (e.getSource() == cbCloudProvider)
 		{
 			cbCloudProviderPressed();
+		}
+		if (e.getSource() == cbExistingDTLAccount)
+		{
+			cbExistingDTLAccountPressed();
 		}
 
 	}
