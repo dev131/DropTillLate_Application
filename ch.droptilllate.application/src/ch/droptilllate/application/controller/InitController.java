@@ -176,7 +176,7 @@ public class InitController {
 	public boolean useExistingAccount(String password, String dropboxPath,
 			String tempPath, String dropboxPassword) {
 		if(!setProperties(dropboxPath,tempPath,null)) return false;
-		return false;
+		return true;
 	}
 
 	

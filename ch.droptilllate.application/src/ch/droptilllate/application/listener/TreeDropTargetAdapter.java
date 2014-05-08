@@ -70,7 +70,6 @@ public class TreeDropTargetAdapter extends DropTargetAdapter {
 	@Override
 	public void drop(DropTargetEvent event) {
 		IDatabase database = new XMLDatabase();
-		database.openTransaction("", DBSituation.LOCAL_DATABASE);
 		// Handle Drag'N'Drop from Desktop into tree
 		if (this.fileTransfer.isSupportedType(event.currentDataType)) {
 			final String[] droppedFileInformation = (String[]) event.data;
@@ -101,6 +100,7 @@ public class TreeDropTargetAdapter extends DropTargetAdapter {
 
 		// This part handles Drag'N'Drop within the tree
 		else {
+			database.openTransaction("", DBSituation.LOCAL_DATABASE);
 			// DraggedElement within the tree
 			List<DroppedElement> draggedElements = TreeDragSourceListener.draggedDroppedElements;
 			int itemsNotMoved = 0;
@@ -144,10 +144,12 @@ public class TreeDropTargetAdapter extends DropTargetAdapter {
 					draggedFolder.getParent().removeFolder(draggedFolder);
 					draggedFolder.setParent(this.dragOverFolder);
 					database.updateElement(draggedFolder);
+					
 					this.dragOverFolder.addFolder(draggedFolder);
 				}
 				// set dragOverFolder back to root for next drop. Otherwise
 				// dropping to root wont be possible.
+			
 				this.dragOverFolder = this.root;
 			}
 
@@ -156,9 +158,9 @@ public class TreeDropTargetAdapter extends DropTargetAdapter {
 				System.out.println(itemsNotMoved);
 			}
 			itemsNotMoved = 0;
+			database.closeTransaction("", Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
 		}
-		TreeDragSourceListener.draggedDroppedElements.clear();
-		database.closeTransaction("", Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
+		TreeDragSourceListener.draggedDroppedElements.clear();		
 		this.treeViewer.refresh();
 	}
 	

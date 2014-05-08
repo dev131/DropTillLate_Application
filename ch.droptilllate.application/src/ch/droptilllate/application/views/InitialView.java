@@ -394,6 +394,8 @@ public class InitialView implements SelectionListener, ModifyListener
 
 		if (controller.isNewUser())
 		{
+				
+			if(!cbExistingDTLAccountChecked){
 				// Check if all parameters are valid
 				if (checkAllFields(cbCloudProvider.getSelection()))
 				{
@@ -402,20 +404,22 @@ public class InitialView implements SelectionListener, ModifyListener
 						startApplication();
 					}
 				}
-		}
-		if(cbExistingDTLAccountChecked){
-			if (checkAllFields(false))
-			{
-				if (controller.useExistingAccount(password, dropboxPath, tempPath, dropboxPassword))
+			}
+			else{
+				if (checkAllFields(false))
 				{
-					if (controller.login(password))
+					if (controller.useExistingAccount(password, dropboxPath, tempPath, dropboxPassword))
 					{
-					IDatabase database = new XMLDatabase();
-					database.openDatabase(password, "", Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
-					startApplication();
+						if (controller.login(password))
+						{
+						IDatabase database = new XMLDatabase();
+						database.openDatabase(password, "", Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
+						startApplication();
+						}
 					}
 				}
 			}
+				
 		}
 		else
 		{
