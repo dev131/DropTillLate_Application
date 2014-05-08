@@ -2,6 +2,7 @@ package ch.droptilllate.application.views;
 
 import static org.junit.Assert.fail;
 
+import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -32,6 +33,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.osgi.framework.Bundle;
@@ -42,7 +44,9 @@ import ch.droptilllate.application.controller.ViewController;
 import ch.droptilllate.application.dnb.CloudAccount;
 import ch.droptilllate.application.error.ParamInitException;
 import ch.droptilllate.application.exceptions.DatabaseStatus;
+import ch.droptilllate.application.handlers.FileHandler;
 import ch.droptilllate.application.info.ErrorMessage;
+import ch.droptilllate.application.lifecycle.OSValidator;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.database.api.DBSituation;
 import ch.droptilllate.database.api.IDatabase;
@@ -115,7 +119,7 @@ public class InitialView implements SelectionListener, ModifyListener
 	// Boolean
 	private boolean cloudAccountProvided = false;
 	private boolean cloudAccountAccepted= false;
-
+	private boolean cbExistingDTLAccountChecked = false;
 	// Constants
 	private static int FORM_WIDTH = 800;
 	private static int HEIGHT_OFFSET = 20;
@@ -398,7 +402,22 @@ public class InitialView implements SelectionListener, ModifyListener
 						startApplication();
 					}
 				}
-		} else
+		}
+		if(cbExistingDTLAccountChecked){
+			if (checkAllFields(false))
+			{
+				if (controller.useExistingAccount(password, dropboxPath, tempPath, dropboxPassword))
+				{
+					if (controller.login(password))
+					{
+					IDatabase database = new XMLDatabase();
+					database.openDatabase(password, "", Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
+					startApplication();
+					}
+				}
+			}
+		}
+		else
 		{
 			if (!password.isEmpty())
 			{
@@ -434,14 +453,25 @@ public class InitialView implements SelectionListener, ModifyListener
 	}
 	
 	private void cbExistingDTLAccountPressed() {
-		boolean checked = cbExistingDTLAccount.getSelection();
-		if (checked)  {
+		cbExistingDTLAccountChecked = cbExistingDTLAccount.getSelection();
+		if (cbExistingDTLAccountChecked)  {
 			// deselect Dropbox account infos
 			cbCloudProvider.setSelection(false);
 			cbCloudProviderPressed();
 		}
-		toggleExistingDTLSettings(checked);
-	}	
+		toggleExistingDTLSettings(cbExistingDTLAccountChecked);
+	}
+	
+	private void btnSearchKeyfilePressed() {
+		String path = chooseDestionation(shell);
+		if(path != null){
+			FileHandler fileHandler = new FileHandler();
+			File destFile = new File(Messages.getApplicationpath() + OSValidator.getSlash()	+ Messages.KeyFile);
+			File srcFile = new File(path);
+			fileHandler.moveFile(srcFile, destFile);
+	
+		}	
+	}
 
 	private void startApplication()
 	{		
@@ -484,14 +514,6 @@ public class InitialView implements SelectionListener, ModifyListener
 		if(!list.isEmpty()){
 			ViewController.getInstance().setSharefunction(true);
 		}
-	
-//		MUIElement share = null;
-//		if(!cloudAccountAccepted){				
-//			MHandledMenuItem shareHandler = (MHandledMenuItem) modelService.find("ch.droptilllate.application.handledmenuitem.ShareFiles",
-//					application);
-//			shareHandler.setVisible(false);	
-//		}
-//		System.out.println();
 	}
 
 	@Override
@@ -527,7 +549,26 @@ public class InitialView implements SelectionListener, ModifyListener
 		{
 			cbExistingDTLAccountPressed();
 		}
+		if (e.getSource() == btnSearchKeyfile)
+		{
+			btnSearchKeyfilePressed();
+		}
+	}
 
+
+	
+	private String chooseDestionation(Shell shell){
+		FileDialog dialog = new FileDialog(shell);
+		dialog.setText("Select key file");
+		dialog.setFilterExtensions(new String[] { "*.key" });
+	
+	    try {
+	    	return dialog.open();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    return null;
 	}
 
 	@Override

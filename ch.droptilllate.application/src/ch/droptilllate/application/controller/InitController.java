@@ -122,9 +122,14 @@ public class InitController {
 	}
 	
 	public boolean setProperties(String dropboxPath, String tempPath, String dropTillLateFolderName){
-			try {
+		if(dropTillLateFolderName == null){
+			
+		}	
+		else{
+			dropboxPath = dropboxPath + OSValidator.getSlash() + dropTillLateFolderName;
+		}
+		try {
 				// TODO check for valid dropbox path (no eding slashes)
-				dropboxPath = dropboxPath + OSValidator.getSlash() + dropTillLateFolderName;
 				Configuration.setPropertieDropBoxPath(dropboxPath,"");
 				Configuration.setPropertieTempPath(tempPath,"");
 			} catch (IOException e) {
@@ -167,6 +172,11 @@ public class InitController {
 	 */
 	public Boolean isNewUser() {
 		return newUser;
+	}
+	public boolean useExistingAccount(String password, String dropboxPath,
+			String tempPath, String dropboxPassword) {
+		if(!setProperties(dropboxPath,tempPath,null)) return false;
+		return false;
 	}
 
 	
