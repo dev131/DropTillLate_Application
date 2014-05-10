@@ -7,6 +7,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import ch.droptilllate.application.com.CloudDropboxCom;
 import ch.droptilllate.application.dnb.CloudAccount;
+import ch.droptilllate.application.error.ParamInitException;
 import ch.droptilllate.application.exceptions.DatabaseStatus;
 import ch.droptilllate.application.info.ErrorMessage;
 import ch.droptilllate.application.info.SuccessMessage;
@@ -54,12 +55,11 @@ public class InitController {
 	 * @param password
 	 * @return
 	 */
-	public boolean login(String password){
+	public boolean login(String password) throws ParamInitException{
 		//Checklogin
 		KeyFileHandlingSummary sum = keyManager.loadKeyFile(Messages.getApplicationpath(), password);
 		if(sum.wrongKey()){
-			new ErrorMessage(shell, "error", sum.getKeyFileErrorList().get(0).getError());
-			return false;
+			throw new ParamInitException("Invalid Parameter", "The Password is invalid!\nPlease provide the valid password for your account.");
 		};
 		keyManager.setKeyrelation(sum.getKeyRelation());
 		return true;

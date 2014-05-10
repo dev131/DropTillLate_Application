@@ -102,7 +102,7 @@ public class InitialView implements SelectionListener, ModifyListener
 	private Button cbExistingDTLAccount;
 	private Composite compositeContent;
 	private Composite parent;
-	
+
 	private ResourceBundle bundle;
 
 	// STRINGS
@@ -118,7 +118,7 @@ public class InitialView implements SelectionListener, ModifyListener
 
 	// Boolean
 	private boolean cloudAccountProvided = false;
-	private boolean cloudAccountAccepted= false;
+	private boolean cloudAccountAccepted = false;
 	private boolean cbExistingDTLAccountChecked = false;
 	// Constants
 	private static int FORM_WIDTH = 800;
@@ -131,7 +131,7 @@ public class InitialView implements SelectionListener, ModifyListener
 	{
 		parent.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		this.parent = parent;
-		
+
 		// initialise language string bundle
 		bundle = ResourceBundle.getBundle("ch.droptilllate.application.multilanguage.InitialView");
 
@@ -189,12 +189,11 @@ public class InitialView implements SelectionListener, ModifyListener
 		cbExistingDTLAccount.setText(bundle.getString("cbExistingDTLAccount"));
 		cbExistingDTLAccount.addSelectionListener(this);
 		cbExistingDTLAccount.setToolTipText(bundle.getString("ttcbExistingDTLAccount"));
-		
-		
+
 		// ------------- Row ---------------
 		lblDroptilllateFoldername = initLabel(grpDroptilllateSettings, "Arial", 14, bundle.getString("labelDTLFolder"), false);
 		lblDroptilllateFoldername.setToolTipText(bundle.getString("ttDTLFolder"));
-		
+
 		txtDroptilllate = initTextField(grpDroptilllateSettings, "Arial", 14, "DropTillLate", true, false);
 
 		btnSearchKeyfile = initButton(grpDroptilllateSettings, "Arial", 12, bundle.getString("buttonImportKeyFile"), BUTTON_WIDTH);
@@ -203,9 +202,9 @@ public class InitialView implements SelectionListener, ModifyListener
 		btnSearchKeyfile.addSelectionListener(this);
 
 		// ------------- Row ---------------
-		lblPassword = initLabel(grpDroptilllateSettings, "Arial", 14, bundle.getString("labelDTLPassword"), false);
-		lblPassword.setToolTipText(bundle.getString("ttDTLPassword"));
-		
+		lblPassword = initLabel(grpDroptilllateSettings, "Arial", 14, bundle.getString("labelPassword"), false);
+		lblPassword.setToolTipText(bundle.getString("ttPassword"));
+
 		text_password = initTextField(grpDroptilllateSettings, "Arial", 14, "", true, true);
 
 		btnLogin_1 = initButton(grpDroptilllateSettings, "Arial", 12, bundle.getString("buttonDTLLogin"), BUTTON_WIDTH);
@@ -213,8 +212,7 @@ public class InitialView implements SelectionListener, ModifyListener
 
 		// ------------- Row ---------------
 		lblDropboxFolder = initLabel(grpDroptilllateSettings, "Arial", 14, bundle.getString("labelDropboxPath"), false);
-		lblDropboxFolder.setToolTipText(bundle.getString("ttDropboxPath"));
-		
+		lblDropboxFolder.setToolTipText(bundle.getString("ttDropboxPath"));		
 		text_dropboxPath = initTextField(grpDroptilllateSettings, "Arial", 14, "", true, false);
 
 		btnSearchDropFolder = initButton(grpDroptilllateSettings, "Arial", 12, bundle.getString("buttonSearchPath"), BUTTON_WIDTH);
@@ -223,8 +221,8 @@ public class InitialView implements SelectionListener, ModifyListener
 		// ------------- Row ---------------
 		lblTempFolder = initLabel(grpDroptilllateSettings, "Arial", 14, bundle.getString("labelTempPath"), false);
 		lblTempFolder.setToolTipText(bundle.getString("ttTempPath"));
-		
-		text_tempPath = initTextField(grpDroptilllateSettings, "Arial", 14, "", true, false);
+		String offeredTempDir = new File(System.getProperty("user.dir"), "temp").getAbsolutePath();
+		text_tempPath = initTextField(grpDroptilllateSettings, "Arial", 14, offeredTempDir, true, false);
 
 		btnSearchTmpFolder = initButton(grpDroptilllateSettings, "Arial", 12, bundle.getString("buttonSearchPath"), BUTTON_WIDTH);
 		btnSearchTmpFolder.addSelectionListener(this);
@@ -294,8 +292,8 @@ public class InitialView implements SelectionListener, ModifyListener
 		if (!controller.checkProperties() || !controller.checkIfFileStructureAvailable())
 		{
 			togglePathPropertiesVisible(true);
-			lblPassword.setText("Enter password");
-			lblPassword.setText("Create password");
+			lblPassword.setText(bundle.getString("labelDTLPassword"));
+			lblPassword.setToolTipText(bundle.getString("ttDTLPassword"));
 			// toggleDropboxSettingVisibility(true);
 		}
 		// Check if an Exit error exist
@@ -311,7 +309,6 @@ public class InitialView implements SelectionListener, ModifyListener
 
 	private void togglePathPropertiesVisible(boolean visible)
 	{
-		// TODO Auto-generated method stub
 		// If path not defined
 		cbCloudProvider.setVisible(visible);
 		btnLogin.setVisible(visible);
@@ -325,6 +322,8 @@ public class InitialView implements SelectionListener, ModifyListener
 		btnLogin.setVisible(visible);
 		txtDroptilllate.setVisible(visible);
 		lblDroptilllateFoldername.setVisible(visible);
+		cbExistingDTLAccount.setVisible(visible);
+		btnSearchKeyfile.setVisible(visible);
 	}
 
 	private void toggleDropboxSettingVisibility(boolean visible)
@@ -334,23 +333,25 @@ public class InitialView implements SelectionListener, ModifyListener
 		text_DropboxPassword.setVisible(visible);
 		btnTestDropbox.setVisible(visible);
 		text_DropboxLoginName.setVisible(visible);
-		lblDropboxLoginname.setVisible(visible);		
+		lblDropboxLoginname.setVisible(visible);
 	}
-	
+
 	private void toggleExistingDTLSettings(boolean visible)
 	{
 		cbCloudProvider.setVisible(!visible);
 		txtDroptilllate.setVisible(!visible);
 		btnSearchKeyfile.setVisible(visible);
-		if (visible) {
+		if (visible)
+		{
 			lblDroptilllateFoldername.setText(bundle.getString("labelKeyFile"));
 			lblDropboxFolder.setText(bundle.getString("labelExistingDTLFolder"));
-			lblDropboxFolder.pack();			
-			lblPassword.setText(bundle.getString("labelExistingDTLPassword"));			
+			lblDropboxFolder.pack();
+			lblPassword.setText(bundle.getString("labelExistingDTLPassword"));
 			lblDropboxFolder.setToolTipText(bundle.getString("ttExistingDTLFolder"));
 			lblPassword.setToolTipText(bundle.getString("ttExistingDTLPassword"));
 			lblDroptilllateFoldername.setToolTipText(bundle.getString("ttImportKeyfile"));
-		} else {
+		} else
+		{
 			lblDroptilllateFoldername.setText(bundle.getString("labelDTLFolder"));
 			lblDropboxFolder.setText(bundle.getString("labelDropboxPath"));
 			lblPassword.setText(bundle.getString("labelDTLPassword"));
@@ -388,59 +389,62 @@ public class InitialView implements SelectionListener, ModifyListener
 		}
 	}
 
-
 	public void loginPressed()
 	{
-
-		if (controller.isNewUser())
+		try
 		{
-				
-			if(!cbExistingDTLAccountChecked){
-				// Check if all parameters are valid
-				if (checkAllFields(cbCloudProvider.getSelection()))
+
+			if (controller.isNewUser())
+			// Setup DTLA
+			{
+
+				if (!cbExistingDTLAccountChecked)
 				{
-					if (controller.newUser(dropboxfoldername, password, dropboxPath, tempPath, dropboxLogin, dropboxPassword,cloudAccountAccepted))
+					// Check if all parameters are valid
+					if (checkAllFields(cbCloudProvider.getSelection()))
 					{
-						startApplication();
-					}
-				}
-			}
-			else{
-				if (checkAllFields(false))
-				{
-					if (controller.useExistingAccount(password, dropboxPath, tempPath, dropboxPassword))
-					{
-						if (controller.login(password))
+						if (controller.newUser(dropboxfoldername, password, dropboxPath, tempPath, dropboxLogin, dropboxPassword,
+								cloudAccountAccepted))
 						{
-						IDatabase database = new XMLDatabase();
-						database.openDatabase(password, "", Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
-						startApplication();
+							startApplication();
 						}
 					}
-				}
-			}
-				
-		}
-		else
-		{
-			if (!password.isEmpty())
-			{
-				// Check if Login successful
-				if (controller.login(password))
+				} else
+				// Reuse existing DTLA account from an other device
 				{
-					IDatabase database = new XMLDatabase();
-					database.openDatabase(password, "", Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
-					startApplication();
-				}
-			} else
-			{
-				new ErrorMessage(shell, "Error", "No Password");
-			}
+					// check for valid DTLA folder path
+					InitialViewHelper.checkForExistingFolder(dropboxPath, "DropTillLate");
+					InitialViewHelper.checkTempPath(tempPath);
+					// check for empty password field
+					ViewHelper.isNotEmptyPassword(password);
 
+					if (controller.useExistingAccount(password, dropboxPath, tempPath, dropboxPassword))
+					{
+						// check for valid password
+						controller.login(password);
+						// Start application
+						startApplicationWithExistingAccount();
+					}
+
+				}
+
+			} else
+			// If DTLA is already setup, just the password has to be provided
+			{
+				// check for empty password field
+				ViewHelper.isNotEmptyPassword(password);
+				// check for valid password
+				controller.login(password);
+				// Start application
+				startApplicationWithExistingAccount();
+
+			}
+		} catch (ParamInitException e)
+		{
+			new ErrorMessage(shell, e.getCategory(), e.getMessage());
 		}
 
 	}
-	
 
 	private void cbCloudProviderPressed()
 	{
@@ -455,44 +459,55 @@ public class InitialView implements SelectionListener, ModifyListener
 		}
 		shell.setSize(x, y);
 	}
-	
-	private void cbExistingDTLAccountPressed() {
+
+	private void cbExistingDTLAccountPressed()
+	{
 		cbExistingDTLAccountChecked = cbExistingDTLAccount.getSelection();
-		if (cbExistingDTLAccountChecked)  {
+		if (cbExistingDTLAccountChecked)
+		{
 			// deselect Dropbox account infos
 			cbCloudProvider.setSelection(false);
 			cbCloudProviderPressed();
 		}
 		toggleExistingDTLSettings(cbExistingDTLAccountChecked);
 	}
-	
-	private void btnSearchKeyfilePressed() {
+
+	private void btnSearchKeyfilePressed()
+	{
 		String path = chooseDestionation(shell);
-		if(path != null){
+		if (path != null)
+		{
 			FileHandler fileHandler = new FileHandler();
-			File destFile = new File(Messages.getApplicationpath() + OSValidator.getSlash()	+ Messages.KeyFile);
+			File destFile = new File(Messages.getApplicationpath() + OSValidator.getSlash() + Messages.KeyFile);
 			File srcFile = new File(path);
 			fileHandler.moveFile(srcFile, destFile);
-	
-		}	
+
+		}
+	}
+
+	private void startApplicationWithExistingAccount()
+	{
+		IDatabase database = new XMLDatabase();
+		database.openDatabase(password, "", Messages.getIdSize(), DBSituation.LOCAL_DATABASE);
+		startApplication();
 	}
 
 	private void startApplication()
-	{		
+	{
 		MHandledToolItem aboutHandler = (MHandledToolItem) modelService.find("ch.droptilllate.application.handledtoolitem.about",
 				application);
-		aboutHandler.setVisible(true);	
+		aboutHandler.setVisible(true);
 		MHandledToolItem exportHandler = (MHandledToolItem) modelService.find("ch.droptilllate.application.handledtoolitem.exportkeyfile",
 				application);
 		exportHandler.setVisible(true);
-		
+
 		MHandledToolItem openkeyfileHanlder = (MHandledToolItem) modelService.find("ch.droptilllate.application.handledtoolitem.openkey",
 				application);
 		openkeyfileHanlder.setVisible(true);
 		MHandledToolItem integryHandler = (MHandledToolItem) modelService.find("ch.droptilllate.application.handledtoolitem.integrycheck",
 				application);
 		integryHandler.setVisible(true);
-		
+
 		MHandledToolItem newFolderHandler = (MHandledToolItem) modelService.find("ch.droptilllate.application.handledtoolitem.newFolder",
 				application);
 		newFolderHandler.setVisible(true);
@@ -501,21 +516,23 @@ public class InitialView implements SelectionListener, ModifyListener
 		importhandler.setVisible(true);
 		MHandledToolItem logviewhandler = (MHandledToolItem) modelService.find("ch.droptilllate.application.handledtoolitem.logview",
 				application);
-	//	logviewhandler.setVisible(true);
+		// logviewhandler.setVisible(true);
 		MPart part = partService.findPart("ch.droptilllate.application.part.decryptedview");
 		part.setVisible(true);
-		
+
 		MPart ownpart = partService.findPart("ch.droptilllate.application.part.InitialView");
-		ownpart.setVisible(false);		
-		
+		ownpart.setVisible(false);
+
 		ViewController.getInstance().initTree();
 		ViewController.getInstance().setSharefunction(cbCloudProvider.getSelection());
 		IDatabase database = new XMLDatabase();
-		if(database.openTransaction("", DBSituation.LOCAL_DATABASE) != DatabaseStatus.OK){
-			//TODO ERROR HANDLING
-		}	
-		List<CloudAccount> list =  (List<CloudAccount>) database.getElementAll(CloudAccount.class);
-		if(!list.isEmpty()){
+		if (database.openTransaction("", DBSituation.LOCAL_DATABASE) != DatabaseStatus.OK)
+		{
+			// TODO ERROR HANDLING
+		}
+		List<CloudAccount> list = (List<CloudAccount>) database.getElementAll(CloudAccount.class);
+		if (!list.isEmpty())
+		{
 			ViewController.getInstance().setSharefunction(true);
 		}
 	}
@@ -539,7 +556,7 @@ public class InitialView implements SelectionListener, ModifyListener
 		if (e.getSource() == btnTestDropbox)
 		{
 			testDropboxAccount();
-			
+
 		}
 		if (e.getSource() == btnLogin_1)
 		{
@@ -559,20 +576,22 @@ public class InitialView implements SelectionListener, ModifyListener
 		}
 	}
 
-
-	
-	private String chooseDestionation(Shell shell){
+	private String chooseDestionation(Shell shell)
+	{
 		FileDialog dialog = new FileDialog(shell);
 		dialog.setText("Select key file");
-		dialog.setFilterExtensions(new String[] { "*.key" });
-	
-	    try {
-	    	return dialog.open();
-		} catch (Exception e) {
+		dialog.setFilterExtensions(new String[]
+		{ "*.key" });
+
+		try
+		{
+			return dialog.open();
+		} catch (Exception e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	    return null;
+		return null;
 	}
 
 	@Override
@@ -611,49 +630,53 @@ public class InitialView implements SelectionListener, ModifyListener
 			password = text_password.getText();
 		}
 	}
-	
-	private void testDropboxAccount() {
+
+	private void testDropboxAccount()
+	{
 		try
 		{
-			InitalViewHelper.checkDropboxLoginName(dropboxLogin);
-			InitalViewHelper.checkDropboxPassword(dropboxPassword);
+			InitialViewHelper.checkDropboxLoginName(dropboxLogin);
+			InitialViewHelper.checkDropboxPassword(dropboxPassword);
 			cloudAccountAccepted = controller.checkDropboxAccount(dropboxLogin, dropboxPassword);
 		} catch (ParamInitException e)
 		{
-			new ErrorMessage(shell, e.getCategory(), e.getMessage()); 
+			new ErrorMessage(shell, e.getCategory(), e.getMessage());
 		}
 	}
 
 	private boolean checkAllFields(Boolean withCloudAccount)
-	{	
+	{
 		// Fetch content
 		dropboxPath = text_dropboxPath.getText();
 		tempPath = text_tempPath.getText();
 		dropboxfoldername = txtDroptilllate.getText();
 		password = text_password.getText();
-		
-		if(withCloudAccount){
-			if (!cloudAccountAccepted) {
+
+		if (withCloudAccount)
+		{
+			if (!cloudAccountAccepted)
+			{
 				new ErrorMessage(shell, "Dropbox Account Error", "Please verifiy your Dropbox account first.");
 				return false;
 			}
 		}
-		
+
 		try
 		{
-			InitalViewHelper.checkDropboxFolderName(dropboxfoldername);
-			InitalViewHelper.checkDTLPassword(password);
-			InitalViewHelper.checkDropboxPath(dropboxPath);			
-			InitalViewHelper.checkTempPath(tempPath);
-			
-			if (InitalViewHelper.checkForSamePath(dropboxPath, tempPath)) {
-				new ParamInitException("Conflict", "Dropbox path and temporary file path can not be the same!");				
+			InitialViewHelper.checkDropboxFolderName(dropboxfoldername);
+			InitialViewHelper.checkDTLPassword(password);
+			InitialViewHelper.checkForExistingFolder(dropboxPath, "Dropbox");
+			InitialViewHelper.checkTempPath(tempPath);
+
+			if (InitialViewHelper.checkForSamePath(dropboxPath, tempPath))
+			{
+				new ParamInitException("Conflict", "Dropbox path and temporary file path can not be the same!");
 			}
 			return true;
 		} catch (ParamInitException e)
 		{
-			new ErrorMessage(shell, e.getCategory(), e.getMessage()); 
-		}			
+			new ErrorMessage(shell, e.getCategory(), e.getMessage());
+		}
 		return withCloudAccount;
 	}
 
@@ -679,13 +702,15 @@ public class InitialView implements SelectionListener, ModifyListener
 	}
 
 	private Text initTextField(Composite parent, String font, int fontSize, String text, boolean fillAvailableSpace, boolean password)
-	{	Text textBox ;
-		if(password){
-			 textBox = new Text(parent,SWT.PASSWORD | SWT.BORDER);
+	{
+		Text textBox;
+		if (password)
+		{
+			textBox = new Text(parent, SWT.PASSWORD | SWT.BORDER);
+		} else
+		{
+			textBox = new Text(parent, SWT.BORDER);
 		}
-		else{
-			 textBox = new Text(parent, SWT.BORDER);
-		}		
 		textBox.setFont(SWTResourceManager.getFont(font, fontSize, SWT.NORMAL));
 		textBox.setText(text);
 		if (fillAvailableSpace)

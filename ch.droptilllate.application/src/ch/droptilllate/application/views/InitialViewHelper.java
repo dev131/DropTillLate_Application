@@ -10,7 +10,7 @@ import ch.droptilllate.application.info.ErrorMessage;
  * @author Roewn
  * 
  */
-public class InitalViewHelper
+public class InitialViewHelper
 {
 
 	public static boolean checkDropboxPassword(String value) throws ParamInitException
@@ -58,17 +58,17 @@ public class InitalViewHelper
 		return true;
 	}
 
-	public static boolean checkDropboxPath(String value) throws ParamInitException
+	public static boolean checkForExistingFolder(String value, String errorMessageFolderName) throws ParamInitException
 	{
 		if (!ViewHelper.isFieldAValidString(value))
 		{
-			throw new ParamInitException("Missing Parameter", "Please provide a valid Dropbox path");
+			throw new ParamInitException("Missing Parameter", "Please provide a valid "+errorMessageFolderName+" path");
 		}		
 		if (!ViewHelper.isValidDir(value, false)){
-			throw new ParamInitException("Invalid Parameter", "Specified Dropbox folder path is not valid, please make sure it is the path to a valid directory: \n" + value);
+			throw new ParamInitException("Invalid Parameter", "Specified "+errorMessageFolderName+" folder path is not valid, please make sure it is the path to a valid directory: \n" + value);
 		}
 		if (!ViewHelper.doesDirExistOnFS(value)){
-			throw new ParamInitException("Invalid Parameter", "Specified Dropbox folder path could not be found: \n" + value);
+			throw new ParamInitException("Invalid Parameter", "Specified "+errorMessageFolderName+" folder path could not be found: \n" + value);
 		}
 		return true;
 	}
