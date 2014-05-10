@@ -19,7 +19,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
 
-import ch.droptilllate.application.lifecycle.OSValidator;
+import ch.droptilllate.application.os.OSValidator;
 import ch.droptilllate.application.properties.Messages;
 
 public class KeyFileExportHandler {

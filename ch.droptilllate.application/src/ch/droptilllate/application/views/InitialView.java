@@ -46,7 +46,7 @@ import ch.droptilllate.application.error.ParamInitException;
 import ch.droptilllate.application.exceptions.DatabaseStatus;
 import ch.droptilllate.application.handlers.FileHandler;
 import ch.droptilllate.application.info.ErrorMessage;
-import ch.droptilllate.application.lifecycle.OSValidator;
+import ch.droptilllate.application.os.OSValidator;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.database.api.DBSituation;
 import ch.droptilllate.database.api.IDatabase;

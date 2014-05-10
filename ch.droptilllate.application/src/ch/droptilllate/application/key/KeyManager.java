@@ -4,7 +4,7 @@ package ch.droptilllate.application.key;
 import java.io.File;
 
 import ch.droptilllate.application.dnb.ShareRelation;
-import ch.droptilllate.application.lifecycle.OSValidator;
+import ch.droptilllate.application.os.OSValidator;
 import ch.droptilllate.application.properties.Configuration;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.properties.XMLConstruct;

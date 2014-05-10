@@ -3,7 +3,7 @@ package ch.droptilllate.application.com;
 import java.util.List;
 
 import ch.droptilllate.application.dnb.CloudAccount;
-import ch.droptilllate.application.lifecycle.OSValidator;
+import ch.droptilllate.application.os.OSValidator;
 import ch.droptilllate.application.properties.Configuration;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.cloudprovider.api.ICloudProvider;

@@ -1,4 +1,4 @@
-package ch.droptilllate.application.lifecycle;
+package ch.droptilllate.application.os;
 
 public class OSValidator {
 	 
