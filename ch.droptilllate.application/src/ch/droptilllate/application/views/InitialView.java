@@ -212,7 +212,7 @@ public class InitialView implements SelectionListener, ModifyListener
 
 		// ------------- Row ---------------
 		lblDropboxFolder = initLabel(grpDroptilllateSettings, "Arial", 14, bundle.getString("labelDropboxPath"), false);
-		lblDropboxFolder.setToolTipText(bundle.getString("ttDropboxPath"));		
+		lblDropboxFolder.setToolTipText(bundle.getString("ttDropboxPath"));
 		text_dropboxPath = initTextField(grpDroptilllateSettings, "Arial", 14, "", true, false);
 
 		btnSearchDropFolder = initButton(grpDroptilllateSettings, "Arial", 12, bundle.getString("buttonSearchPath"), BUTTON_WIDTH);
@@ -412,6 +412,7 @@ public class InitialView implements SelectionListener, ModifyListener
 				} else
 				// Reuse existing DTLA account from an other device
 				{
+					fetchFields();
 					// check for valid DTLA folder path
 					InitialViewHelper.checkForExistingFolder(dropboxPath, "DropTillLate");
 					InitialViewHelper.checkTempPath(tempPath);
@@ -644,13 +645,18 @@ public class InitialView implements SelectionListener, ModifyListener
 		}
 	}
 
-	private boolean checkAllFields(Boolean withCloudAccount)
+	private void fetchFields()
 	{
 		// Fetch content
 		dropboxPath = text_dropboxPath.getText();
 		tempPath = text_tempPath.getText();
 		dropboxfoldername = txtDroptilllate.getText();
 		password = text_password.getText();
+	}
+
+	private boolean checkAllFields(Boolean withCloudAccount)
+	{
+		fetchFields();
 
 		if (withCloudAccount)
 		{
