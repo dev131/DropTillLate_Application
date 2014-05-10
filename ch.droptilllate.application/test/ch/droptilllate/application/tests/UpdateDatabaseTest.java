@@ -12,7 +12,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import ch.droptilllate.application.dnb.ShareRelation;
-import ch.droptilllate.application.exceptions.DatabaseStatus;
 import ch.droptilllate.application.key.KeyManager;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.GhostFolderDob;
@@ -20,6 +19,7 @@ import ch.droptilllate.application.properties.Configuration;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.database.api.DBSituation;
 import ch.droptilllate.database.api.IDatabase;
+import ch.droptilllate.database.exceptions.DatabaseStatus;
 import ch.droptilllate.database.xml.XMLDatabase;
 
 public class UpdateDatabaseTest {

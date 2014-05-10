@@ -5,12 +5,12 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import ch.droptilllate.application.dnb.TillLateContainer;
-import ch.droptilllate.application.exceptions.DatabaseStatus;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.properties.XMLConstruct;
 import ch.droptilllate.database.api.DBSituation;
 import ch.droptilllate.database.api.IDatabase;
+import ch.droptilllate.database.exceptions.DatabaseStatus;
 import ch.droptilllate.database.xml.XMLDatabase;
 
 public class ShareLabelProvider implements ITableLabelProvider {

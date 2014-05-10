@@ -2,12 +2,12 @@ package ch.droptilllate.application.com;
 
 import java.util.List;
 
+import ch.droptilllate.application.api.ICloudProviderCom;
 import ch.droptilllate.application.dnb.CloudAccount;
 import ch.droptilllate.application.os.OSValidator;
 import ch.droptilllate.application.properties.Configuration;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.cloudprovider.api.ICloudProvider;
-import ch.droptilllate.cloudprovider.api.ICloudProviderCom;
 import ch.droptilllate.cloudprovider.dropbox.DropboxHandler;
 import ch.droptilllate.cloudprovider.error.CloudError;
 import ch.droptilllate.database.api.DBSituation;

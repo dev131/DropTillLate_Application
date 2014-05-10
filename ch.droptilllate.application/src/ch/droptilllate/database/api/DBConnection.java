@@ -24,19 +24,19 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import ch.droptilllate.application.api.IFileSystemCom;
 import ch.droptilllate.application.com.FileSystemCom;
 import ch.droptilllate.application.dnb.TillLateContainer;
 import ch.droptilllate.application.dnb.ShareMember;
 import ch.droptilllate.application.dnb.ShareRelation;
-import ch.droptilllate.application.exceptions.DatabaseException;
-import ch.droptilllate.application.exceptions.DatabaseStatus;
 import ch.droptilllate.application.handlers.FileHandler;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.model.StructureXmlDob;
 import ch.droptilllate.application.properties.Configuration;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.properties.XMLConstruct;
-import ch.droptilllate.cloudprovider.api.IFileSystemCom;
+import ch.droptilllate.database.exceptions.DatabaseException;
+import ch.droptilllate.database.exceptions.DatabaseStatus;
 import ch.droptilllate.keyfile.error.KeyFileException;
 
 public class DBConnection {

@@ -11,12 +11,12 @@ import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 
+import ch.droptilllate.application.api.IFileSystemCom;
 import ch.droptilllate.application.com.FileSystemCom;
 import ch.droptilllate.application.controller.ViewController;
 import ch.droptilllate.application.dnb.TillLateContainer;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.properties.Messages;
-import ch.droptilllate.cloudprovider.api.IFileSystemCom;
 import ch.droptilllate.database.api.DBSituation;
 import ch.droptilllate.database.api.IDatabase;
 import ch.droptilllate.database.xml.XMLDatabase;

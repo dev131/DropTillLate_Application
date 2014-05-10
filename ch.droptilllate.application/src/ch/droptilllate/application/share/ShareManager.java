@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import ch.droptilllate.application.api.ICloudProviderCom;
+import ch.droptilllate.application.api.IFileSystemCom;
 import ch.droptilllate.application.com.CloudDropboxCom;
 import ch.droptilllate.application.com.FileSystemCom;
 import ch.droptilllate.application.controller.ViewController;
@@ -14,7 +16,6 @@ import ch.droptilllate.application.dnb.CloudAccount;
 import ch.droptilllate.application.dnb.TillLateContainer;
 import ch.droptilllate.application.dnb.ShareRelation;
 import ch.droptilllate.application.dnb.ShareMember;
-import ch.droptilllate.application.exceptions.DatabaseStatus;
 import ch.droptilllate.application.info.CRUDCryptedFileInfo;
 import ch.droptilllate.application.info.ErrorMessage;
 import ch.droptilllate.application.info.SuccessMessage;
@@ -24,11 +25,10 @@ import ch.droptilllate.application.model.GhostFolderDob;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.properties.XMLConstruct;
 import ch.droptilllate.application.views.Status;
-import ch.droptilllate.cloudprovider.api.ICloudProviderCom;
-import ch.droptilllate.cloudprovider.api.IFileSystemCom;
 import ch.droptilllate.cloudprovider.error.CloudError;
 import ch.droptilllate.database.api.DBSituation;
 import ch.droptilllate.database.api.IDatabase;
+import ch.droptilllate.database.exceptions.DatabaseStatus;
 import ch.droptilllate.database.xml.XMLDatabase;
 
 
