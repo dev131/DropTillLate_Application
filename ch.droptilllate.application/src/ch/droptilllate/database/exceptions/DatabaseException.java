@@ -1,4 +1,4 @@
-package ch.droptilllate.application.exceptions;
+package ch.droptilllate.database.exceptions;
 
 /**
  * @author dev131

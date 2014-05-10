@@ -1,4 +1,4 @@
-package ch.droptilllate.cloudprovider.api;
+package ch.droptilllate.application.api;
 
 import java.util.HashMap;
 import java.util.List;

@@ -2,8 +2,8 @@ package ch.droptilllate.database.api;
 
 import java.util.List;
 
-import ch.droptilllate.application.exceptions.DatabaseStatus;
 import ch.droptilllate.application.model.GhostFolderDob;
+import ch.droptilllate.database.exceptions.DatabaseStatus;
 
 
 public interface IDatabase {

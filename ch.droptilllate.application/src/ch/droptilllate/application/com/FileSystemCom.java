@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.crypto.KeyGenerator;
 
+import ch.droptilllate.application.api.IFileSystemCom;
 import ch.droptilllate.application.converter.FileInfoConverter;
 import ch.droptilllate.application.converter.FileIntegryConverter;
 import ch.droptilllate.application.dnb.CloudAccount;
@@ -21,7 +22,6 @@ import ch.droptilllate.application.model.StructureXmlDob;
 import ch.droptilllate.application.properties.Configuration;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.properties.XMLConstruct;
-import ch.droptilllate.cloudprovider.api.IFileSystemCom;
 import ch.droptilllate.database.api.DBSituation;
 import ch.droptilllate.database.api.IDatabase;
 import ch.droptilllate.database.xml.XMLDatabase;

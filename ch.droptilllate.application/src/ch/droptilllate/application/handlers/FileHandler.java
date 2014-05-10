@@ -15,12 +15,12 @@ import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.VFS;
 import org.apache.commons.vfs2.impl.DefaultFileMonitor;
 
+import ch.droptilllate.application.api.IFileSystemCom;
 import ch.droptilllate.application.com.FileSystemCom;
 import ch.droptilllate.application.info.CRUDCryptedFileInfo;
 import ch.droptilllate.application.listener.FileChangeListener;
 import ch.droptilllate.application.model.EncryptedFileDob;
 import ch.droptilllate.application.properties.Configuration;
-import ch.droptilllate.cloudprovider.api.IFileSystemCom;
 
 public class FileHandler {
 	

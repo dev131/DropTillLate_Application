@@ -10,7 +10,6 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import ch.droptilllate.application.exceptions.DatabaseStatus;
 import ch.droptilllate.application.info.ErrorMessage;
 import ch.droptilllate.application.key.KeyManager;
 import ch.droptilllate.application.model.EncryptedFileDob;
@@ -20,6 +19,7 @@ import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.application.properties.XMLConstruct;
 import ch.droptilllate.database.api.DBSituation;
 import ch.droptilllate.database.api.IDatabase;
+import ch.droptilllate.database.exceptions.DatabaseStatus;
 import ch.droptilllate.database.xml.XMLDatabase;
 import ch.droptilllate.keyfile.api.KeyFileHandlingSummary;
  

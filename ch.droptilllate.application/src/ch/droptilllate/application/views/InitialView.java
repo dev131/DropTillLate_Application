@@ -43,13 +43,13 @@ import ch.droptilllate.application.controller.InitController;
 import ch.droptilllate.application.controller.ViewController;
 import ch.droptilllate.application.dnb.CloudAccount;
 import ch.droptilllate.application.error.ParamInitException;
-import ch.droptilllate.application.exceptions.DatabaseStatus;
 import ch.droptilllate.application.handlers.FileHandler;
 import ch.droptilllate.application.info.ErrorMessage;
 import ch.droptilllate.application.os.OSValidator;
 import ch.droptilllate.application.properties.Messages;
 import ch.droptilllate.database.api.DBSituation;
 import ch.droptilllate.database.api.IDatabase;
+import ch.droptilllate.database.exceptions.DatabaseStatus;
 import ch.droptilllate.database.xml.XMLDatabase;
 
 import org.eclipse.swt.widgets.Text;
