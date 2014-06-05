@@ -10,8 +10,6 @@ public class DeleteFileHandler {
 
 		 ViewController viewcontroller = ViewController.getInstance();
 		 viewcontroller.deleteFile();
-	}
-	
-	
+	}	
 
 }
