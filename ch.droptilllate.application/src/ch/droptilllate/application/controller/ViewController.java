@@ -225,7 +225,9 @@ public class ViewController {
 				}
 			}
 		}
+		if (folderList != null && folderList.size() > 0) {
 		database.deleteElement(folderList);
+		}
 		deleteTreeFiles(fileList);
 		deleteTreeFolders(folderList);
 		//CloseDatabase
